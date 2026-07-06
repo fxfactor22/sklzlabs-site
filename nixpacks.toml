@@ -1,0 +1,5 @@
+# Railway build: no dependencies needed, pure stdlib server.
+[phases.setup]
+nixPkgs = ["python312"]
+[start]
+cmd = "python server.py"
