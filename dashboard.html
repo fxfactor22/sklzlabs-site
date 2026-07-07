@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — SKLZ Labs</title>
+<style>
+  :root{
+    --bg:#080A0F;--panel:#0F131C;--panel-2:#141A26;--line:#1E2735;
+    --ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;
+    --gold:#F5A623;--blue:#1DA9E0;
+    --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+    --sans:'Inter','SF Pro Text',-apple-system,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  nav{border-bottom:1px solid var(--line);background:rgba(8,10,15,.8);backdrop-filter:blur(12px)}
+  .nav-in{max-width:1000px;margin:0 auto;padding:0 24px;height:76px;display:flex;
+    align-items:center;justify-content:space-between}
+  .logo{height:52px}
+  .logout{font-family:var(--mono);font-size:13px;color:var(--muted);background:var(--panel);
+    border:1px solid var(--line);border-radius:8px;padding:8px 16px;cursor:pointer}
+  .logout:hover{color:var(--ink);border-color:var(--muted)}
+  .wrap{max-width:1000px;margin:0 auto;padding:44px 24px}
+  h1{font-size:30px;letter-spacing:-.02em;margin-bottom:8px}
+  .sub{color:var(--muted);margin-bottom:36px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:24px}
+  .card h3{font-size:16px;margin-bottom:14px}
+  .kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);
+    font-family:var(--mono);font-size:13px}
+  .kv:last-child{border-bottom:none}
+  .kv .k{color:var(--dim)} .kv .v{color:var(--ink)}
+  .badge{display:inline-block;font-family:var(--mono);font-size:11px;padding:4px 10px;
+    border-radius:6px;background:rgba(245,166,35,.12);color:var(--gold);
+    border:1px solid rgba(245,166,35,.3)}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:13px;text-align:center;padding:24px}
+  .loading{text-align:center;padding:80px;color:var(--muted);font-family:var(--mono)}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ Labs"/></a>
+  <button class="logout" onclick="logout()">Log out</button>
+</div></nav>
+
+<div class="wrap" id="content">
+  <div class="loading" id="loading">Loading your dashboard…</div>
+</div>
+
+<script>
+  const API_BASE = "https://api.sklzlabs.com";
+
+  async function load(){
+    const token = localStorage.getItem('sklz_access');
+    if(!token){ window.location.href='/login.html'; return; }
+
+    let profile=null;
+    try{
+      let r = await fetch(API_BASE+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){
+        // try refresh once
+        const refreshed = await tryRefresh();
+        if(!refreshed){ window.location.href='/login.html'; return; }
+        r = await fetch(API_BASE+'/api/auth/me',{headers:{'Authorization':'Bearer '+localStorage.getItem('sklz_access')}});
+      }
+      if(!r.ok){ window.location.href='/login.html'; return; }
+      profile = await r.json();
+    }catch(e){
+      document.getElementById('content').innerHTML =
+        '<div class="empty">Could not reach the server. Please try again.</div>';
+      return;
+    }
+    render(profile);
+  }
+
+  async function tryRefresh(){
+    const rt = localStorage.getItem('sklz_refresh');
+    if(!rt) return false;
+    try{
+      const r = await fetch(API_BASE+'/api/auth/refresh',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({refresh_token:rt})
+      });
+      if(!r.ok) return false;
+      const d = await r.json();
+      if(d.access_token){
+        localStorage.setItem('sklz_access', d.access_token);
+        if(d.refresh_token) localStorage.setItem('sklz_refresh', d.refresh_token);
+        return true;
+      }
+    }catch(e){}
+    return false;
+  }
+
+  function render(p){
+    const name = p.display_name || p.email.split('@')[0];
+    document.getElementById('content').innerHTML = `
+      <h1>Welcome, ${escape(name)}</h1>
+      <p class="sub">Your SKLZ Labs account.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Account</h3>
+          <div class="kv"><span class="k">Email</span><span class="v">${escape(p.email)}</span></div>
+          <div class="kv"><span class="k">Role</span><span class="v">${escape(p.role)}</span></div>
+          <div class="kv"><span class="k">Plan</span><span class="v">Free</span></div>
+        </div>
+        <div class="card">
+          <h3>My Products <span class="badge">soon</span></h3>
+          <div class="empty">Your purchased bots, indicators, and<br>license keys will appear here.</div>
+        </div>
+        <div class="card">
+          <h3>Copy Strategy <span class="badge">soon</span></h3>
+          <div class="empty">Follow the SKLZ strategy through your<br>broker once it's live.</div>
+        </div>
+      </div>`;
+  }
+
+  function escape(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+  async function logout(){
+    const token = localStorage.getItem('sklz_access');
+    try{ await fetch(API_BASE+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+token}}); }catch(e){}
+    localStorage.removeItem('sklz_access');
+    localStorage.removeItem('sklz_refresh');
+    window.location.href='/';
+  }
+
+  load();
+</script>
+</body>
+</html>

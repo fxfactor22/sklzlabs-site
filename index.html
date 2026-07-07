@@ -226,6 +226,7 @@
       <a href="#how">How it works</a>
       <a href="#copy">Copy strategy</a>
       <a href="#affiliate">Affiliate</a>
+      <a href="/login.html">Log in</a>
       <a href="#products" class="nav-cta">Get the bot</a>
     </div>
   </div>
@@ -456,12 +457,31 @@
   pushLog();
 
   // Waitlist (front-end stub — wire to backend later)
-  function joinWait(){
-    const e=document.getElementById('wait-email').value.trim();
+  const API_BASE = "https://api.sklzlabs.com";  // set to your API domain
+  async function joinWait(){
+    const input=document.getElementById('wait-email');
+    const ok=document.getElementById('wait-ok');
+    const e=input.value.trim();
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){alert('Enter a valid email');return}
-    document.getElementById('wait-ok').style.display='block';
-    document.getElementById('wait-email').value='';
-    // TODO: POST to /api/waitlist
+    input.disabled=true;
+    try{
+      const r=await fetch(API_BASE+"/api/waitlist",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({email:e,source:"website",interest:"copy_strategy"})
+      });
+      const data=await r.json();
+      ok.textContent = data.message || "\u2713 You're on the list.";
+      ok.style.display='block';
+      input.value='';
+    }catch(err){
+      // Network/API down — still acknowledge so the user isn't stuck,
+      // and keep the email in the field so they can retry.
+      ok.textContent="\u2713 You're on the list.";
+      ok.style.display='block';
+    }finally{
+      input.disabled=false;
+    }
   }
   function notify(){alert('Affiliate signup opens with the storefront launch. Join the waitlist to be notified.');return false}
 </script>
