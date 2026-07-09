@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bot Monitor — SKLZ Labs</title>
+<style>
+  :root{
+    --bg:#080A0F;--panel:#0F131C;--panel-2:#141A26;--line:#1E2735;
+    --ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;
+    --gold:#F5A623;--blue:#1DA9E0;--red:#F87171;--green:#34D399;
+    --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+    --sans:'Inter','SF Pro Text',-apple-system,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  nav{border-bottom:1px solid var(--line);background:rgba(8,10,15,.85);
+    backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+  .nav-in{max-width:860px;margin:0 auto;padding:0 16px;height:64px;display:flex;
+    align-items:center;justify-content:space-between}
+  .logo{height:44px}
+  .nav-right{display:flex;gap:10px;align-items:center}
+  .pill{font-family:var(--mono);font-size:11px;padding:5px 11px;border-radius:20px;
+    border:1px solid var(--line);color:var(--muted);background:var(--panel);cursor:pointer}
+  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+  h1{font-size:22px;letter-spacing:-.01em;margin:6px 0 16px}
+  .sessions{display:grid;gap:12px}
+  .sess{background:var(--panel);border:1px solid var(--line);border-radius:13px;
+    padding:16px;cursor:pointer;transition:border-color .2s}
+  .sess:hover,.sess.sel{border-color:var(--gold)}
+  .sess-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  .sess-title{font-family:var(--mono);font-size:14px;font-weight:600}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px}
+  .dot.on{background:var(--green);box-shadow:0 0 8px var(--green)}
+  .dot.off{background:var(--dim)}
+  .badge{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:6px}
+  .badge.paper{background:rgba(29,169,224,.12);color:var(--blue);border:1px solid rgba(29,169,224,.3)}
+  .badge.live{background:rgba(245,166,35,.14);color:var(--gold);border:1px solid rgba(245,166,35,.35)}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));
+    gap:8px;margin-top:12px}
+  .m{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+  .m .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--dim);
+    text-transform:uppercase}
+  .m .v{font-family:var(--mono);font-size:15px;font-weight:600;margin-top:3px}
+  .v.up{color:var(--green)} .v.down{color:var(--red)}
+  .section-h{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--dim);
+    text-transform:uppercase;margin:22px 0 10px}
+  .console{background:var(--panel);border:1px solid var(--line);border-radius:13px;
+    padding:14px;font-family:var(--mono);font-size:11.5px;max-height:420px;
+    overflow-y:auto;line-height:1.75}
+  .ln{display:flex;gap:8px}
+  .ln .t{color:var(--dim);flex-shrink:0}
+  .ln .lv{flex-shrink:0;width:52px}
+  .ln .lv.info{color:var(--blue)} .ln .lv.warning{color:var(--gold)} .ln .lv.error{color:var(--red)}
+  .ai{background:linear-gradient(160deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);border-radius:13px;padding:18px;margin-top:10px}
+  .ai h3{font-size:15px;margin-bottom:10px}
+  .ai pre{font-family:var(--mono);font-size:12px;color:var(--muted);
+    white-space:pre-wrap;line-height:1.6}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12.5px;text-align:center;
+    padding:36px 12px}
+  .loading{text-align:center;padding:70px;color:var(--muted);font-family:var(--mono)}
+  .foot-note{margin-top:26px;font-size:11px;color:var(--dim);font-family:var(--mono);
+    text-align:center}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ Labs"/></a>
+  <div class="nav-right">
+    <span class="pill" id="refresh-pill" onclick="loadAll()">↻ refresh</span>
+    <a class="pill" href="/dashboard.html">← dashboard</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <h1>Bot Monitor</h1>
+  <div id="content"><div class="loading">Loading sessions…</div></div>
+  <div class="foot-note">Auto-refreshes every 10s · Read-only monitor · Software only, not financial advice</div>
+</div>
+
+<script>
+  const API_BASE = "https://api.sklzlabs.com";
+  let selected = null;
+  let timer = null;
+
+  function token(){ return localStorage.getItem('sklz_access'); }
+
+  async function api(path){
+    const r = await fetch(API_BASE+path, {headers:{'Authorization':'Bearer '+token()}});
+    if(r.status===401){ window.location.href='/login.html'; throw new Error('auth'); }
+    return r.json();
+  }
+
+  function fmtMoney(v){ return v==null?'—':('$'+Number(v).toLocaleString(undefined,{maximumFractionDigits:2})); }
+  function ago(iso){
+    const s = (Date.now()-new Date(iso).getTime())/1000;
+    if(s<90) return Math.round(s)+'s ago';
+    if(s<5400) return Math.round(s/60)+'m ago';
+    return Math.round(s/3600)+'h ago';
+  }
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+
+  async function loadAll(){
+    if(!token()){ window.location.href='/login.html'; return; }
+    let data;
+    try{ data = await api('/api/bot/sessions'); }
+    catch(e){ if(e.message!=='auth')
+      document.getElementById('content').innerHTML =
+        '<div class="empty">Could not reach the API. Retrying…</div>'; return; }
+    const ss = data.sessions||[];
+    if(!ss.length){
+      document.getElementById('content').innerHTML =
+        '<div class="empty">No bot sessions yet.<br><br>Start the bot on your VPS with SKLZ_API_URL and<br>SKLZ_BOT_KEY set, and it will appear here.</div>';
+      return;
+    }
+    if(!selected) selected = ss[0].id;
+    const list = ss.map(s=>{
+      const fresh = (Date.now()-new Date(s.last_seen).getTime()) < 60_000;
+      const st = s.stats||{};
+      return `<div class="sess ${s.id===selected?'sel':''}" onclick="select('${s.id}')">
+        <div class="sess-head">
+          <span class="sess-title"><span class="dot ${fresh?'on':'off'}"></span>
+            ${esc(s.bot)} · ${esc(s.symbol)} ${esc(s.timeframe||'')}</span>
+          <span>
+            <span class="badge ${s.mode==='live'?'live':'paper'}">${esc(s.mode)}</span>
+            <span class="badge paper" style="border-color:var(--line);color:var(--dim)">${ago(s.last_seen)}</span>
+          </span>
+        </div>
+        <div class="metrics">
+          <div class="m"><div class="k">Equity</div><div class="v">${fmtMoney(s.equity)}</div></div>
+          <div class="m"><div class="k">Balance</div><div class="v">${fmtMoney(s.balance)}</div></div>
+          <div class="m"><div class="k">Signals</div><div class="v">${st.signals??'—'}</div></div>
+          <div class="m"><div class="k">Opened</div><div class="v">${st.positions_opened??'—'}</div></div>
+          <div class="m"><div class="k">Closed</div><div class="v">${st.positions_closed??'—'}</div></div>
+          <div class="m"><div class="k">Realized</div>
+            <div class="v ${ (st.realized_pl||0)>=0?'up':'down'}">${st.realized_pl!=null?fmtMoney(st.realized_pl):'—'}</div></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    let html = `<div class="sessions">${list}</div>
+      <div class="section-h">Live console — selected session</div>
+      <div class="console" id="console"><div class="empty">loading…</div></div>
+      <div id="ai-slot"></div>`;
+    document.getElementById('content').innerHTML = html;
+    loadEvents(ss.find(s=>s.id===selected));
+  }
+
+  function select(id){ selected = id; loadAll(); }
+
+  async function loadEvents(session){
+    if(!session) return;
+    let data;
+    try{ data = await api(`/api/bot/sessions/${session.id}/events?limit=120`); }
+    catch(e){ return; }
+    const evs = (data.events||[]);
+    const el = document.getElementById('console');
+    el.innerHTML = evs.length ? evs.map(e=>{
+      const t = new Date(e.ts).toLocaleTimeString([],{hour12:false});
+      return `<div class="ln"><span class="t">${t}</span>
+        <span class="lv ${esc(e.level)}">${esc(e.level)}</span>
+        <span>${esc(e.message)}</span></div>`;
+    }).join('') : '<div class="empty">no events yet</div>';
+
+    const slot = document.getElementById('ai-slot');
+    if(session.ai_report){
+      slot.innerHTML = `<div class="section-h">AI Session Analysis</div>
+        <div class="ai"><h3>Claude's review of this session</h3>
+        <pre>${esc(typeof session.ai_report==='string'
+          ? session.ai_report : JSON.stringify(session.ai_report,null,2))}</pre></div>`;
+    } else { slot.innerHTML=''; }
+  }
+
+  loadAll();
+  timer = setInterval(loadAll, 10_000);
+</script>
+</body>
+</html>
