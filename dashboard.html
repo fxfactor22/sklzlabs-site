@@ -8,44 +8,115 @@
   :root{
     --bg:#080A0F;--panel:#0F131C;--panel-2:#141A26;--line:#1E2735;
     --ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;
-    --gold:#F5A623;--blue:#1DA9E0;
+    --gold:#F5A623;--gold-2:#FFC24B;--blue:#1DA9E0;--green:#34D399;--red:#F87171;
     --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
     --sans:'Inter','SF Pro Text',-apple-system,system-ui,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
-  nav{border-bottom:1px solid var(--line);background:rgba(8,10,15,.8);backdrop-filter:blur(12px)}
-  .nav-in{max-width:1000px;margin:0 auto;padding:0 24px;height:76px;display:flex;
+  a{color:inherit;text-decoration:none}
+  nav{border-bottom:1px solid var(--line);background:rgba(8,10,15,.85);
+    backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}
+  .nav-in{max-width:1180px;margin:0 auto;padding:0 20px;height:72px;display:flex;
     align-items:center;justify-content:space-between}
-  .logo{height:52px}
-  .logout{font-family:var(--mono);font-size:13px;color:var(--muted);background:var(--panel);
-    border:1px solid var(--line);border-radius:8px;padding:8px 16px;cursor:pointer}
-  .logout:hover{color:var(--ink);border-color:var(--muted)}
-  .wrap{max-width:1000px;margin:0 auto;padding:44px 24px}
-  h1{font-size:30px;letter-spacing:-.02em;margin-bottom:8px}
-  .sub{color:var(--muted);margin-bottom:36px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:24px}
-  .card h3{font-size:16px;margin-bottom:14px}
-  .kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);
-    font-family:var(--mono);font-size:13px}
-  .kv:last-child{border-bottom:none}
-  .kv .k{color:var(--dim)} .kv .v{color:var(--ink)}
-  .badge{display:inline-block;font-family:var(--mono);font-size:11px;padding:4px 10px;
-    border-radius:6px;background:rgba(245,166,35,.12);color:var(--gold);
-    border:1px solid rgba(245,166,35,.3)}
-  .empty{color:var(--dim);font-family:var(--mono);font-size:13px;text-align:center;padding:24px}
-  .loading{text-align:center;padding:80px;color:var(--muted);font-family:var(--mono)}
+  .logo{height:48px}
+  .nav-right{display:flex;gap:10px;align-items:center}
+  .user-chip{font-family:var(--mono);font-size:12px;color:var(--muted);
+    border:1px solid var(--line);border-radius:20px;padding:6px 14px;background:var(--panel)}
+  .btn-sm{font-family:var(--mono);font-size:12.5px;color:var(--muted);background:var(--panel);
+    border:1px solid var(--line);border-radius:8px;padding:8px 15px;cursor:pointer;transition:all .2s}
+  .btn-sm:hover{color:var(--ink);border-color:var(--muted)}
+  .wrap{max-width:1180px;margin:0 auto;padding:36px 20px 80px}
+  h1{font-size:clamp(24px,4vw,32px);letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:6px 0 30px;font-size:15px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:22px;position:relative;transition:border-color .25s,transform .25s;
+    display:flex;flex-direction:column;min-height:170px}
+  .card.clickable{cursor:pointer}
+  .card.clickable:hover{border-color:var(--gold);transform:translateY(-2px)}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+  .card h3{font-size:16.5px;display:flex;align-items:center;gap:9px}
+  .card .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    font-size:16px;background:var(--panel-2);border:1px solid var(--line);flex-shrink:0}
+  .card p{color:var(--muted);font-size:13.5px;line-height:1.55;flex:1}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:4px 9px;
+    border-radius:6px;white-space:nowrap}
+  .badge.live{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+  .badge.soon{background:rgba(245,166,35,.1);color:var(--gold);border:1px solid rgba(245,166,35,.28)}
+  .badge.free{background:rgba(29,169,224,.1);color:var(--blue);border:1px solid rgba(29,169,224,.3)}
+  .card-cta{margin-top:14px;font-family:var(--mono);font-size:12.5px;color:var(--gold)}
+  .section-h{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--dim);
+    text-transform:uppercase;margin:34px 0 14px}
+  .acct{display:flex;gap:22px;flex-wrap:wrap;background:var(--panel);
+    border:1px solid var(--line);border-radius:14px;padding:18px 22px;align-items:center}
+  .acct .kv{font-family:var(--mono);font-size:13px}
+  .acct .kv .k{color:var(--dim);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px}
+  .overlay{position:fixed;inset:0;background:rgba(4,6,10,.7);backdrop-filter:blur(4px);
+    display:none;place-items:center;z-index:50;padding:18px}
+  .overlay.open{display:grid}
+  .modal{width:100%;max-width:440px;background:var(--panel);border:1px solid var(--line);
+    border-radius:16px;padding:26px;max-height:92vh;overflow-y:auto}
+  .modal h2{font-size:19px;margin-bottom:4px}
+  .modal .hint{color:var(--dim);font-size:12px;margin-bottom:18px}
+  .modal label{display:block;font-family:var(--mono);font-size:11px;color:var(--muted);
+    letter-spacing:.06em;text-transform:uppercase;margin:13px 0 6px}
+  .modal input,.modal select{width:100%;background:var(--bg);border:1px solid var(--line);
+    border-radius:9px;padding:11px 13px;color:var(--ink);font-family:var(--mono);font-size:14px}
+  .modal input:focus,.modal select:focus{outline:none;border-color:var(--gold)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .calc-out{margin-top:20px;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:16px}
+  .calc-out .big{font-family:var(--mono);font-size:30px;font-weight:700;
+    background:linear-gradient(100deg,var(--gold),var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .calc-out .det{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px;line-height:1.8}
+  .modal-close{float:right;background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer}
+  .disclaim{margin-top:14px;font-size:10.5px;color:var(--dim);font-family:var(--mono);line-height:1.5}
+  .loading{text-align:center;padding:90px;color:var(--muted);font-family:var(--mono)}
+  .foot{margin-top:44px;font-size:11px;color:var(--dim);font-family:var(--mono);text-align:center}
 </style>
 </head>
 <body>
 <nav><div class="nav-in">
   <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ Labs"/></a>
-  <button class="logout" onclick="logout()">Log out</button>
+  <div class="nav-right">
+    <span class="user-chip" id="user-chip">…</span>
+    <button class="btn-sm" onclick="logout()">Log out</button>
+  </div>
 </div></nav>
 
-<div class="wrap" id="content">
-  <div class="loading" id="loading">Loading your dashboard…</div>
+<div class="wrap" id="content"><div class="loading">Loading your dashboard…</div></div>
+
+<div class="overlay" id="calc-overlay" onclick="if(event.target===this)closeCalc()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeCalc()">✕</button>
+    <h2>Lot Size Calculator</h2>
+    <div class="hint">Position size from account, risk % and stop distance.</div>
+    <div class="row2">
+      <div><label>Account balance</label><input type="number" id="c-bal" value="10000" min="1"/></div>
+      <div><label>Account currency</label>
+        <select id="c-cur"><option>USD</option><option>EUR</option><option>GBP</option></select></div>
+    </div>
+    <div class="row2">
+      <div><label>Risk %</label><input type="number" id="c-risk" value="1" step="0.1" min="0.01" max="100"/></div>
+      <div><label>Stop loss (pips/points)</label><input type="number" id="c-sl" value="30" step="0.1" min="0.1"/></div>
+    </div>
+    <div class="row2">
+      <div><label>Instrument</label>
+        <select id="c-inst" onchange="calc()">
+          <option value="10">Forex majors (pip = $10/lot)</option>
+          <option value="1">Gold XAUUSD (point = $1/lot)</option>
+          <option value="custom">Custom pip value</option>
+        </select></div>
+      <div><label>Pip/point value per lot ($)</label><input type="number" id="c-pv" value="10" step="0.01"/></div>
+    </div>
+    <div class="calc-out">
+      <div class="big" id="c-lots">1.00 lots</div>
+      <div class="det" id="c-det"></div>
+    </div>
+    <div class="disclaim">Educational tool only — verify contract specs with your broker.
+      Not financial advice. Trading involves risk of loss.</div>
+  </div>
 </div>
 
 <script>
@@ -54,82 +125,127 @@
   async function load(){
     const token = localStorage.getItem('sklz_access');
     if(!token){ window.location.href='/login.html'; return; }
-
-    let profile=null;
+    let p = null;
     try{
       let r = await fetch(API_BASE+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}});
-      if(r.status===401){
-        // try refresh once
-        const refreshed = await tryRefresh();
-        if(!refreshed){ window.location.href='/login.html'; return; }
+      if(r.status===401 && await tryRefresh())
         r = await fetch(API_BASE+'/api/auth/me',{headers:{'Authorization':'Bearer '+localStorage.getItem('sklz_access')}});
-      }
       if(!r.ok){ window.location.href='/login.html'; return; }
-      profile = await r.json();
+      p = await r.json();
     }catch(e){
-      document.getElementById('content').innerHTML =
-        '<div class="empty">Could not reach the server. Please try again.</div>';
+      document.getElementById('content').innerHTML='<div class="loading">Could not reach the server. Refresh to retry.</div>';
       return;
     }
-    render(profile);
+    render(p);
   }
 
   async function tryRefresh(){
-    const rt = localStorage.getItem('sklz_refresh');
-    if(!rt) return false;
+    const rt = localStorage.getItem('sklz_refresh'); if(!rt) return false;
     try{
-      const r = await fetch(API_BASE+'/api/auth/refresh',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({refresh_token:rt})
-      });
+      const r = await fetch(API_BASE+'/api/auth/refresh',{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
       if(!r.ok) return false;
       const d = await r.json();
-      if(d.access_token){
-        localStorage.setItem('sklz_access', d.access_token);
-        if(d.refresh_token) localStorage.setItem('sklz_refresh', d.refresh_token);
-        return true;
-      }
+      if(d.access_token){ localStorage.setItem('sklz_access',d.access_token);
+        if(d.refresh_token) localStorage.setItem('sklz_refresh',d.refresh_token); return true; }
     }catch(e){}
     return false;
   }
 
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+
   function render(p){
     const name = p.display_name || p.email.split('@')[0];
+    document.getElementById('user-chip').textContent = p.email;
     document.getElementById('content').innerHTML = `
-      <h1>Welcome, ${escape(name)}</h1>
-      <p class="sub">Your SKLZ Labs account.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Account</h3>
-          <div class="kv"><span class="k">Email</span><span class="v">${escape(p.email)}</span></div>
-          <div class="kv"><span class="k">Role</span><span class="v">${escape(p.role)}</span></div>
-          <div class="kv"><span class="k">Plan</span><span class="v">Free</span></div>
-        </div>
-        <div class="card" style="cursor:pointer" onclick="window.location.href='/bot.html'">
-          <h3>Bot Monitor →</h3>
-          <div class="kv"><span class="k">Status</span><span class="v">Watch your VPS bots live</span></div>
-          <div class="kv"><span class="k">Includes</span><span class="v">Console + AI analysis</span></div>
-        </div>
-        <div class="card">
-          <h3>My Products <span class="badge">soon</span></h3>
-          <div class="empty">Your purchased bots, indicators, and<br>license keys will appear here.</div>
-        </div>
-        <div class="card">
-          <h3>Copy Strategy <span class="badge">soon</span></h3>
-          <div class="empty">Follow the SKLZ strategy through your<br>broker once it's live.</div>
-        </div>
-      </div>`;
-  }
+      <h1>Welcome back, ${esc(name)}</h1>
+      <p class="sub">Your SKLZ Labs control panel.</p>
 
-  function escape(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+      <div class="acct">
+        <div class="kv"><span class="k">Email</span>${esc(p.email)}</div>
+        <div class="kv"><span class="k">Role</span>${esc(p.role)}</div>
+        <div class="kv"><span class="k">Plan</span>Free</div>
+        <div class="kv"><span class="k">Member since</span>2026</div>
+      </div>
+
+      <div class="section-h">Live now</div>
+      <div class="grid">
+        <div class="card clickable" onclick="location.href='/bot.html'">
+          <div class="card-head"><h3><span class="ic">🖥️</span>Bot Monitor</h3>
+            <span class="badge live">● LIVE</span></div>
+          <p>Watch your VPS bots in real time — equity, positions, streaming console, and Claude's AI session analysis on every run.</p>
+          <div class="card-cta">Open monitor →</div>
+        </div>
+        <div class="card clickable" onclick="openCalc()">
+          <div class="card-head"><h3><span class="ic">🧮</span>Lot Size Calculator</h3>
+            <span class="badge free">FREE TOOL</span></div>
+          <p>Position sizing done right: account, risk %, stop distance → exact lot size. The same math our bots use internally.</p>
+          <div class="card-cta">Open calculator →</div>
+        </div>
+        <div class="card clickable" onclick="location.href='/#products'">
+          <div class="card-head"><h3><span class="ic">🤖</span>MT5 Bots</h3>
+            <span class="badge live">AVAILABLE</span></div>
+          <p>Trend EMA and Smart Money strategies with risk manager, kill-switch, laddered entries and AI session reports.</p>
+          <div class="card-cta">View products →</div>
+        </div>
+      </div>
+
+      <div class="section-h">Coming soon — in the lab</div>
+      <div class="grid">
+        <div class="card"><div class="card-head"><h3><span class="ic">📊</span>Indicators Suite</h3>
+          <span class="badge soon">SOON</span></div>
+          <p>Order blocks, FVG, liquidity maps and session tools for MT5 &amp; TradingView. Invite-based delivery to your account.</p></div>
+        <div class="card"><div class="card-head"><h3><span class="ic">📓</span>AI Trading Journal</h3>
+          <span class="badge soon">SOON</span></div>
+          <p>Auto-import your trades, tag setups, and get AI-written weekly reviews that find the mistakes you keep repeating.</p></div>
+        <div class="card"><div class="card-head"><h3><span class="ic">🛰️</span>Crypto Scanner</h3>
+          <span class="badge soon">PHASE 2</span></div>
+          <p>Trending-coin detection from market + social data with AI sentiment summaries. Data, not signals — you decide.</p></div>
+        <div class="card"><div class="card-head"><h3><span class="ic">🎓</span>Academy</h3>
+          <span class="badge soon">SOON</span></div>
+          <p>Structured courses on algorithmic trading, risk, and market structure — with an AI tutor that answers as you learn.</p></div>
+        <div class="card"><div class="card-head"><h3><span class="ic">📡</span>Copy Strategy</h3>
+          <span class="badge soon">AFTER TRACK RECORD</span></div>
+          <p>Follow the SKLZ master strategy through your broker's own copy system. No credentials shared, funds stay in your account.</p></div>
+        <div class="card"><div class="card-head"><h3><span class="ic">🤝</span>Affiliate — 50%</h3>
+          <span class="badge soon">SOON</span></div>
+          <p>Half of every subscription you refer, recurring. Your referral link and stats will live here when the storefront opens.</p></div>
+      </div>
+
+      <div class="foot">Software only · Not financial advice · Trading involves risk of loss<br>
+      © 2026 SKLZ Labs</div>`;
+  }
 
   async function logout(){
-    const token = localStorage.getItem('sklz_access');
-    try{ await fetch(API_BASE+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+token}}); }catch(e){}
-    localStorage.removeItem('sklz_access');
-    localStorage.removeItem('sklz_refresh');
+    const t = localStorage.getItem('sklz_access');
+    try{ await fetch(API_BASE+'/api/auth/logout',{method:'POST',headers:{'Authorization':'Bearer '+t}}); }catch(e){}
+    localStorage.removeItem('sklz_access'); localStorage.removeItem('sklz_refresh');
     window.location.href='/';
   }
+
+  function openCalc(){ document.getElementById('calc-overlay').classList.add('open'); calc(); }
+  function closeCalc(){ document.getElementById('calc-overlay').classList.remove('open'); }
+  function calc(){
+    const bal = +document.getElementById('c-bal').value || 0;
+    const risk = +document.getElementById('c-risk').value || 0;
+    const sl = +document.getElementById('c-sl').value || 0;
+    const inst = document.getElementById('c-inst').value;
+    const pvEl = document.getElementById('c-pv');
+    if(inst!=='custom') pvEl.value = inst;
+    const pv = +pvEl.value || 0;
+    const cur = document.getElementById('c-cur').value;
+    const riskMoney = bal * risk / 100;
+    const lots = (sl>0 && pv>0) ? riskMoney / (sl*pv) : 0;
+    document.getElementById('c-lots').textContent =
+      (lots>0? lots.toFixed(2) : '—') + ' lots';
+    document.getElementById('c-det').innerHTML =
+      'risk money: '+cur+' '+riskMoney.toFixed(2)+'<br>' +
+      'loss if SL hit: '+cur+' '+(lots*sl*pv).toFixed(2)+'<br>' +
+      'formula: risk ÷ (stop × pip value)';
+  }
+  ['c-bal','c-risk','c-sl','c-pv'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', calc)});
+  document.getElementById('c-cur').addEventListener('change', calc);
 
   load();
 </script>
