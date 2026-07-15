@@ -163,6 +163,30 @@
     -webkit-background-clip:text;background-clip:text;color:transparent}
   .out .d{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;line-height:1.7}
   .x{float:right;background:none;border:none;color:var(--dim);font-size:19px;cursor:pointer}
+  /* TV access */
+  .tv-grid{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .tv-in{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--line);
+    border-radius:8px;padding:10px 12px;color:var(--ink);font-family:var(--mono);font-size:13px}
+  .tv-in:focus{outline:none;border-color:var(--gold)}
+  .tv-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;
+    border:none;border-radius:8px;padding:10px 18px;font-weight:600;font-size:13px;cursor:pointer}
+  .tv-status{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:6px}
+  .st-pending{background:rgba(245,166,35,.12);color:var(--gold)}
+  .st-active{background:rgba(52,211,153,.12);color:var(--green)}
+  .st-expired{background:rgba(248,113,113,.12);color:var(--red)}
+  .tv-note{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:9px;line-height:1.6}
+  /* admin queue */
+  .aq-row{display:flex;align-items:center;gap:10px;padding:9px 0;
+    border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .aq-row:last-child{border-bottom:none}
+  .aq-user{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--gold)}
+  .aq-mail{font-family:var(--mono);font-size:10px;color:var(--dim)}
+  .aq-exp{font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:auto}
+  .aq-btn{font-family:var(--mono);font-size:10.5px;border-radius:6px;padding:6px 10px;
+    cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}
+  .aq-btn:hover{color:var(--ink);border-color:var(--muted)}
+  .aq-btn.g{border-color:rgba(52,211,153,.4);color:var(--green)}
+  .aq-btn.r{border-color:rgba(248,113,113,.35);color:var(--red)}
   .foot{margin-top:20px;font-family:var(--mono);font-size:9.5px;color:var(--dim);
     text-align:center;line-height:1.7}
 </style>
@@ -180,7 +204,7 @@
       <span class="i">🖥️</span>Bot Monitor<span class="dot"></span></div>
     <div class="nav-sec">Tools</div>
     <div class="nav-item" onclick="openCalc()"><span class="i">🧮</span>Lot Calculator</div>
-    <div class="nav-item" onclick="location.href='/#indicators'"><span class="i">📊</span>Indicators</div>
+    <div class="nav-item" onclick="location.href='/indicators.html'"><span class="i">📊</span>Indicators</div>
     <div class="nav-item" onclick="toast('Signals feed opens with the storefront')">
       <span class="i">📡</span>Signals<span class="soon">SOON</span></div>
     <div class="nav-item" onclick="toast('Journal ships next')">
