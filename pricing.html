@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pricing — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  nav{border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1060px;margin:0 auto;padding:0 18px;height:60px;display:flex;
+    align-items:center;justify-content:space-between}
+  .logo{height:40px}
+  .btn{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);
+    border:1px solid var(--line);border-radius:7px;padding:7px 13px;cursor:pointer}
+  .wrap{max-width:1060px;margin:0 auto;padding:36px 18px 70px}
+  h1{font-size:30px;text-align:center;letter-spacing:-.02em}
+  .sub{color:var(--muted);text-align:center;margin:10px auto 8px;max-width:560px;line-height:1.6}
+  .founder{display:flex;justify-content:center;margin:14px 0 30px}
+  .founder span{font-family:var(--mono);font-size:11.5px;color:var(--gold);
+    border:1px solid rgba(245,166,35,.35);border-radius:20px;padding:7px 16px;
+    background:rgba(245,166,35,.07)}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:900px){.tiers{grid-template-columns:1fr}}
+  .tier{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    padding:24px;display:flex;flex-direction:column;position:relative}
+  .tier.hot{border-color:var(--gold);box-shadow:0 8px 44px rgba(245,166,35,.14)}
+  .pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:9px;letter-spacing:.1em;background:linear-gradient(135deg,var(--gold),var(--gold2));
+    color:#08101A;padding:4px 12px;border-radius:11px;font-weight:700}
+  .tname{font-size:16px;font-weight:700}
+  .tdesc{color:var(--muted);font-size:12px;margin-top:4px;line-height:1.5;min-height:36px}
+  .price{margin:16px 0 2px;display:flex;align-items:baseline;gap:7px}
+  .price .n{font-family:var(--mono);font-size:40px;font-weight:700;
+    background:linear-gradient(100deg,var(--gold),var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .price .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .price .was{font-family:var(--mono);font-size:15px;color:var(--dim);text-decoration:line-through}
+  .renew{font-family:var(--mono);font-size:10.5px;color:var(--muted);min-height:16px}
+  .feat{margin:16px 0;padding:0;list-style:none;flex:1}
+  .feat li{font-size:12.5px;color:var(--muted);padding:5px 0 5px 20px;position:relative}
+  .feat li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+  .cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;
+    border-radius:9px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;width:100%}
+  .cta.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+  .alt{font-family:var(--mono);font-size:10.5px;color:var(--dim);text-align:center;
+    margin-top:10px}
+  .alt a{color:var(--blue);cursor:pointer}
+  .fine{margin-top:34px;text-align:center;font-family:var(--mono);font-size:10.5px;
+    color:var(--dim);line-height:2}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--panel2);border:1px solid var(--gold);border-radius:9px;
+    padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
+  .toast.on{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+  <a href="/dashboard.html"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+  <a class="btn" href="/dashboard.html">← Dashboard</a>
+</div></nav>
+
+<div class="wrap">
+  <h1>Simple pricing. Honest tools.</h1>
+  <div class="sub">Every plan renews at the price on the button, cancels in one click from
+    your billing portal, and carries a 7-day money-back guarantee on your first purchase.</div>
+  <div class="founder"><span id="founder-badge">🔥 Founder pricing: first 100 bundle members lock $39/mo for life</span></div>
+
+  <div class="tiers">
+    <!-- SUITE -->
+    <div class="tier">
+      <div class="tname">Indicator Suite</div>
+      <div class="tdesc">All four TradingView tools — Pro, Trend, Flow, Radar — on your TV account.</div>
+      <div class="price"><span class="n">$7</span><span class="u">first month</span><span class="was">$29</span></div>
+      <div class="renew">then $29/mo · cancel anytime</div>
+      <ul class="feat">
+        <li>SKLZ Pro — structure &amp; trade plans</li>
+        <li>SKLZ Trend — regime-adaptive signals</li>
+        <li>SKLZ Flow — divergence matrix</li>
+        <li>SKLZ Radar — MTF scanner</li>
+        <li>Honest performance panels</li>
+      </ul>
+      <button class="cta" onclick="buy('suite_monthly')">Start for $7 →</button>
+      <div class="alt">or <a onclick="buy('suite_annual')">$290/yr</a> · <a onclick="buy('suite_lifetime')">$349 lifetime</a></div>
+    </div>
+
+    <!-- BUNDLE -->
+    <div class="tier hot">
+      <div class="pop">MOST POPULAR</div>
+      <div class="tname">The Bundle</div>
+      <div class="tdesc">Everything: all four indicators + TradeGPT Pro, one subscription.</div>
+      <div class="price"><span class="n" id="bundle-price">$39</span><span class="u">/month</span><span class="was" id="bundle-was">$58</span></div>
+      <div class="renew" id="bundle-renew">founder price — locked for life · cancel anytime</div>
+      <ul class="feat">
+        <li>Full Indicator Suite</li>
+        <li>TradeGPT Pro — unlimited chart analysis</li>
+        <li>AI performance reviews</li>
+        <li>English &amp; العربية</li>
+        <li>Priority access to Signals (coming)</li>
+      </ul>
+      <button class="cta" onclick="buy('bundle_monthly')" id="bundle-cta">Get the Bundle →</button>
+      <div class="alt">or <a onclick="buy('bundle_annual')">$490/yr</a></div>
+    </div>
+
+    <!-- TRADEGPT -->
+    <div class="tier">
+      <div class="tname">TradeGPT Pro</div>
+      <div class="tdesc">Your AI analyst — chart screenshots in, structured trade plans out.</div>
+      <div class="price"><span class="n">$29</span><span class="u">/month</span></div>
+      <div class="renew">cancel anytime</div>
+      <ul class="feat">
+        <li>Vision chart analysis</li>
+        <li>Exact position sizing</li>
+        <li>The case against every trade</li>
+        <li>Behavioural performance reviews</li>
+        <li>English &amp; العربية</li>
+      </ul>
+      <button class="cta ghost" onclick="buy('gpt_monthly')">Start TradeGPT →</button>
+      <div class="alt">or <a onclick="buy('gpt_annual')">$290/yr</a></div>
+    </div>
+  </div>
+
+  <div class="fine">
+    Prices in USD · Renewal price always shown at checkout · Manage or cancel anytime from your billing portal<br>
+    7-day money-back guarantee on first purchase · Software tools only — not financial advice · Trading involves risk of loss
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;
+    t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2800)}
+
+  async function loadConfig(){
+    try{
+      const r=await fetch(API+'/api/billing/config',{headers:{'Authorization':'Bearer '+tok()}});
+      if(!r.ok) return;
+      const d=await r.json();
+      const n=d.founder_remaining;
+      if(n>0){
+        document.getElementById('founder-badge').textContent=
+          `🔥 Founder pricing: ${n} of 100 spots left — lock $39/mo for life`;
+      }else{
+        document.getElementById('founder-badge').textContent='Bundle — best value';
+        document.getElementById('bundle-price').textContent='$49';
+        document.getElementById('bundle-was').textContent='$58';
+        document.getElementById('bundle-renew').textContent='cancel anytime';
+      }
+    }catch(e){}
+  }
+  async function buy(product){
+    try{
+      const r=await fetch(API+'/api/billing/checkout',{method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok()},
+        body:JSON.stringify({product})});
+      const d=await r.json();
+      if(!r.ok){ toast(d.detail||'Checkout unavailable'); return; }
+      location.href=d.url;
+    }catch(e){ toast('Could not reach billing'); }
+  }
+  loadConfig();
+</script>
+</body>
+</html>
