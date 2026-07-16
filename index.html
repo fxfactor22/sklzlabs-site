@@ -226,8 +226,8 @@
       <a href="#how">How it works</a>
       <a href="#copy">Copy strategy</a>
       <a href="#affiliate">Affiliate</a>
-      <a href="/pricing.html">Pricing</a>
-      <a href="/pricing.html">Pricing</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#pricing">Pricing</a>
       <a href="/login.html">Log in</a>
       <a href="#products" class="nav-cta">Get the bot</a>
     </div>
@@ -391,6 +391,116 @@
   </div>
 </section>
 
+
+<!-- PRICING (injected) -->
+<section id="pricing">
+  <div class="wrap">
+    <style>
+      #pricing{padding:90px 0 70px;position:relative}
+      #pricing .p-head{text-align:center;margin-bottom:14px}
+      #pricing h2{font-size:34px;letter-spacing:-.02em}
+      #pricing .p-sub{color:var(--muted);max-width:560px;margin:12px auto 0;line-height:1.65}
+      #pricing .p-founder{display:flex;justify-content:center;margin:20px 0 34px}
+      #pricing .p-founder span{font-family:var(--mono);font-size:12px;color:var(--gold);
+        border:1px solid rgba(245,166,35,.35);border-radius:20px;padding:8px 18px;
+        background:rgba(245,166,35,.07)}
+      #pricing .p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+      @media(max-width:920px){#pricing .p-grid{grid-template-columns:1fr}}
+      #pricing .p-card{background:var(--panel,#0F131C);border:1px solid var(--line);
+        border-radius:16px;padding:26px;display:flex;flex-direction:column;position:relative}
+      #pricing .p-card.hot{border-color:var(--gold);box-shadow:0 10px 50px rgba(245,166,35,.13)}
+      #pricing .p-pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+        font-family:var(--mono);font-size:9px;letter-spacing:.1em;font-weight:700;
+        background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#08101A;
+        padding:4px 12px;border-radius:11px}
+      #pricing .p-name{font-size:17px;font-weight:700}
+      #pricing .p-desc{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.55;min-height:38px}
+      #pricing .p-price{margin:18px 0 3px;display:flex;align-items:baseline;gap:8px}
+      #pricing .p-n{font-family:var(--mono);font-size:42px;font-weight:700;
+        background:linear-gradient(100deg,var(--gold),var(--blue));
+        -webkit-background-clip:text;background-clip:text;color:transparent}
+      #pricing .p-u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+      #pricing .p-was{font-family:var(--mono);font-size:15px;color:#5B6377;text-decoration:line-through}
+      #pricing .p-renew{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+      #pricing ul{margin:18px 0;padding:0;list-style:none;flex:1}
+      #pricing li{font-size:13px;color:var(--muted);padding:5px 0 5px 20px;position:relative}
+      #pricing li::before{content:'✓';position:absolute;left:0;color:#34D399;font-weight:700}
+      #pricing .p-cta{display:block;text-align:center;background:linear-gradient(135deg,var(--gold),var(--gold-2));
+        color:#08101A;border:none;border-radius:9px;padding:13px;font-weight:700;
+        font-size:14.5px;cursor:pointer;width:100%}
+      #pricing .p-cta.ghost{background:var(--panel,#0F131C);color:var(--ink);border:1px solid var(--line)}
+      #pricing .p-fine{margin-top:30px;text-align:center;font-family:var(--mono);
+        font-size:10.5px;color:#5B6377;line-height:2}
+    </style>
+    <div class="p-head">
+      <h2>Simple pricing. Honest tools.</h2>
+      <div class="p-sub">Every plan renews at the price on the button, cancels in one click,
+        and carries a 7-day money-back guarantee on your first purchase.</div>
+    </div>
+    <div class="p-founder"><span id="p-founder-badge">🔥 Founder pricing: first 100 bundle members lock $39/mo for life</span></div>
+    <div class="p-grid">
+      <div class="p-card">
+        <div class="p-name">Indicator Suite</div>
+        <div class="p-desc">All four TradingView tools — Pro, Trend, Flow, Radar — on your TV account.</div>
+        <div class="p-price"><span class="p-n">$7</span><span class="p-u">first month</span><span class="p-was">$29</span></div>
+        <div class="p-renew">then $29/mo · cancel anytime</div>
+        <ul><li>Structure &amp; trade plans on your chart</li><li>Regime-adaptive trend signals</li>
+            <li>5-oscillator divergence matrix</li><li>Multi-timeframe scanner</li>
+            <li>Honest performance panels</li></ul>
+        <button class="p-cta" onclick="sklzBuy('suite_monthly')">Start for $7 →</button>
+      </div>
+      <div class="p-card hot">
+        <div class="p-pop">MOST POPULAR</div>
+        <div class="p-name">The Bundle</div>
+        <div class="p-desc">Everything: all four indicators + TradeGPT Pro, one subscription.</div>
+        <div class="p-price"><span class="p-n" id="p-bundle-n">$39</span><span class="p-u">/month</span><span class="p-was">$58</span></div>
+        <div class="p-renew" id="p-bundle-renew">founder price — locked for life · cancel anytime</div>
+        <ul><li>Full Indicator Suite</li><li>TradeGPT Pro — unlimited AI chart analysis</li>
+            <li>AI performance reviews</li><li>English &amp; العربية</li>
+            <li>Priority access to Signals (coming)</li></ul>
+        <button class="p-cta" onclick="sklzBuy('bundle_monthly')">Get the Bundle →</button>
+      </div>
+      <div class="p-card">
+        <div class="p-name">TradeGPT Pro</div>
+        <div class="p-desc">Your AI analyst — chart screenshots in, structured trade plans out.</div>
+        <div class="p-price"><span class="p-n">$29</span><span class="p-u">/month</span></div>
+        <div class="p-renew">cancel anytime</div>
+        <ul><li>Vision chart analysis</li><li>Exact position sizing</li>
+            <li>The case against every trade</li><li>Behavioural reviews</li>
+            <li>English &amp; العربية</li></ul>
+        <button class="p-cta ghost" onclick="sklzBuy('gpt_monthly')">Start TradeGPT →</button>
+      </div>
+    </div>
+    <div class="p-fine">Prices in USD · Renewal price always shown at checkout · Cancel anytime from your billing portal<br>
+      7-day money-back guarantee on first purchase · Software tools only — not financial advice · Trading involves risk of loss ·
+      <a href="/pricing.html" style="color:var(--blue)">annual &amp; lifetime options →</a></div>
+  </div>
+</section>
+<script>
+  (function(){
+    const API="https://api.sklzlabs.com";
+    fetch(API+'/api/billing/config').then(r=>r.json()).then(d=>{
+      const n=d.founder_remaining;
+      const b=document.getElementById('p-founder-badge');
+      if(n>0){ b.textContent='🔥 Founder pricing: '+n+' of 100 spots left — lock $39/mo for life'; }
+      else{ b.textContent='Bundle — best value';
+        document.getElementById('p-bundle-n').textContent='$49';
+        document.getElementById('p-bundle-renew').textContent='cancel anytime'; }
+    }).catch(()=>{});
+    window.sklzBuy=async function(product){
+      const t=localStorage.getItem('sklz_access');
+      const path=t?'/api/billing/checkout':'/api/billing/checkout-public';
+      const h={'Content-Type':'application/json'};
+      if(t)h['Authorization']='Bearer '+t;
+      try{
+        const r=await fetch(API+path,{method:'POST',headers:h,body:JSON.stringify({product})});
+        const d=await r.json();
+        if(!r.ok){ alert(d.detail||'Checkout unavailable'); return; }
+        location.href=d.url;
+      }catch(e){ alert('Could not reach billing — try again in a moment.'); }
+    };
+  })();
+</script>
 <footer>
   <div class="wrap">
     <div class="foot-grid">
