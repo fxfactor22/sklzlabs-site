@@ -134,11 +134,63 @@
 
 <script>
   const API="https://api.sklzlabs.com";
-  function tok(){return localStorage.getItem('sklz_access')}
-  if(!tok()) location.href='/login.html';
+  function tok(){return localStorage.getItem('sklz_access')}   // may be null: page is public
   function toast(m){const t=document.getElementById('toast');t.textContent=m;
     t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2800)}
 
+  let myPlan = null;
+  async function loadStatus(){
+    if(!tok()) return;
+    try{
+      const r=await fetch(API+'/api/billing/status',{headers:{'Authorization':'Bearer '+tok()}});
+      if(!r.ok) return;
+      const d=await r.json();
+      if(!d.active) return;
+      myPlan = d.plan||'';
+      const bar=document.createElement('div');
+      bar.style.cssText='max-width:1060px;margin:0 auto 22px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap';
+      bar.innerHTML=`<span style="font-family:var(--mono);font-size:12px;color:var(--green);border:1px solid rgba(52,211,153,.35);border-radius:20px;padding:7px 16px;background:rgba(52,211,153,.07)">● Your plan: ${myPlan}${d.founder?' 🔥':''}</span>
+        <button class="btn" onclick="portal()">Manage billing →</button>`;
+      document.querySelector('.tiers').before(bar);
+
+      const suiteBtn=document.querySelector('.tier:nth-child(1) .cta');
+      const bundleBtn=document.getElementById('bundle-cta');
+      const gptBtn=document.querySelector('.tier:nth-child(3) .cta');
+      const off=(b,t)=>{b.textContent=t;b.disabled=true;b.style.opacity=.45;b.style.cursor='default';b.onclick=null};
+
+      if(myPlan.includes('Bundle')){
+        off(bundleBtn,'✓ Current plan'); off(suiteBtn,'Included in your bundle'); off(gptBtn,'Included in your bundle');
+      }else if(myPlan.includes('Suite')){
+        off(suiteBtn, myPlan.includes('Lifetime') ? '✓ Lifetime access' : '✓ Current plan');
+        bundleBtn.textContent='Upgrade — $7 today →';
+        bundleBtn.onclick=doUpgrade;
+        off(gptBtn,'Get it in the Bundle ↑');
+      }else if(myPlan.includes('TradeGPT')){
+        off(gptBtn,'✓ Current plan');
+        bundleBtn.textContent='Upgrade — $7 today →';
+        bundleBtn.onclick=doUpgrade;
+        off(suiteBtn,'Get it in the Bundle ↑');
+      }
+    }catch(e){}
+  }
+  async function doUpgrade(){
+    const b=document.getElementById('bundle-cta');
+    b.disabled=true;b.textContent='Upgrading…';
+    try{
+      const r=await fetch(API+'/api/billing/upsell',{method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok()}});
+      const d=await r.json();
+      if(r.ok){ b.textContent='✓ Bundle active — $'+d.charged_today+' charged'; toast('Upgraded! Renews at $'+d.renews_at+'/mo'); setTimeout(()=>location.reload(),1800); }
+      else { b.disabled=false; b.textContent='Upgrade — $7 today →'; toast(d.detail||'Upgrade failed'); }
+    }catch(e){ b.disabled=false; b.textContent='Upgrade — $7 today →'; toast('Network error'); }
+  }
+  async function portal(){
+    try{
+      const r=await fetch(API+'/api/billing/portal',{headers:{'Authorization':'Bearer '+tok()}});
+      const d=await r.json();
+      if(r.ok) location.href=d.url; else toast(d.detail||'Portal unavailable');
+    }catch(e){ toast('Network error'); }
+  }
   async function loadConfig(){
     try{
       const r=await fetch(API+'/api/billing/config',{headers:{'Authorization':'Bearer '+tok()}});
@@ -158,15 +210,17 @@
   }
   async function buy(product){
     try{
-      const r=await fetch(API+'/api/billing/checkout',{method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok()},
-        body:JSON.stringify({product})});
+      const path = tok() ? '/api/billing/checkout' : '/api/billing/checkout-public';
+      const headers = {'Content-Type':'application/json'};
+      if(tok()) headers['Authorization']='Bearer '+tok();
+      const r=await fetch(API+path,{method:'POST',headers,body:JSON.stringify({product})});
       const d=await r.json();
       if(!r.ok){ toast(d.detail||'Checkout unavailable'); return; }
       location.href=d.url;
     }catch(e){ toast('Could not reach billing'); }
   }
-  loadConfig();
+  // config endpoint needs no auth-sensitive data; try with token, fall back public
+  loadConfig(); loadStatus();
 </script>
 </body>
 </html>
