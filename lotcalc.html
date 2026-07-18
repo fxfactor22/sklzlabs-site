@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lot Calculator — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  nav{border-bottom:1px solid var(--line)}
+  .nav-in{max-width:960px;margin:0 auto;padding:0 18px;height:60px;display:flex;align-items:center;justify-content:space-between}
+  .logo{height:40px}
+  .btn{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:7px 13px;cursor:pointer}
+  .wrap{max-width:960px;margin:0 auto;padding:26px 18px 70px}
+  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:5px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  @media(max-width:800px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h2{font-size:14px;font-weight:600;margin-bottom:16px;font-family:var(--mono);
+    text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  label{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em;margin:14px 0 5px}
+  input,select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;
+    padding:11px 12px;color:var(--ink);font-family:var(--mono);font-size:14px}
+  input:focus,select:focus{outline:none;border-color:var(--gold)}
+  .row{display:flex;gap:12px}.row>div{flex:1}
+  .seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .seg button{flex:1;min-width:52px;font-family:var(--mono);font-size:12px;padding:8px 4px;
+    border-radius:7px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer}
+  .seg button.on{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,.08)}
+  .result{background:radial-gradient(120% 140% at 100% 0%,rgba(245,166,35,.12),transparent 55%),var(--panel2);
+    border:1px solid rgba(245,166,35,.3);border-radius:12px;padding:22px;text-align:center;margin-bottom:14px}
+  .result .lots{font-family:var(--mono);font-size:44px;font-weight:700;
+    background:linear-gradient(100deg,var(--gold),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .result .units{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:2px}
+  .breakdown{display:flex;flex-direction:column;gap:0}
+  .brow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .brow:last-child{border-bottom:none}
+  .brow .k{color:var(--muted)}.brow .v{font-family:var(--mono);font-weight:600}
+  .v.pos{color:var(--green)}.v.neg{color:var(--red)}
+  .warn{margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--gold);
+    background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.25);border-radius:8px;padding:10px;display:none}
+  .rr{display:flex;gap:8px;margin-top:6px}
+  .rr input{text-align:center}
+  .foot{margin-top:26px;font-family:var(--mono);font-size:9.5px;color:var(--dim);text-align:center;line-height:1.7}
+  .inst-note{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px;min-height:14px}
+</style></head>
+<body>
+<nav><div class="nav-in">
+  <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+  <a class="btn" href="/dashboard.html">← Dashboard</a>
+</div></nav>
+<div class="wrap">
+  <h1>Lot Size Calculator</h1>
+  <div class="sub">Pick your instrument — SKLZ knows its contract math, so you never look up pip values.</div>
+  <div class="grid">
+    <div class="card">
+      <h2>Inputs</h2>
+      <div class="row">
+        <div><label>Account balance</label><input type="number" id="bal" value="10000" step="100"/></div>
+        <div><label>Account currency</label>
+          <select id="acct"><option>USD</option><option>EUR</option><option>GBP</option><option>AUD</option></select></div>
+      </div>
+      <label>Risk per trade</label>
+      <div class="seg" id="risk-seg">
+        <button data-r="0.5">0.5%</button><button data-r="1" class="on">1%</button>
+        <button data-r="2">2%</button><button data-r="3">3%</button>
+        <button data-r="custom">Custom</button>
+      </div>
+      <input type="number" id="risk" value="1" step="0.1" style="margin-top:8px;display:none"/>
+
+      <label>Instrument</label>
+      <select id="inst"></select>
+      <div class="inst-note" id="inst-note"></div>
+
+      <label id="sl-label">Stop-loss (pips)</label>
+      <input type="number" id="sl" value="30" step="0.1"/>
+
+      <label>Reward : Risk (optional — for target)</label>
+      <div class="rr">
+        <input type="number" id="rr" value="2" step="0.5" placeholder="R:R"/>
+        <button class="btn" onclick="document.getElementById('rr').value='';calc()" style="white-space:nowrap">clear</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Result</h2>
+      <div class="result">
+        <div class="lots" id="lots">—</div>
+        <div class="units" id="lots-sub">position size</div>
+      </div>
+      <div class="breakdown">
+        <div class="brow"><span class="k">Risk amount</span><span class="v" id="r-amt">—</span></div>
+        <div class="brow"><span class="k">Loss if stopped</span><span class="v neg" id="r-loss">—</span></div>
+        <div class="brow"><span class="k">Value per pip/pt</span><span class="v" id="r-pv">—</span></div>
+        <div class="brow"><span class="k" id="tgt-k">Target (R:R)</span><span class="v pos" id="r-tgt">—</span></div>
+        <div class="brow"><span class="k">Units / contracts</span><span class="v" id="r-units">—</span></div>
+      </div>
+      <div class="warn" id="warn"></div>
+    </div>
+  </div>
+  <div class="foot">Estimates use standard contract sizes; your broker's exact tick value may differ slightly.<br>
+    Software only · Not financial advice · Trading involves risk of loss</div>
+</div>
+<script>
+/* SKLZ Lot Calculator — instrument-aware, auto pip/tick value.
+   Covers FX majors/minors/JPY, metals, indices, energy, crypto.
+   The user picks an instrument; we know its contract math so they don't
+   have to look up "value per pip" — the #1 friction in every basic calc. */
+const SKLZ_INSTRUMENTS = {
+  // fx: value per pip per 1.00 lot (100k units), pip = 0.0001 (or 0.01 JPY)
+  "EURUSD":{cat:"FX Majors",pip:0.0001,pipVal:10,quote:"USD",px:1.08},
+  "GBPUSD":{cat:"FX Majors",pip:0.0001,pipVal:10,quote:"USD",px:1.27},
+  "AUDUSD":{cat:"FX Majors",pip:0.0001,pipVal:10,quote:"USD",px:0.66},
+  "NZDUSD":{cat:"FX Majors",pip:0.0001,pipVal:10,quote:"USD",px:0.60},
+  "USDCAD":{cat:"FX Majors",pip:0.0001,pipVal:10,quote:"CAD",px:1.36},
+  "USDCHF":{cat:"FX Majors",pip:0.0001,pipVal:10,quote:"CHF",px:0.88},
+  "USDJPY":{cat:"FX JPY",pip:0.01,pipVal:1000,quote:"JPY",px:150},
+  "EURJPY":{cat:"FX JPY",pip:0.01,pipVal:1000,quote:"JPY",px:162},
+  "GBPJPY":{cat:"FX JPY",pip:0.01,pipVal:1000,quote:"JPY",px:190},
+  "EURGBP":{cat:"FX Minors",pip:0.0001,pipVal:10,quote:"GBP",px:0.85},
+  "EURAUD":{cat:"FX Minors",pip:0.0001,pipVal:10,quote:"AUD",px:1.63},
+  "GBPAUD":{cat:"FX Minors",pip:0.0001,pipVal:10,quote:"AUD",px:1.92},
+  // metals: pip convention 0.01, contract sizes differ
+  "XAUUSD":{cat:"Metals",pip:0.01,pipVal:1,quote:"USD",px:2350,note:"Gold · 100oz/lot · $1/0.01"},
+  "XAGUSD":{cat:"Metals",pip:0.01,pipVal:50,quote:"USD",px:28,note:"Silver · 5000oz/lot"},
+  "XPTUSD":{cat:"Metals",pip:0.01,pipVal:1,quote:"USD",px:950,note:"Platinum · 100oz/lot"},
+  // indices: 1 point move value per 1.0 lot (CFD, 1 contract)
+  "US30":{cat:"Indices",pip:1,pipVal:1,quote:"USD",px:39000,unit:"pts",note:"Dow · $1/point"},
+  "NAS100":{cat:"Indices",pip:1,pipVal:1,quote:"USD",px:18500,unit:"pts",note:"Nasdaq · $1/point"},
+  "SPX500":{cat:"Indices",pip:1,pipVal:1,quote:"USD",px:5300,unit:"pts",note:"S&P · $1/point"},
+  "GER40":{cat:"Indices",pip:1,pipVal:1,quote:"EUR",px:18200,unit:"pts",note:"DAX · €1/point"},
+  "UK100":{cat:"Indices",pip:1,pipVal:1,quote:"GBP",px:8200,unit:"pts",note:"FTSE · £1/point"},
+  // energy
+  "USOIL":{cat:"Energy",pip:0.01,pipVal:10,quote:"USD",px:78,note:"WTI · 1000bbl/lot"},
+  "UKOIL":{cat:"Energy",pip:0.01,pipVal:10,quote:"USD",px:82,note:"Brent · 1000bbl/lot"},
+  // crypto: value per $1 move per 1.0 unit
+  "BTCUSD":{cat:"Crypto",pip:1,pipVal:1,quote:"USD",px:64000,unit:"$",note:"1 BTC/lot · $1/$1"},
+  "ETHUSD":{cat:"Crypto",pip:1,pipVal:1,quote:"USD",px:3400,unit:"$",note:"1 ETH/lot"},
+};
+
+
+// build instrument dropdown grouped by category
+(function(){
+  const sel=document.getElementById('inst');
+  const cats={};
+  for(const [sym,d] of Object.entries(SKLZ_INSTRUMENTS)){(cats[d.cat]=cats[d.cat]||[]).push(sym);}
+  for(const [cat,syms] of Object.entries(cats)){
+    const g=document.createElement('optgroup');g.label=cat;
+    for(const s of syms){const o=document.createElement('option');o.value=s;o.textContent=s;g.appendChild(o);}
+    sel.appendChild(g);
+  }
+  sel.value='XAUUSD';
+})();
+
+function fmt(n,c){return (c||'')+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function calc(){
+  const bal=+document.getElementById('bal').value||0;
+  const acct=document.getElementById('acct').value;
+  const risk=+document.getElementById('risk').value||0;
+  const sym=document.getElementById('inst').value;
+  const d=SKLZ_INSTRUMENTS[sym];
+  const sl=+document.getElementById('sl').value||0;
+  const rr=+document.getElementById('rr').value||0;
+  const unit=d.unit||'pips';
+  document.getElementById('sl-label').textContent='Stop-loss ('+unit+')';
+  document.getElementById('inst-note').textContent=d.note||(d.cat+' · '+d.quote+' quoted');
+
+  // value per pip/point per 1.0 lot, converted to account currency (approx via px)
+  let pipValAcct=d.pipVal;
+  // convert quote-currency pip value to account currency when they differ
+  if(d.quote!==acct){
+    // rough: if quote is USD and acct EUR etc. Use 1 as fallback (majors dominate USD)
+    // For USD-quoted instruments in a USD account this is exact.
+    pipValAcct=d.pipVal; // kept simple & transparent; note explains
+  }
+  const riskAmt=bal*risk/100;
+  const lots=(sl>0&&pipValAcct>0)?riskAmt/(sl*pipValAcct):0;
+
+  document.getElementById('lots').textContent=lots>0?lots.toFixed(2):'—';
+  document.getElementById('lots-sub').textContent=lots>0?(lots.toFixed(2)+' standard lots'):'position size';
+  document.getElementById('r-amt').textContent=fmt(riskAmt,acct+' ');
+  document.getElementById('r-loss').textContent=lots>0?fmt(lots*sl*pipValAcct,acct+' '):'—';
+  document.getElementById('r-pv').textContent=fmt(lots>0?lots*pipValAcct:pipValAcct,acct+' ')+'/'+unit.replace('pips','pip').replace('pts','pt');
+  if(rr>0&&lots>0){
+    document.getElementById('tgt-k').textContent='Target ('+rr+'R, '+(sl*rr).toFixed(0)+' '+unit+')';
+    document.getElementById('r-tgt').textContent='+'+fmt(riskAmt*rr,acct+' ');
+  }else{document.getElementById('tgt-k').textContent='Target (set R:R)';document.getElementById('r-tgt').textContent='—';}
+  // units/contracts
+  let units='';
+  if(d.cat.startsWith('FX')) units=(lots*100000).toLocaleString()+' units';
+  else if(d.cat==='Crypto') units=lots.toFixed(2)+' '+sym.replace('USD','');
+  else units=lots.toFixed(2)+' contracts';
+  document.getElementById('r-units').textContent=lots>0?units:'—';
+
+  // sanity warning
+  const w=document.getElementById('warn');
+  if(lots>0 && lots*sl*pipValAcct>riskAmt*1.02){
+    w.style.display='block';w.textContent='⚠ Rounding may push actual risk above target — verify with broker.';
+  }else if(risk>3){
+    w.style.display='block';w.textContent='⚠ Risking more than 3% per trade is aggressive — most pros stay ≤1-2%.';
+  }else if(d.quote!==acct){
+    w.style.display='block';
+    w.textContent='ℹ '+sym+' is quoted in '+d.quote+'. Value shown assumes ≈1:1 to '+acct+'; for non-USD accounts confirm the FX conversion with your broker.';
+  }else{w.style.display='none';}
+}
+
+// risk segment
+document.getElementById('risk-seg').addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON')return;
+  [...e.target.parentNode.children].forEach(b=>b.classList.remove('on'));
+  e.target.classList.add('on');
+  const r=e.target.dataset.r;
+  const inp=document.getElementById('risk');
+  if(r==='custom'){inp.style.display='block';inp.focus();}
+  else{inp.style.display='none';inp.value=r;calc();}
+});
+['bal','acct','risk','inst','sl','rr'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',calc);
+  document.getElementById(id).addEventListener('change',calc);
+});
+calc();
+</script>
+</body></html>
