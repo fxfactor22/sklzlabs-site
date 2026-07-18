@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Bot Monitor — SKLZ Labs</title>
 <style>
-  :root{
+  :root{--up:#34D399;--down:#F87171;
     --bg:#080A0F;--panel:#0F131C;--panel-2:#141A26;--line:#1E2735;
     --ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;
     --gold:#F5A623;--blue:#1DA9E0;--red:#F87171;--green:#34D399;
@@ -108,17 +108,37 @@
     catch(e){ if(e.message!=='auth')
       document.getElementById('content').innerHTML =
         '<div class="empty">Could not reach the API. Retrying…</div>'; return; }
-    const ss = data.sessions||[];
+    let ss = data.sessions||[];
     if(!ss.length){
       document.getElementById('content').innerHTML =
         '<div class="empty">No bot sessions yet.<br><br>Start the bot on your VPS with SKLZ_API_URL and<br>SKLZ_BOT_KEY set, and it will appear here.</div>';
       return;
     }
-    if(!selected) selected = ss[0].id;
+    // dedupe: keep only the NEWEST session per bot label (restarts make new ids)
+    const newestByBot = {};
+    for(const s of ss){
+      const k = s.bot||'?';
+      if(!newestByBot[k] || new Date(s.last_seen) > new Date(newestByBot[k].last_seen))
+        newestByBot[k] = s;
+    }
+    ss = Object.values(newestByBot);
+    // live (heartbeat < 90s) first, then by recency
+    const isLive = s => (Date.now()-new Date(s.last_seen).getTime()) < 90_000;
+    ss.sort((a,b)=> (isLive(b)-isLive(a)) || (new Date(b.last_seen)-new Date(a.last_seen)));
+    const liveCount = ss.filter(isLive).length;
+
+    // default selection = first LIVE session, else first
+    if(!selected || !ss.find(s=>s.id===selected))
+      selected = (ss.find(isLive) || ss[0]).id;
+
+    const banner = `<div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px">
+      ${liveCount} live · ${ss.length} bot${ss.length!==1?'s':''} total
+      ${ss.length>liveCount?`<span style="color:var(--dim)">· stale sessions dimmed</span>`:''}</div>`;
+
     const list = ss.map(s=>{
-      const fresh = (Date.now()-new Date(s.last_seen).getTime()) < 60_000;
+      const fresh = (Date.now()-new Date(s.last_seen).getTime()) < 90_000;
       const st = s.stats||{};
-      return `<div class="sess ${s.id===selected?'sel':''}" onclick="select('${s.id}')">
+      return `<div class="sess ${s.id===selected?'sel':''}" onclick="select('${s.id}')" style="${fresh?'':'opacity:.5'}">
         <div class="sess-head">
           <span class="sess-title"><span class="dot ${fresh?'on':'off'}"></span>
             ${esc(s.bot)} · ${esc(s.symbol)} ${esc(s.timeframe||'')}</span>
@@ -127,6 +147,21 @@
             <span class="badge paper" style="border-color:var(--line);color:var(--dim)">${ago(s.last_seen)}</span>
           </span>
         </div>
+        ${st.mode!==undefined && st.basket_open!==undefined ? `
+        <div class="metrics">
+          <div class="m"><div class="k">Equity</div><div class="v">${fmtMoney(s.equity)}</div></div>
+          <div class="m"><div class="k">Basket</div><div class="v">${st.basket_open?'● OPEN':'○ flat'}</div></div>
+          <div class="m"><div class="k">Legs</div><div class="v">${(st.legs&&st.legs.length)||0}</div></div>
+          <div class="m"><div class="k">Basket P/L</div>
+            <div class="v ${(st.basket_pl||0)>=0?'up':'down'}">${st.basket_pl!=null?fmtMoney(st.basket_pl):'—'}</div></div>
+          <div class="m"><div class="k">Peak</div><div class="v">${st.peak!=null?fmtMoney(st.peak):'—'}</div></div>
+          <div class="m"><div class="k">Protect</div><div class="v" style="font-size:11px">${st.trail_armed?'TRAIL':st.be_armed?'BE':'—'}</div></div>
+        </div>
+        ${st.legs&&st.legs.length?`<div style="font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">
+          ${st.legs.map(l=>`<span style="border:1px solid var(--line);border-radius:5px;padding:2px 7px">
+            ${l.d>0?'▲':'▼'} ${esc(l.s)} <span style="color:${(l.pl||0)>=0?'var(--up)':'var(--down)'}">${fmtMoney(l.pl)}</span></span>`).join('')}
+        </div>`:''}
+        ` : `
         <div class="metrics">
           <div class="m"><div class="k">Equity</div><div class="v">${fmtMoney(s.equity)}</div></div>
           <div class="m"><div class="k">Balance</div><div class="v">${fmtMoney(s.balance)}</div></div>
@@ -135,11 +170,11 @@
           <div class="m"><div class="k">Closed</div><div class="v">${st.positions_closed??'—'}</div></div>
           <div class="m"><div class="k">Realized</div>
             <div class="v ${ (st.realized_pl||0)>=0?'up':'down'}">${st.realized_pl!=null?fmtMoney(st.realized_pl):'—'}</div></div>
-        </div>
+        </div>`}
       </div>`;
     }).join('');
 
-    let html = `<div class="sessions">${list}</div>
+    let html = `${banner}<div class="sessions">${list}</div>
       <div class="section-h">Live console — selected session</div>
       <div class="console" id="console"><div class="empty">loading…</div></div>
       <div id="ai-slot"></div>`;
