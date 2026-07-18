@@ -51,6 +51,15 @@
   .lv .k{font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--dim)}
   .lv .v{font-family:var(--mono);font-size:14px;font-weight:600;margin-top:3px}
   .lv.entry .v{color:var(--gold)}.lv.sl .v{color:var(--red)}.lv.tp .v{color:var(--green)}
+  .upgrade-banner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;
+    background:radial-gradient(120% 140% at 100% 0%,rgba(245,166,35,.12),transparent 55%),var(--panel);
+    border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:20px 22px;margin-bottom:18px}
+  .upgrade-banner b{font-size:15px}
+  .upgrade-banner p{color:var(--muted);font-size:12.5px;margin-top:5px;max-width:560px;line-height:1.55}
+  .preview-wrap{position:relative;margin-bottom:6px}
+  .preview.sig{opacity:.85}
+  .preview-fade{position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,transparent 40%,var(--bg) 95%)}
   .locked-card{background:radial-gradient(120% 140% at 100% 0%,rgba(245,166,35,.1),transparent 55%),var(--panel);
     border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:30px;text-align:center}
   .locked-card h2{font-size:18px;margin-bottom:8px}
@@ -107,11 +116,43 @@
 
   function render(){
     if(!ent.allowed || !ent.allowed.length){
+      // PREVIEW state — show what signals look like, then a soft upgrade nudge.
+      // Never a hard paywall on arrival.
+      const sample={symbol:'XAUUSD',category:'metals',side:'buy',timeframe:'H1',
+        entry_low:2397,entry_high:2403,sl:2382,tp:2436,rr:2.0};
+      const ez=`${sample.entry_low} – ${sample.entry_high}`;
       document.getElementById('content').innerHTML=`
-        <div class="locked-card"><h2>🔒 Signals are a subscriber feature</h2>
-        <p>Entry zones, stops and targets across forex, crypto, stocks and metals —
-           live to your dashboard and Telegram. Included with the Indicator Suite and Bundle.</p>
-        <a class="btn" href="/pricing.html">See plans →</a></div>`;
+        <div class="upgrade-banner">
+          <div>
+            <b>Signals unlock with the Indicator Suite &amp; Bundle</b>
+            <p>SKLZ Radar maps forex, crypto, stocks &amp; metals and posts entry, stop and target —
+               to your dashboard and private Telegram channels. Here's what a signal looks like:</p>
+          </div>
+          <a class="btn" href="/pricing.html">View plans →</a>
+        </div>
+        <div class="preview-wrap">
+          <div class="sig preview">
+            <div class="sig-head">
+              <span class="sig-side buy">🟢 BUY</span>
+              <span class="sig-sym">${sample.symbol}</span>
+              <span class="sig-cat">${sample.category}</span>
+              <span class="sig-tf">${sample.timeframe}</span>
+              <span class="sig-time">sample</span>
+            </div>
+            <div class="levels">
+              <div class="lv entry"><div class="k">Entry zone</div><div class="v">${ez}</div></div>
+              <div class="lv sl"><div class="k">Stop loss</div><div class="v">${sample.sl}</div></div>
+              <div class="lv tp"><div class="k">Take profit</div><div class="v">${sample.tp}</div></div>
+              <div class="lv"><div class="k">R : R</div><div class="v">${sample.rr}</div></div>
+            </div>
+          </div>
+          <div class="preview-fade"></div>
+        </div>
+        <div style="text-align:center;margin-top:8px">
+          <a class="btn" href="/pricing.html">Unlock signals →</a>
+          <div style="font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:10px">
+            Included with Indicator Suite (forex + metals) and Bundle (all markets).</div>
+        </div>`;
       return;
     }
     // filter chips: allowed = interactive, others = locked
