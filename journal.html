@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Journal — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;--purple:#A78BFA;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .shell{display:grid;grid-template-columns:226px 1fr;min-height:100vh}
+  @media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}}
+  .side{border-right:1px solid var(--line);background:var(--panel);padding:20px 14px;
+    position:sticky;top:0;height:100vh;overflow-y:auto}
+  .logo{height:44px;margin:0 8px 22px}
+  .nav-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--dim);margin:18px 10px 7px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;
+    color:var(--muted);font-size:13.5px;cursor:pointer;margin-bottom:2px}
+  .nav-item:hover{background:var(--panel2);color:var(--ink)}
+  .nav-item.on{background:rgba(245,166,35,.1);color:var(--gold)}
+  .nav-item .i{width:18px;text-align:center}
+  .main{padding:24px 28px 60px;min-width:0;max-width:1120px}
+  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:20px}
+  .tabs{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+  .tab{font-family:var(--mono);font-size:12px;padding:9px 16px;color:var(--muted);cursor:pointer;
+    border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  @media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px}
+  .kpi .k{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+  .kpi .v{font-family:var(--mono);font-size:23px;font-weight:700;margin-top:6px}
+  .v.pos{color:var(--green)}.v.neg{color:var(--red)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+  .card h2{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;
+    color:var(--muted);margin-bottom:14px}
+  .honest{background:radial-gradient(120% 140% at 0% 0%,rgba(167,139,250,.12),transparent 55%),var(--panel);
+    border-color:rgba(167,139,250,.3)}
+  .honest h2{color:var(--purple)}
+  .edge-row,.flip-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;
+    border-bottom:1px solid var(--line);font-size:13px}
+  .edge-row:last-child,.flip-row:last-child{border-bottom:none}
+  .tag{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:5px;margin-left:6px}
+  .tag.good{background:rgba(52,211,153,.12);color:var(--green)}
+  .tag.bad{background:rgba(248,113,113,.12);color:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--dim);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--muted)}
+  tr:hover td{background:var(--panel2)}
+  .pill{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:5px}
+  .pill.win{background:rgba(52,211,153,.12);color:var(--green)}
+  .pill.loss{background:rgba(248,113,113,.12);color:var(--red)}
+  .pill.open{background:rgba(139,148,168,.12);color:var(--muted)}
+  label{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px;color:var(--ink);font-family:var(--mono);font-size:13px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  .row{display:flex;gap:12px}.row>div{flex:1}
+  .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;
+    border-radius:9px;padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer}
+  .btn.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+  .review-box{white-space:pre-wrap;line-height:1.7;font-size:13.5px}
+  .review-box .h{color:var(--purple);font-weight:600;font-size:15px;margin-bottom:10px}
+  .review-box .sec{margin:12px 0}
+  .review-box .lbl{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--dim)}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:30px}
+  svg .grid-l{stroke:var(--line);stroke-width:1}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;
+    font-size:13px;transition:transform .28s;z-index:99}
+  .toast.on{transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+    <div class="nav-sec">Workspace</div>
+    <div class="nav-item" onclick="location.href='/dashboard.html'"><span class="i">◈</span>Dashboard</div>
+    <div class="nav-item" onclick="location.href='/tradegpt.html'"><span class="i">🧠</span>TradeGPT</div>
+    <div class="nav-item" onclick="location.href='/bot.html'"><span class="i">🖥️</span>Bot Monitor</div>
+    <div class="nav-sec">Tools</div>
+    <div class="nav-item" onclick="location.href='/lotcalc.html'"><span class="i">🧮</span>Lot Calculator</div>
+    <div class="nav-item" onclick="location.href='/indicators.html'"><span class="i">📊</span>Indicators</div>
+    <div class="nav-item on"><span class="i">📓</span>Journal</div>
+    <div class="nav-sec">Account</div>
+    <div class="nav-item" onclick="location.href='/pricing.html'"><span class="i">💳</span>Billing</div>
+    <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
+  </aside>
+  <main class="main">
+    <h1>Trading Journal</h1>
+    <div class="sub">The journal that tells you the truth — which of your setups actually have edge, and which just feel like they do.</div>
+    <div class="tabs">
+      <div class="tab on" onclick="tab('overview')">Overview</div>
+      <div class="tab" onclick="tab('trades')">Trades</div>
+      <div class="tab" onclick="tab('add')">Log a trade</div>
+      <div class="tab" onclick="tab('review')">AI Review</div>
+    </div>
+
+    <div id="v-overview">
+      <div class="cards" id="kpis"></div>
+      <div class="card"><h2>Equity curve</h2><div id="eqcurve"><div class="empty">No closed trades yet.</div></div></div>
+      <div class="card honest"><h2>⚖ The honest read — what actually has edge</h2>
+        <div id="edges"></div></div>
+      <div class="card"><h2>By setup</h2><div id="by-setup"></div></div>
+      <div class="card"><h2>By session</h2><div id="by-session"></div></div>
+    </div>
+
+    <div id="v-trades" style="display:none">
+      <div class="card"><table><thead><tr>
+        <th>Date</th><th>Symbol</th><th>Setup</th><th>Reason</th><th>Session</th>
+        <th>Outcome</th><th>P/L</th><th>R</th></tr></thead>
+        <tbody id="trades-body"></tbody></table></div>
+    </div>
+
+    <div id="v-add" style="display:none">
+      <div class="card" style="max-width:640px">
+        <h2>Log a trade</h2>
+        <div class="row">
+          <div><label>Symbol</label><input id="f-symbol" placeholder="XAUUSD"/></div>
+          <div><label>Side</label><select id="f-side"><option>buy</option><option>sell</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>Entry</label><input id="f-entry" type="number" step="any"/></div>
+          <div><label>Exit</label><input id="f-exit" type="number" step="any"/></div>
+          <div><label>Lots</label><input id="f-lots" type="number" step="any"/></div>
+        </div>
+        <div class="row">
+          <div><label>P/L (account $)</label><input id="f-pnl" type="number" step="any"/></div>
+          <div><label>R multiple</label><input id="f-r" type="number" step="any" placeholder="e.g. 2 or -1"/></div>
+        </div>
+        <label>Setup <span style="color:var(--dim)">(name it — this is how edge is measured)</span></label>
+        <input id="f-setup" placeholder="London sweep / SMC OB / Breakout ..."/>
+        <label>Reason — WHY did you take it? <span style="color:var(--dim)">(the honest part)</span></label>
+        <textarea id="f-reason" rows="2" placeholder="USD weak on strength meter, price swept Asia low then reclaimed..."></textarea>
+        <div class="row">
+          <div><label>Session</label><select id="f-session">
+            <option value="">—</option><option>asia</option><option>london</option>
+            <option>london_ny_overlap</option><option>newyork</option></select></div>
+          <div><label>Emotion</label><select id="f-emotion">
+            <option value="">—</option><option>calm</option><option>fomo</option>
+            <option>revenge</option><option>hesitant</option><option>confident</option></select></div>
+          <div><label>Execution grade</label><select id="f-grade">
+            <option value="">—</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+        </div>
+        <button class="btn" style="margin-top:16px" onclick="saveTrade()">Save trade</button>
+      </div>
+    </div>
+
+    <div id="v-review" style="display:none">
+      <div class="card honest">
+        <h2>⚖ AI Session Review — honest about your edge</h2>
+        <button class="btn ghost" onclick="runReview()" id="review-btn">Run review</button>
+        <div id="review-out" style="margin-top:16px"></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;
+    t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function money(n){return (n>=0?'+':'')+'$'+(+n).toLocaleString(undefined,{maximumFractionDigits:0})}
+
+  function tab(name){
+    ['overview','trades','add','review'].forEach(v=>{
+      document.getElementById('v-'+v).style.display=v===name?'block':'none';
+    });
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    event.target.classList.add('on');
+    if(name==='trades') loadTrades();
+  }
+
+  async function loadAnalytics(){
+    try{
+      const r=await fetch(API+'/api/journal/analytics',{headers:H()});
+      const a=await r.json();
+      if(a.empty || !a.trades){
+        document.getElementById('kpis').innerHTML='<div class="empty" style="grid-column:1/-1">No trades yet — log your first one to see your edge.</div>';
+        return;
+      }
+      const pf=a.profit_factor==null?'∞':a.profit_factor;
+      document.getElementById('kpis').innerHTML=`
+        <div class="kpi"><div class="k">Trades</div><div class="v">${a.trades}</div></div>
+        <div class="kpi"><div class="k">Win rate</div><div class="v">${(a.win_rate*100).toFixed(0)}%</div></div>
+        <div class="kpi"><div class="k">Net P/L</div><div class="v ${a.total_pnl>=0?'pos':'neg'}">${money(a.total_pnl)}</div></div>
+        <div class="kpi"><div class="k">Profit factor</div><div class="v">${pf}</div></div>
+        <div class="kpi"><div class="k">Expectancy</div><div class="v ${a.expectancy>=0?'pos':'neg'}">${money(a.expectancy)}</div></div>
+        <div class="kpi"><div class="k">Avg R</div><div class="v">${a.avg_r??'—'}</div></div>
+        <div class="kpi"><div class="k">Max DD</div><div class="v neg">${money(a.max_drawdown)}</div></div>
+        <div class="kpi"><div class="k">Avg win / loss</div><div class="v" style="font-size:15px">${money(a.avg_win)} / ${money(a.avg_loss)}</div></div>`;
+      drawCurve(a.equity_curve);
+      drawHonest(a);
+      drawBucket('by-setup',a.by_setup);
+      drawBucket('by-session',a.by_session);
+    }catch(e){ toast('Could not load analytics'); }
+  }
+
+  function drawCurve(curve){
+    if(!curve||curve.length<2){return;}
+    const w=880,h=200,pad=30;
+    const eqs=curve.map(p=>p.eq),min=Math.min(0,...eqs),max=Math.max(0,...eqs);
+    const rng=(max-min)||1;
+    const pts=curve.map((p,i)=>{
+      const x=pad+(i/(curve.length-1))*(w-2*pad);
+      const y=h-pad-((p.eq-min)/rng)*(h-2*pad);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;}).join(' ');
+    const zeroY=h-pad-((0-min)/rng)*(h-2*pad);
+    document.getElementById('eqcurve').innerHTML=`
+      <svg viewBox="0 0 ${w} ${h}" style="width:100%">
+        <line class="grid-l" x1="${pad}" y1="${zeroY}" x2="${w-pad}" y2="${zeroY}" stroke-dasharray="3 3"/>
+        <polyline points="${pts}" fill="none" stroke="${eqs[eqs.length-1]>=0?'var(--green)':'var(--red)'}" stroke-width="2"/>
+      </svg>`;
+  }
+
+  function drawHonest(a){
+    const edges=a.edge_setups||[], flips=a.coin_flip_setups||[];
+    let html='';
+    if(edges.length){
+      html+='<div style="font-family:var(--mono);font-size:10px;color:var(--green);margin-bottom:6px">✓ REAL EDGE — the data backs these</div>';
+      html+=edges.map(e=>`<div class="edge-row"><span>${esc(e.setup)}
+        <span class="tag good">${(e.win_rate*100).toFixed(0)}% · ${money(e.pnl)} · n=${e.n}</span></span></div>`).join('');
+    }
+    if(flips.length){
+      html+='<div style="font-family:var(--mono);font-size:10px;color:var(--red);margin:14px 0 6px">⚠ COIN FLIPS — you may believe in these, the data doesn\'t</div>';
+      html+=flips.map(f=>`<div class="flip-row"><span>${esc(f.setup)}
+        <span class="tag bad">${(f.win_rate*100).toFixed(0)}% · n=${f.n}</span></span></div>`).join('');
+    }
+    if(!edges.length && !flips.length)
+      html='<div class="empty">Not enough sample yet. Log ~8+ trades per setup and the honest read appears here.</div>';
+    document.getElementById('edges').innerHTML=html;
+  }
+
+  function drawBucket(id,b){
+    const rows=Object.entries(b||{}).sort((x,y)=>y[1].pnl-x[1].pnl);
+    if(!rows.length){document.getElementById(id).innerHTML='<div class="empty">—</div>';return;}
+    document.getElementById(id).innerHTML=rows.map(([k,v])=>`
+      <div class="edge-row"><span>${esc(k)}</span>
+        <span style="font-family:var(--mono);font-size:12px">
+          <span style="color:var(--muted)">${(v.win_rate*100).toFixed(0)}% · n=${v.n}</span>
+          <span class="${v.pnl>=0?'v pos':'v neg'}" style="margin-left:10px">${money(v.pnl)}</span></span></div>`).join('');
+  }
+
+  async function loadTrades(){
+    try{
+      const r=await fetch(API+'/api/journal/trades?limit=200',{headers:H()});
+      const d=await r.json();
+      const body=document.getElementById('trades-body');
+      if(!d.trades||!d.trades.length){body.innerHTML='<tr><td colspan="8" class="empty">No trades yet.</td></tr>';return;}
+      body.innerHTML=d.trades.map(t=>`<tr>
+        <td>${(t.opened_at||'').slice(0,10)}</td>
+        <td style="color:var(--ink)">${esc(t.symbol)}</td>
+        <td>${esc(t.setup||'—')}</td>
+        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.reason||'')}</td>
+        <td>${esc(t.session||'—')}</td>
+        <td><span class="pill ${t.outcome}">${t.outcome}</span></td>
+        <td class="${(t.pnl||0)>=0?'v pos':'v neg'}" style="font-family:var(--mono)">${t.pnl!=null?money(t.pnl):'—'}</td>
+        <td style="font-family:var(--mono)">${t.r_multiple!=null?t.r_multiple:'—'}</td></tr>`).join('');
+    }catch(e){ toast('Could not load trades'); }
+  }
+
+  async function saveTrade(){
+    const body={
+      symbol:document.getElementById('f-symbol').value.trim(),
+      side:document.getElementById('f-side').value,
+      entry_price:+document.getElementById('f-entry').value||null,
+      exit_price:+document.getElementById('f-exit').value||null,
+      lots:+document.getElementById('f-lots').value||null,
+      pnl:document.getElementById('f-pnl').value!==''?+document.getElementById('f-pnl').value:null,
+      r_multiple:document.getElementById('f-r').value!==''?+document.getElementById('f-r').value:null,
+      setup:document.getElementById('f-setup').value.trim(),
+      reason:document.getElementById('f-reason').value.trim(),
+      session:document.getElementById('f-session').value,
+      emotion:document.getElementById('f-emotion').value,
+      grade:document.getElementById('f-grade').value,
+    };
+    if(!body.symbol){toast('Enter a symbol');return;}
+    try{
+      const r=await fetch(API+'/api/journal/trade',{method:'POST',headers:H(),body:JSON.stringify(body)});
+      if(!r.ok){const e=await r.json();toast(e.detail||'Save failed');return;}
+      toast('Trade logged');
+      ['f-symbol','f-entry','f-exit','f-lots','f-pnl','f-r','f-setup','f-reason'].forEach(id=>document.getElementById(id).value='');
+      loadAnalytics();
+    }catch(e){ toast('Network error'); }
+  }
+
+  async function runReview(){
+    const btn=document.getElementById('review-btn');btn.disabled=true;btn.textContent='Analyzing your edge…';
+    try{
+      const r=await fetch(API+'/api/journal/review',{method:'POST',headers:H()});
+      const d=await r.json();const v=d.review||{};
+      document.getElementById('review-out').innerHTML=`<div class="review-box">
+        <div class="h">${esc(v.headline||'')}</div>
+        ${v.what_works?`<div class="sec"><div class="lbl">✓ What works</div>${esc(v.what_works)}</div>`:''}
+        ${v.what_doesnt?`<div class="sec"><div class="lbl">⚠ What doesn't (but you may believe it does)</div>${esc(v.what_doesnt)}</div>`:''}
+        ${v.psychology?`<div class="sec"><div class="lbl">Psychology</div>${esc(v.psychology)}</div>`:''}
+        ${v.execution?`<div class="sec"><div class="lbl">Execution</div>${esc(v.execution)}</div>`:''}
+        ${v.actions?`<div class="sec"><div class="lbl">Actions</div>${v.actions.map(a=>'• '+esc(a)).join('<br>')}</div>`:''}
+        ${v.one_thing?`<div class="sec" style="color:var(--gold)"><div class="lbl">The one thing this week</div>${esc(v.one_thing)}</div>`:''}
+      </div>`;
+    }catch(e){ toast('Review failed'); }
+    btn.disabled=false;btn.textContent='Re-run review';
+  }
+
+  async function logout(){
+    try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}
+    localStorage.removeItem('sklz_access');location.href='/';
+  }
+  loadAnalytics();
+</script>
+</body></html>
