@@ -175,7 +175,7 @@
       const d=await r.json();const t=d.top||{};
       const setups=(t.setups||[]).map(s=>'<div class="ai-item"><b>'+esc(s.symbol)+'</b> <span style="font-family:var(--mono);font-size:10px;color:'+(s.bias==='long'?'var(--green)':'var(--red)')+'">'+esc(s.bias||'')+'</span><div style="color:var(--muted);margin-top:2px">'+esc(s.why||'')+'</div></div>').join('')||'<div class="ai-item" style="color:var(--dim)">No clean setups right now.</div>';
       const traps=(t.traps||[]).map(s=>'<div class="ai-item"><b>'+esc(s.symbol)+'</b><div style="color:var(--muted);margin-top:2px">'+esc(s.why||'')+'</div></div>').join('')||'<div class="ai-item" style="color:var(--dim)">Nothing screaming trap.</div>';
-      document.getElementById('airead').innerHTML='<h2>\u2696 Today\\'s honest read</h2><div class="ai-cols"><div class="ai-col good"><h3>\u2713 Cleaner setups</h3>'+setups+'</div><div class="ai-col bad"><h3>\u26a0 Traps \u2014 tempting but late</h3>'+traps+'</div></div>'+(t.note?'<div class="ai-note">'+esc(t.note)+'</div>':'');
+      document.getElementById('airead').innerHTML='<h2>\u2696 Today\u2019s honest read</h2><div class="ai-cols"><div class="ai-col good"><h3>\u2713 Cleaner setups</h3>'+setups+'</div><div class="ai-col bad"><h3>\u26a0 Traps \u2014 tempting but late</h3>'+traps+'</div></div>'+(t.note?'<div class="ai-note">'+esc(t.note)+'</div>':'');
     }catch(e){document.getElementById('airead').innerHTML='<div class="ai-load">Honest read unavailable right now.</div>';}
   }
   async function openRead(sym){
