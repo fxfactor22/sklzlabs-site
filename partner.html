@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Partner Program — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;--green:#34D399;--red:#F87171;--purple:#A78BFA;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .shell{display:grid;grid-template-columns:226px 1fr;min-height:100vh}
+  @media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}}
+  .side{border-right:1px solid var(--line);background:var(--panel);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .logo{height:44px;margin:0 8px 22px}
+  .nav-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:18px 10px 7px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);font-size:13.5px;cursor:pointer;margin-bottom:2px}
+  .nav-item:hover{background:var(--panel2);color:var(--ink)}
+  .nav-item.on{background:rgba(245,166,35,.1);color:var(--gold)}
+  .nav-item .i{width:18px;text-align:center}
+  .main{padding:24px 28px 60px;min-width:0;max-width:960px}
+  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+  .toprow{display:grid;grid-template-columns:1fr 1.3fr;gap:14px;margin-bottom:16px}
+  @media(max-width:700px){.toprow{grid-template-columns:1fr}}
+  .levelcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .lvl-name{font-family:var(--mono);font-size:18px;font-weight:700;margin-bottom:12px}
+  .lvl-bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-bottom:8px}
+  .lvl-bar i{display:block;height:100%;border-radius:4px}
+  .lvl-hint{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+  .linkcard{background:radial-gradient(120% 140% at 100% 0%,rgba(245,166,35,.1),transparent 55%),var(--panel);border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:18px 20px}
+  .lb-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);margin-bottom:10px}
+  .lb-row{display:flex;gap:10px}
+  .lb-row input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:var(--ink);font-family:var(--mono);font-size:12.5px}
+  .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;border-radius:9px;padding:11px 18px;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap}
+  .btn.sm{padding:10px 14px;font-size:12.5px}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  @media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px}
+  .kpi .k{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+  .kpi .v{font-family:var(--mono);font-size:24px;font-weight:700;margin-top:6px}
+  .walletcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+  .wallet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+  .wallet-head h2{font-size:14px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .wgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  @media(max-width:700px){.wgrid{grid-template-columns:repeat(2,1fr)}}
+  .wcell{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .wk{font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--dim)}
+  .wv{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:4px}
+  .ledger{border-top:1px solid var(--line);padding-top:10px}
+  .lrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+  .lrow:last-child{border:none}
+  .lstat{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:5px;text-transform:uppercase}
+  .lstat.cleared{background:rgba(52,211,153,.14);color:var(--green)}
+  .lstat.pending{background:rgba(139,148,168,.12);color:var(--muted)}
+  .lstat.paid{background:rgba(29,169,224,.14);color:var(--blue)}
+  .lamt{margin-left:auto;font-family:var(--mono);font-weight:600;color:var(--green)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+  .card h2{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:14px}
+  .crow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .crow:last-child{border:none}
+  .cstat{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px}
+  .cstat.on{background:rgba(52,211,153,.14);color:var(--green)}
+  .cstat.off{background:rgba(248,113,113,.12);color:var(--red)}
+  .cmo{font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .camt{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--gold)}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:30px}
+  .disc{font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;line-height:1.7;margin-top:18px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
+  .toast.on{transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+    <div class="nav-sec">Workspace</div>
+    <div class="nav-item" onclick="location.href='/dashboard.html'"><span class="i">◈</span>Dashboard</div>
+    <div class="nav-item" onclick="location.href='/tradegpt.html'"><span class="i">🧠</span>TradeGPT</div>
+    <div class="nav-item" onclick="location.href='/bot.html'"><span class="i">🖥️</span>Bot Monitor</div>
+    <div class="nav-item" onclick="location.href='/signals.html'"><span class="i">📡</span>Signals</div>
+    <div class="nav-sec">Tools</div>
+    <div class="nav-item" onclick="location.href='/lotcalc.html'"><span class="i">🧮</span>Lot Calculator</div>
+    <div class="nav-item" onclick="location.href='/indicators.html'"><span class="i">📊</span>Indicators</div>
+    <div class="nav-item" onclick="location.href='/journal.html'"><span class="i">📓</span>Journal</div>
+    <div class="nav-item" onclick="location.href='/scanner.html'"><span class="i">🛰️</span>Scanner</div>
+    <div class="nav-sec">Learn &amp; Earn</div>
+    <div class="nav-item" onclick="location.href='/academy.html'"><span class="i">🎓</span>Academy</div>
+    <div class="nav-item on"><span class="i">🤝</span>Partner</div>
+    <div class="nav-sec">Account</div>
+    <div class="nav-item" onclick="location.href='/pricing.html'"><span class="i">💳</span>Billing</div>
+    <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
+  </aside>
+  <main class="main">
+    <h1>Partner Program</h1>
+    <div class="sub">Earn 50% recurring commission on every membership you refer. The more active customers, the higher your level.</div>
+    <div id="content"><div class="empty">Loading…</div></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2400)}
+  function money(n){return '$'+(+n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+  const LEVEL_COLORS={'Partner':'#8B94A8','Elite Partner':'#1DA9E0','Ambassador':'#A78BFA','Legend':'#F5A623'};
+
+  async function load(){
+    try{
+      const r=await fetch(API+'/api/partner/me',{headers:H()});
+      const d=await r.json();
+      if(d.detail){document.getElementById('content').innerHTML='<div class="empty">'+esc(d.detail)+'</div>';return;}
+      render(d);
+    }catch(e){document.getElementById('content').innerHTML='<div class="empty">Could not load partner data.</div>';}
+  }
+
+  function render(d){
+    const lvl=d.level, lc=LEVEL_COLORS[lvl.name]||'#8B94A8';
+    const prog=lvl.next?Math.min(100,Math.round((d.customers.active/lvl.next_at)*100)):100;
+    const custs=(d.customer_list||[]).map(c=>'<div class="crow"><span>'+esc(c.masked)+'</span>'+
+      '<span class="cstat '+(c.active?'on':'off')+'">'+(c.active?'active':'churned')+'</span>'+
+      '<span class="cmo">'+(c.months||0)+' mo</span>'+
+      '<span class="camt">'+money(c.commission)+'/mo</span></div>').join('')
+      ||'<div class="empty" style="padding:20px">No customers yet. Share your link to start earning.</div>';
+    const ledger=(d.recent_commissions||[]).map(e=>'<div class="lrow"><span>'+
+      (e.bonus>0?'\uD83C\uDF81 retention bonus + commission':'Monthly commission')+'</span>'+
+      '<span class="lstat '+esc(e.status)+'">'+esc(e.status)+'</span>'+
+      '<span class="lamt">'+money(e.amount)+'</span></div>').join('')
+      ||'<div class="empty" style="padding:16px">No commissions yet.</div>';
+
+    document.getElementById('content').innerHTML=
+      '<div class="toprow">'+
+        '<div class="levelcard" style="border-color:'+lc+'44">'+
+          '<div class="lvl-name" style="color:'+lc+'">'+esc(lvl.name)+'</div>'+
+          (lvl.next?'<div class="lvl-prog"><div class="lvl-bar"><i style="width:'+prog+'%;background:'+lc+'"></i></div>'+
+            '<div class="lvl-hint">'+lvl.to_next+' more active customers \u2192 '+esc(lvl.next)+'</div></div>'
+            :'<div class="lvl-hint">Top level reached \uD83C\uDFC6</div>')+
+        '</div>'+
+        '<div class="linkcard"><div class="lb-label">Your referral link</div>'+
+          '<div class="lb-row"><input id="afflink" readonly value="'+esc(d.link)+'"/>'+
+          '<button class="btn sm" onclick="copyLink()">Copy</button></div></div>'+
+      '</div>'+
+      '<div class="cards">'+
+        '<div class="kpi"><div class="k">Active customers</div><div class="v" style="color:var(--green)">'+d.customers.active+'</div></div>'+
+        '<div class="kpi"><div class="k">Monthly commission</div><div class="v" style="color:var(--gold)">'+money(d.mrr_commission)+'</div></div>'+
+        '<div class="kpi"><div class="k">Total earned</div><div class="v">'+money(d.wallet.earned)+'</div></div>'+
+        '<div class="kpi"><div class="k">Churned</div><div class="v" style="color:var(--muted)">'+d.customers.churned+'</div></div>'+
+      '</div>'+
+      '<div class="walletcard">'+
+        '<div class="wallet-head"><h2>\uD83D\uDCB0 Commission wallet</h2>'+
+          '<button class="btn" onclick="requestPayout()" '+(d.wallet.available<=0?'disabled':'')+'>Request payout ('+money(d.wallet.available)+')</button></div>'+
+        '<div class="wgrid">'+
+          '<div class="wcell"><div class="wk">Available</div><div class="wv" style="color:var(--green)">'+money(d.wallet.available)+'</div></div>'+
+          '<div class="wcell"><div class="wk">Pending</div><div class="wv">'+money(d.wallet.pending)+'</div></div>'+
+          '<div class="wcell"><div class="wk">Paid out</div><div class="wv">'+money(d.wallet.paid_out)+'</div></div>'+
+          '<div class="wcell"><div class="wk">Lifetime earned</div><div class="wv">'+money(d.wallet.earned)+'</div></div>'+
+        '</div>'+
+        '<div class="ledger">'+ledger+'</div></div>'+
+      '<div class="card"><h2>Your customers</h2><div class="custlist">'+custs+'</div></div>'+
+      '<div class="disc">50% recurring commission on each active membership. Payouts are processed manually by SKLZ Labs. '+
+        'You are responsible for any taxes on commissions earned.</div>';
+  }
+
+  function copyLink(){const i=document.getElementById('afflink');i.select();navigator.clipboard.writeText(i.value).then(()=>toast('Link copied!')).catch(()=>toast('Copy failed'));}
+  async function requestPayout(){
+    try{const r=await fetch(API+'/api/partner/request-payout',{method:'POST',headers:H()});const d=await r.json();
+      toast(d.ok?('Payout requested: '+money(d.requested)):(d.note||'Nothing to withdraw'));if(d.ok)load();}
+    catch(e){toast('Request failed');}
+  }
+  async function logout(){try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}localStorage.removeItem('sklz_access');location.href='/';}
+  load();
+
+</script>
+</body></html>
