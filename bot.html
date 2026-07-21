@@ -78,9 +78,14 @@
   <div id="adminpanel" style="display:none;background:#0F131C;border:1px solid rgba(245,166,35,.35);border-radius:12px;padding:16px;margin-bottom:16px">
   <div style="font-family:monospace;font-size:10px;color:#F5A623;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Admin — manual entry (learning)</div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <input id="o-bot" placeholder="bot (learning-runner)" style="flex:1;min-width:130px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"/>
-    <input id="o-sym" placeholder="SYMBOL e.g. XAUUSD" style="flex:1;min-width:120px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"/>
-    <input id="o-note" placeholder="your reasoning (the AI learns from this)" style="flex:2;min-width:200px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-size:12.5px"/>
+    <select id="o-bot" style="flex:1;min-width:130px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"><option value="learning-runner">learning-runner</option></select>
+    <select id="o-sym" style="flex:1;min-width:110px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px">
+      <option>XAUUSD</option><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>AUDUSD</option><option>USDCAD</option><option>NZDUSD</option><option>USDCHF</option><option>EURGBP</option><option>EURJPY</option><option>GBPJPY</option><option>XAGUSD</option><option>US30</option><option>NAS100</option><option>SPX500</option><option>GER40</option><option>UK100</option><option>USOIL</option><option>BTCUSD</option><option>ETHUSD</option>
+    </select>
+    <input id="o-lots" type="number" step="0.01" placeholder="lots (auto)" style="width:96px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"/>
+    <input id="o-sl" type="number" step="0.00001" placeholder="SL (auto)" style="width:104px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"/>
+    <input id="o-tp" type="number" step="0.00001" placeholder="TP (none)" style="width:104px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"/>
+    <input id="o-note" placeholder="your reasoning (the AI learns from this)" style="flex:2;min-width:180px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-size:12.5px"/>
     <button onclick="sendOrder('buy')" style="background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.5);color:#34D399;border-radius:8px;padding:9px 16px;font-family:monospace;font-weight:700;cursor:pointer">▲ BUY</button>
     <button onclick="sendOrder('sell')" style="background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.5);color:#F87171;border-radius:8px;padding:9px 16px;font-family:monospace;font-weight:700;cursor:pointer">▼ SELL</button>
   </div>
@@ -118,7 +123,7 @@
     }catch(e){}
   }
   async function sendOrder(side){
-    const bot=document.getElementById('o-bot').value.trim()||'learning-runner';
+    const bot=document.getElementById('o-bot').value||'learning-runner';
     const sym=document.getElementById('o-sym').value.trim().toUpperCase();
     const note=document.getElementById('o-note').value.trim();
     if(!sym){alert('Enter a symbol');return;}
@@ -127,12 +132,17 @@
     try{
       const r=await fetch(API_BASE+'/api/bot/order',{method:'POST',
         headers:{'Authorization':'Bearer '+token(),'Content-Type':'application/json'},
-        body:JSON.stringify({bot_name:bot,symbol:sym,side:side,note:note})});
+        body:JSON.stringify({bot_name:bot,symbol:sym,side:side,note:note,
+          lots:+document.getElementById('o-lots').value||0,
+          sl:+document.getElementById('o-sl').value||0,
+          tp:+document.getElementById('o-tp').value||0})});
       const d=await r.json();
       alert(d.ok?'✓ Order queued — executes within ~30s':(d.reason||d.detail||'failed'));
       if(d.ok)document.getElementById('o-note').value='';
     }catch(e){alert('Network error');}
   }
+  function fillBots(names){const s=document.getElementById('o-bot');if(!s||!names.length)return;
+    s.innerHTML=names.map(n=>'<option>'+n+'</option>').join('');}
   checkAdmin();
   async function botCmd(bot,cmd){
     try{
@@ -226,6 +236,7 @@
       <div class="console" id="console"><div class="empty">loading…</div></div>
       <div id="ai-slot"></div>`;
     document.getElementById('content').innerHTML = html;
+    try{fillBots([...new Set(ss.map(s=>s.bot).filter(Boolean))]);}catch(e){}
     loadEvents(ss.find(s=>s.id===selected));
   }
 
