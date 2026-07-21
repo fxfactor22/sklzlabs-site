@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Welcome — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;--green:#34D399;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+    display:grid;place-items:center;padding:20px}
+  .card{max-width:520px;width:100%;background:var(--panel);border:1px solid var(--line);
+    border-radius:18px;padding:34px;text-align:center}
+  .tick{width:58px;height:58px;border-radius:50%;background:rgba(52,211,153,.12);
+    border:1px solid rgba(52,211,153,.4);display:grid;place-items:center;font-size:26px;
+    margin:0 auto 16px;color:var(--green)}
+  h1{font-size:23px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:13.5px;margin:10px 0 20px;line-height:1.65}
+  .upsell{background:
+    radial-gradient(130% 160% at 100% 0%, rgba(245,166,35,.18), transparent 55%),
+    var(--panel2);border:1px solid rgba(245,166,35,.35);border-radius:14px;
+    padding:20px;margin:18px 0;text-align:left}
+  .upsell .k{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--gold);
+    margin-bottom:8px}
+  .upsell h2{font-size:17px;margin-bottom:6px}
+  .upsell p{color:var(--muted);font-size:12.5px;line-height:1.6}
+  .big{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;
+    border-radius:9px;padding:13px;font-weight:700;font-size:14.5px;cursor:pointer;
+    width:100%;margin-top:14px}
+  .no{display:block;margin-top:11px;font-family:var(--mono);font-size:11px;color:var(--dim);
+    cursor:pointer;text-decoration:underline;background:none;border:none;width:100%}
+  .go{display:inline-block;background:var(--panel2);border:1px solid var(--line);
+    border-radius:9px;padding:11px 20px;font-size:13.5px;color:var(--ink);text-decoration:none}
+  .fine{font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-top:16px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="tick">✓</div>
+  <h1 id="title">Payment received — welcome aboard</h1>
+  <div class="sub" id="sub">Your subscription is active. Head to the Indicators page and
+    submit your TradingView username — access is added within a few hours.</div>
+
+  <div class="upsell" id="upsell" style="display:none">
+    <div class="k">ONE-TIME OFFER — ONLY ON THIS PAGE</div>
+    <h2>Add TradeGPT for $7 more today</h2>
+    <p>Upgrade to the full Bundle right now: all four indicators <b>plus</b> unlimited
+       AI chart analysis, position sizing and performance reviews.
+       <b>$7 charged today</b> to your card on file; your subscription renews at the
+       bundle price shown on the button. Cancel anytime.</p>
+    <button class="big" id="upsell-btn" onclick="acceptUpsell()">Yes — add TradeGPT · $7 today, then $49/mo</button>
+    <button class="no" onclick="declineUpsell()">No thanks — keep just the Indicator Suite at $29/mo</button>
+  </div>
+
+  <a class="go" href="/indicators.html" id="go">Activate my indicators →</a>
+  <div class="fine">Receipt sent by email · Manage or cancel anytime: Dashboard → Billing<br>
+    7-day money-back guarantee on your first purchase</div>
+</div>
+
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  const p = new URLSearchParams(location.search).get('p')||'';
+
+  async function init(){
+    if(p==='suite_monthly'){
+      // fetch founder availability so the button states the true renewal price
+      try{
+        const r=await fetch(API+'/api/billing/config',{headers:{'Authorization':'Bearer '+tok()}});
+        const d=await r.json();
+        const renews = (d.founder_remaining>0)? 39 : 49;
+        document.getElementById('upsell-btn').textContent =
+          `Yes — add TradeGPT · $7 today, then $${renews}/mo`;
+      }catch(e){}
+      document.getElementById('upsell').style.display='block';
+    }
+    if(p.startsWith('gpt')){
+      document.getElementById('sub').textContent=
+        'TradeGPT Pro is active. Open it from your dashboard and drop in your first chart.';
+      document.getElementById('go').textContent='Open TradeGPT →';
+      document.getElementById('go').href='/tradegpt.html';
+    }
+    if(p==='suite_lifetime'){
+      document.getElementById('title').textContent='Lifetime access — welcome aboard';
+    }
+  }
+  async function acceptUpsell(){
+    const b=document.getElementById('upsell-btn');
+    b.disabled=true; b.textContent='Upgrading…';
+    try{
+      const r=await fetch(API+'/api/billing/upsell',{method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok()}});
+      const d=await r.json();
+      if(r.ok){
+        document.getElementById('upsell').innerHTML=
+          `<div class="k">UPGRADED</div><h2>Bundle active 🎉</h2>
+           <p>$${d.charged_today} charged today · renews at $${d.renews_at}/mo · ${d.plan}.
+           TradeGPT is unlocked on your dashboard right now.</p>`;
+      }else{
+        b.disabled=false;
+        b.textContent='Try again — '+(d.detail||'upgrade failed');
+      }
+    }catch(e){ b.disabled=false; b.textContent='Network error — try again'; }
+  }
+  function declineUpsell(){ document.getElementById('upsell').style.display='none'; }
+  init();
+</script>
+</body>
+</html>

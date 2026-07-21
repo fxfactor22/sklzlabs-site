@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academy — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;--purple:#A78BFA;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .shell{display:grid;grid-template-columns:226px 1fr;min-height:100vh}
+  @media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}}
+  .side{border-right:1px solid var(--line);background:var(--panel);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .logo{height:44px;margin:0 8px 22px}
+  .nav-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:18px 10px 7px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);font-size:13.5px;cursor:pointer;margin-bottom:2px}
+  .nav-item:hover{background:var(--panel2);color:var(--ink)}
+  .nav-item.on{background:rgba(245,166,35,.1);color:var(--gold)}
+  .nav-item .i{width:18px;text-align:center}
+  .main{padding:24px 28px 60px;min-width:0;max-width:1080px}
+  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:20px}
+  .sec-h{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:24px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.grid{grid-template-columns:1fr}}
+  .item{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+  .item:hover{border-color:var(--gold)}
+  .item.locked{opacity:.7}
+  .thumb{position:relative;aspect-ratio:16/9;background:var(--panel2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+  .thumb .ph{font-size:28px;color:var(--dim)}
+  .thumb .lock{position:absolute;top:8px;right:8px;font-size:16px}
+  .livebadge{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px}
+  .meta{padding:12px 14px}
+  .meta .t{font-size:14px;font-weight:600;margin-bottom:4px}
+  .meta .d{font-size:12px;color:var(--muted);line-height:1.4;min-height:32px}
+  .meta .sub2{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px}
+  .upgrade-banner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;
+    background:radial-gradient(120% 140% at 100% 0%,rgba(245,166,35,.12),transparent 55%),var(--panel);
+    border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:18px 22px;margin-bottom:18px}
+  .upgrade-banner b{font-size:15px}.upgrade-banner p{color:var(--muted);font-size:12.5px;margin-top:5px;max-width:560px}
+  .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;border-radius:9px;padding:11px 20px;font-weight:700;font-size:14px;cursor:pointer;display:inline-block}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:40px}
+  label{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:var(--ink);font-family:var(--mono);font-size:13px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  .row{display:flex;gap:12px}.row>div{flex:1}
+  .player{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+  .player.open{display:flex}
+  .pbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:900px;width:100%;max-height:90vh;overflow-y:auto;padding:20px;position:relative}
+  .pbox.admin{max-width:520px}
+  .pbox .x{position:absolute;top:14px;right:16px;cursor:pointer;color:var(--muted);font-size:20px;z-index:2}
+  .pv{aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;margin-bottom:12px}
+  .pv iframe{width:100%;height:100%;border:0}
+  .pt{font-size:17px;font-weight:700}.pd{color:var(--muted);font-size:13px;margin-top:5px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
+  .toast.on{transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+    <div class="nav-sec">Workspace</div>
+    <div class="nav-item" onclick="location.href='/dashboard.html'"><span class="i">◈</span>Dashboard</div>
+    <div class="nav-item" onclick="location.href='/tradegpt.html'"><span class="i">🧠</span>TradeGPT</div>
+    <div class="nav-item" onclick="location.href='/bot.html'"><span class="i">🖥️</span>Bot Monitor</div>
+    <div class="nav-item" onclick="location.href='/signals.html'"><span class="i">📡</span>Signals</div>
+    <div class="nav-sec">Tools</div>
+    <div class="nav-item" onclick="location.href='/lotcalc.html'"><span class="i">🧮</span>Lot Calculator</div>
+    <div class="nav-item" onclick="location.href='/indicators.html'"><span class="i">📊</span>Indicators</div>
+    <div class="nav-item" onclick="location.href='/journal.html'"><span class="i">📓</span>Journal</div>
+    <div class="nav-item" onclick="location.href='/scanner.html'"><span class="i">🛰️</span>Scanner</div>
+    <div class="nav-sec">Learn &amp; Earn</div>
+    <div class="nav-item on"><span class="i">🎓</span>Academy</div>
+    <div class="nav-sec">Account</div>
+    <div class="nav-item" onclick="location.href='/pricing.html'"><span class="i">💳</span>Billing</div>
+    <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
+  </aside>
+  <main class="main">
+    <h1>SKLZ Academy</h1>
+    <div class="sub">Live sessions, recordings, and events. Free previews for everyone; full library for subscribers.</div>
+    <div id="content"><div class="empty">Loading…</div></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}
+  let DATA=null;
+
+  function embedUrl(u){
+    if(!u)return '';
+    const yt=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|live\/|embed\/))([\w-]+)/);
+    if(yt)return 'https://www.youtube.com/embed/'+yt[1];
+    const vim=u.match(/vimeo\.com\/(\d+)/);
+    if(vim)return 'https://player.vimeo.com/video/'+vim[1];
+    return u;
+  }
+
+  async function load(){
+    try{
+      const r=await fetch(API+'/api/academy/content',{headers:H()});
+      DATA=await r.json();
+      render();
+    }catch(e){document.getElementById('content').innerHTML='<div class="empty">Could not load academy.</div>';}
+  }
+
+  function card(it){
+    const locked=!it.watchable;
+    const thumb=it.thumbnail?`<img src="${esc(it.thumbnail)}" onerror="this.style.display='none'"/>`:`<div class="ph">${it.kind==='live'?'\u25CF LIVE':it.kind==='event'?'\uD83D\uDCC5':'\u25B6'}</div>`;
+    const when=it.starts_at?new Date(it.starts_at).toLocaleString():'';
+    return `<div class="item ${locked?'locked':''}" onclick="${locked?`toast('This session is for subscribers')`:`openItem('${it.id}')`}">
+      <div class="thumb">${thumb}${locked?'<div class="lock">\uD83D\uDD12</div>':''}
+        ${it.kind==='live'?'<span class="livebadge">LIVE</span>':''}</div>
+      <div class="meta"><div class="t">${esc(it.title)}</div>
+        <div class="d">${esc(it.description||'').slice(0,90)}</div>
+        <div class="sub2">${when}${it.duration_min?' \u00B7 '+it.duration_min+'m':''}${it.access==='preview'?' \u00B7 free preview':''}</div>
+      </div></div>`;
+  }
+
+  function render(){
+    if(!DATA){return;}
+    const adminBtn=DATA.is_admin?`<button class="btn" onclick="showAdmin()" style="margin-bottom:18px">+ Add content (admin)</button>`:'';
+    const banner=!DATA.full_access?`<div class="upgrade-banner"><div><b>Preview access</b>
+      <p>You're seeing free preview sessions. Full library, live sessions and events unlock with any subscription.</p></div>
+      <a class="btn" href="/pricing.html">Unlock full access \u2192</a></div>`:'';
+    const sec=(title,arr)=> arr&&arr.length?`<h2 class="sec-h">${title}</h2><div class="grid">${arr.map(card).join('')}</div>`:'';
+    let html=adminBtn+banner;
+    if(DATA.live&&DATA.live.length) html+=sec('\u25CF Live &amp; upcoming', DATA.live);
+    html+=sec('\uD83D\uDCC5 Events', DATA.events);
+    html+=sec('\u25B6 Recordings', DATA.recordings);
+    if(!(DATA.live.length||DATA.events.length||DATA.recordings.length))
+      html+='<div class="empty">No sessions yet.'+(DATA.is_admin?' Click "Add content" to create the first one.':' Check back soon.')+'</div>';
+    document.getElementById('content').innerHTML=html;
+  }
+
+  function openItem(id){
+    const all=[...DATA.live,...DATA.events,...DATA.recordings];
+    const it=all.find(x=>x.id===id);
+    if(!it||!it.video_url){toast('No video attached yet');return;}
+    const url=embedUrl(it.video_url);
+    let m=document.getElementById('player');
+    if(!m){m=document.createElement('div');m.id='player';m.className='player';document.body.appendChild(m);}
+    m.innerHTML=`<div class="pbox"><span class="x" onclick="closePlayer()">\u2715</span>
+      <div class="pv"><iframe src="${esc(url)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe></div>
+      <div class="pt">${esc(it.title)}</div><div class="pd">${esc(it.description||'')}</div></div>`;
+    m.classList.add('open');
+  }
+  function closePlayer(){const m=document.getElementById('player');if(m){m.classList.remove('open');m.innerHTML='';}}
+
+  function showAdmin(){
+    let m=document.getElementById('adminmodal');
+    if(!m){m=document.createElement('div');m.id='adminmodal';m.className='player open';document.body.appendChild(m);}
+    m.className='player open';
+    m.innerHTML=`<div class="pbox admin"><span class="x" onclick="this.closest('.player').classList.remove('open')">\u2715</span>
+      <h2 style="margin-bottom:14px">Add content</h2>
+      <label>Type</label><select id="a-kind"><option value="recording">Recording</option><option value="live">Live session</option><option value="event">Event</option></select>
+      <label>Title</label><input id="a-title" placeholder="Weekly market breakdown"/>
+      <label>Description</label><textarea id="a-desc" rows="2"></textarea>
+      <label>Video / stream URL (YouTube, Vimeo, Zoom)</label><input id="a-url" placeholder="https://youtube.com/watch?v=..."/>
+      <label>Thumbnail URL (optional)</label><input id="a-thumb"/>
+      <div class="row"><div><label>Starts at</label><input id="a-start" type="datetime-local"/></div>
+        <div><label>Duration (min)</label><input id="a-dur" type="number"/></div></div>
+      <label>Access</label><select id="a-access"><option value="full">Subscribers only</option><option value="preview">Free preview</option></select>
+      <button class="btn" style="margin-top:16px" onclick="saveItem()">Publish</button></div>`;
+  }
+
+  async function saveItem(){
+    const b={kind:document.getElementById('a-kind').value,title:document.getElementById('a-title').value.trim(),
+      description:document.getElementById('a-desc').value.trim(),video_url:document.getElementById('a-url').value.trim(),
+      thumbnail:document.getElementById('a-thumb').value.trim(),access:document.getElementById('a-access').value,
+      duration_min:+document.getElementById('a-dur').value||null};
+    const st=document.getElementById('a-start').value; if(st)b.starts_at=new Date(st).toISOString();
+    if(!b.title){toast('Title required');return;}
+    try{
+      const r=await fetch(API+'/api/academy/item',{method:'POST',headers:H(),body:JSON.stringify(b)});
+      if(!r.ok){const e=await r.json();toast(e.detail||'Failed');return;}
+      toast('Published');document.getElementById('adminmodal').classList.remove('open');load();
+    }catch(e){toast('Network error');}
+  }
+
+  async function logout(){try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}localStorage.removeItem('sklz_access');location.href='/';}
+  load();
+
+</script>
+</body></html>

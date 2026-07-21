@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Affiliate — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;--green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .shell{display:grid;grid-template-columns:226px 1fr;min-height:100vh}
+  @media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}}
+  .side{border-right:1px solid var(--line);background:var(--panel);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .logo{height:44px;margin:0 8px 22px}
+  .nav-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:18px 10px 7px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);font-size:13.5px;cursor:pointer;margin-bottom:2px}
+  .nav-item:hover{background:var(--panel2);color:var(--ink)}
+  .nav-item.on{background:rgba(245,166,35,.1);color:var(--gold)}
+  .nav-item .i{width:18px;text-align:center}
+  .main{padding:24px 28px 60px;min-width:0;max-width:920px}
+  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+  .linkbox{background:radial-gradient(120% 140% at 0% 0%,rgba(245,166,35,.12),transparent 55%),var(--panel);
+    border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:20px;margin-bottom:18px}
+  .lb-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);margin-bottom:10px}
+  .lb-row{display:flex;gap:10px}
+  .lb-row input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px 14px;color:var(--ink);font-family:var(--mono);font-size:13px}
+  .lb-hint{font-size:12px;color:var(--muted);margin-top:10px}
+  .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;border-radius:9px;padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  @media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px}
+  .kpi.hl{border-color:rgba(245,166,35,.4)}
+  .kpi .k{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+  .kpi .v{font-family:var(--mono);font-size:26px;font-weight:700;margin-top:6px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+  .card h2{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:14px}
+  .how{display:flex;flex-direction:column;gap:10px}
+  .step{font-size:13.5px;color:var(--ink)}
+  .step b{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:var(--panel2);border-radius:50%;color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:10px}
+  .reflist{display:flex;flex-direction:column}
+  .ref-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .ref-row:last-child{border:none}
+  .ref-row .rstat{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:5px}
+  .rstat.paid{background:rgba(52,211,153,.14);color:var(--green)}
+  .rstat.pending{background:rgba(139,148,168,.12);color:var(--muted)}
+  .ref-row .rdate{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .credit-note{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.3);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--ink)}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:30px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
+  .toast.on{transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+    <div class="nav-sec">Workspace</div>
+    <div class="nav-item" onclick="location.href=\'/dashboard.html\'"><span class="i">◈</span>Dashboard</div>
+    <div class="nav-item" onclick="location.href=\'/tradegpt.html\'"><span class="i">🧠</span>TradeGPT</div>
+    <div class="nav-item" onclick="location.href=\'/bot.html\'"><span class="i">🖥️</span>Bot Monitor</div>
+    <div class="nav-item" onclick="location.href=\'/signals.html\'"><span class="i">📡</span>Signals</div>
+    <div class="nav-sec">Tools</div>
+    <div class="nav-item" onclick="location.href=\'/lotcalc.html\'"><span class="i">🧮</span>Lot Calculator</div>
+    <div class="nav-item" onclick="location.href=\'/indicators.html\'"><span class="i">📊</span>Indicators</div>
+    <div class="nav-item" onclick="location.href=\'/journal.html\'"><span class="i">📓</span>Journal</div>
+    <div class="nav-item" onclick="location.href=\'/scanner.html\'"><span class="i">🛰️</span>Scanner</div>
+    <div class="nav-sec">Learn &amp; Earn</div>
+    <div class="nav-item" onclick="location.href=\'/academy.html\'"><span class="i">🎓</span>Academy</div>
+    <div class="nav-item on"><span class="i">🤝</span>Affiliate</div>
+    <div class="nav-sec">Account</div>
+    <div class="nav-item" onclick="location.href=\'/pricing.html\'"><span class="i">💳</span>Billing</div>
+    <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
+  </aside>
+  <main class="main">
+    <h1>Affiliate Program</h1>
+    <div class="sub">Refer traders to SKLZ. Every paid referral earns you a free month — no limit.</div>
+    <div id="content"><div class="empty">Loading…</div></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2400)}
+
+  async function load(){
+    try{
+      const r=await fetch(API+'/api/affiliate/me',{headers:H()});
+      const d=await r.json();
+      if(d.detail){document.getElementById('content').innerHTML='<div class="empty">'+esc(d.detail)+'</div>';return;}
+      render(d);
+    }catch(e){document.getElementById('content').innerHTML='<div class="empty">Could not load affiliate data.</div>';}
+  }
+
+  function render(d){
+    const refs=(d.referrals||[]).map(r=>'<div class="ref-row"><span>'+esc(r.masked)+'</span>'+
+      '<span class="rstat '+(r.status==='paid'?'paid':'pending')+'">'+esc(r.status)+'</span>'+
+      '<span class="rdate">'+(r.joined_at?new Date(r.joined_at).toLocaleDateString():'')+'</span></div>').join('')
+      ||'<div class="empty" style="padding:20px">No referrals yet. Share your link to get started.</div>';
+    document.getElementById('content').innerHTML=
+      '<div class="linkbox"><div class="lb-label">Your referral link</div>'+
+        '<div class="lb-row"><input id="afflink" readonly value="'+esc(d.link)+'"/>'+
+        '<button class="btn" onclick="copyLink()">Copy</button></div>'+
+        '<div class="lb-hint">Share this link. When someone subscribes through it, you earn '+d.reward_per_conversion+' free month.</div></div>'+
+      '<div class="cards">'+
+        '<div class="kpi"><div class="k">Joined via your link</div><div class="v">'+d.joined+'</div></div>'+
+        '<div class="kpi"><div class="k">Became subscribers</div><div class="v" style="color:var(--green)">'+d.converted+'</div></div>'+
+        '<div class="kpi"><div class="k">Pending</div><div class="v">'+d.pending+'</div></div>'+
+        '<div class="kpi hl"><div class="k">Free months earned</div><div class="v" style="color:var(--gold)">'+d.credits_months+'</div></div>'+
+      '</div>'+
+      '<div class="card"><h2>How it works</h2>'+
+        '<div class="how"><div class="step"><b>1</b> Share your link with traders you know</div>'+
+        '<div class="step"><b>2</b> They sign up and subscribe to any plan</div>'+
+        '<div class="step"><b>3</b> You get 1 free month credited automatically</div>'+
+        '<div class="step"><b>4</b> No limit — every paid referral is another free month</div></div></div>'+
+      '<div class="card"><h2>Your referrals</h2><div class="reflist">'+refs+'</div></div>'+
+      (d.credits_months>0?'<div class="credit-note">You have <b>'+d.credits_months+' free month'+(d.credits_months>1?'s':'')+'</b> in credit. These apply to your subscription — contact support to redeem, or they auto-apply at renewal.</div>':'');
+  }
+
+  function copyLink(){
+    const i=document.getElementById('afflink');i.select();
+    navigator.clipboard.writeText(i.value).then(()=>toast('Link copied!')).catch(()=>{document.execCommand('copy');toast('Link copied!');});
+  }
+  async function logout(){try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}localStorage.removeItem('sklz_access');location.href='/';}
+  load();
+
+</script>
+</body></html>

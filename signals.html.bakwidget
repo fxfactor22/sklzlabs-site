@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Signals — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .shell{display:grid;grid-template-columns:226px 1fr;min-height:100vh}
+  @media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}}
+  .side{border-right:1px solid var(--line);background:var(--panel);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .logo{height:44px;margin:0 8px 22px}
+  .nav-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:18px 10px 7px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);font-size:13.5px;cursor:pointer;margin-bottom:2px}
+  .nav-item:hover{background:var(--panel2);color:var(--ink)}
+  .nav-item.on{background:rgba(245,166,35,.1);color:var(--gold)}
+  .nav-item .i{width:18px;text-align:center}
+  .main{padding:24px 28px 60px;min-width:0;max-width:1000px}
+  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:20px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .fchip{font-family:var(--mono);font-size:12px;padding:8px 16px;border-radius:20px;border:1px solid var(--line);
+    background:var(--panel);color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:7px}
+  .fchip.on{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,.08)}
+  .fchip.locked{opacity:.45;cursor:not-allowed}
+  .fchip .lock{font-size:10px}
+  .tel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .tel .ic{font-size:22px}
+  .tel .txt{flex:1;min-width:200px}
+  .tel .txt b{font-size:14px}
+  .tel .txt p{font-size:12px;color:var(--muted);margin-top:2px}
+  .tel a{font-family:var(--mono);font-size:12px;background:#229ED9;color:#fff;padding:9px 16px;border-radius:8px}
+  .sig{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+  .sig-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .sig-side{font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px}
+  .sig-side.buy{background:rgba(52,211,153,.14);color:var(--green)}
+  .sig-side.sell{background:rgba(248,113,113,.14);color:var(--red)}
+  .sig-sym{font-size:16px;font-weight:700}
+  .sig-cat{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;
+    padding:3px 8px;border-radius:5px;background:var(--panel2);color:var(--muted)}
+  .sig-tf{font-family:var(--mono);font-size:10px;color:var(--dim)}
+  .sig-time{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto}
+  .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media(max-width:600px){.levels{grid-template-columns:repeat(2,1fr)}}
+  .lv{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  .lv .k{font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--dim)}
+  .lv .v{font-family:var(--mono);font-size:14px;font-weight:600;margin-top:3px}
+  .lv.entry .v{color:var(--gold)}.lv.sl .v{color:var(--red)}.lv.tp .v{color:var(--green)}
+  .upgrade-banner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;
+    background:radial-gradient(120% 140% at 100% 0%,rgba(245,166,35,.12),transparent 55%),var(--panel);
+    border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:20px 22px;margin-bottom:18px}
+  .upgrade-banner b{font-size:15px}
+  .upgrade-banner p{color:var(--muted);font-size:12.5px;margin-top:5px;max-width:560px;line-height:1.55}
+  .preview-wrap{position:relative;margin-bottom:6px}
+  .preview.sig{opacity:.85}
+  .preview-fade{position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,transparent 40%,var(--bg) 95%)}
+  .locked-card{background:radial-gradient(120% 140% at 100% 0%,rgba(245,166,35,.1),transparent 55%),var(--panel);
+    border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:30px;text-align:center}
+  .locked-card h2{font-size:18px;margin-bottom:8px}
+  .locked-card p{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+  .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;border-radius:9px;
+    padding:11px 22px;font-weight:700;font-size:14px;cursor:pointer;display:inline-block}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:30px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);
+    border:1px solid var(--gold);border-radius:9px;padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
+  .toast.on{transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+    <div class="nav-sec">Workspace</div>
+    <div class="nav-item" onclick="location.href='/dashboard.html'"><span class="i">◈</span>Dashboard</div>
+    <div class="nav-item" onclick="location.href='/tradegpt.html'"><span class="i">🧠</span>TradeGPT</div>
+    <div class="nav-item" onclick="location.href='/bot.html'"><span class="i">🖥️</span>Bot Monitor</div>
+    <div class="nav-item on"><span class="i">📡</span>Signals</div>
+    <div class="nav-sec">Tools</div>
+    <div class="nav-item" onclick="location.href='/lotcalc.html'"><span class="i">🧮</span>Lot Calculator</div>
+    <div class="nav-item" onclick="location.href='/indicators.html'"><span class="i">📊</span>Indicators</div>
+    <div class="nav-item" onclick="location.href='/journal.html'"><span class="i">📓</span>Journal</div>
+    <div class="nav-sec">Account</div>
+    <div class="nav-item" onclick="location.href='/pricing.html'"><span class="i">💳</span>Billing</div>
+    <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
+  </aside>
+  <main class="main">
+    <h1>Signals</h1>
+    <div class="sub">SKLZ Radar maps multiple markets and posts entry zone, stop and target — live to your dashboard and Telegram.</div>
+    <div id="content"><div class="empty">Loading…</div></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const API="https://api.sklzlabs.com";
+  const LABELS={forex:"💱 Forex",crypto:"₿ Crypto",stocks:"📈 Stocks",metals:"🪙 Metals"};
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
+    clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  let ent=null, activeFilter=null;
+
+  async function init(){
+    try{
+      const r=await fetch(API+'/api/signals/entitlements',{headers:H()});
+      ent=await r.json();
+      render();
+    }catch(e){document.getElementById('content').innerHTML='<div class="empty">Could not load signals.</div>';}
+  }
+
+  function render(){
+    if(!ent.allowed || !ent.allowed.length){
+      // PREVIEW state — show what signals look like, then a soft upgrade nudge.
+      // Never a hard paywall on arrival.
+      const sample={symbol:'XAUUSD',category:'metals',side:'buy',timeframe:'H1',
+        entry_low:2397,entry_high:2403,sl:2382,tp:2436,rr:2.0};
+      const ez=`${sample.entry_low} – ${sample.entry_high}`;
+      document.getElementById('content').innerHTML=`
+        <div class="upgrade-banner">
+          <div>
+            <b>Signals unlock with the Indicator Suite &amp; Bundle</b>
+            <p>SKLZ Radar maps forex, crypto, stocks &amp; metals and posts entry, stop and target —
+               to your dashboard and private Telegram channels. Here's what a signal looks like:</p>
+          </div>
+          <a class="btn" href="/pricing.html">View plans →</a>
+        </div>
+        <div class="preview-wrap">
+          <div class="sig preview">
+            <div class="sig-head">
+              <span class="sig-side buy">🟢 BUY</span>
+              <span class="sig-sym">${sample.symbol}</span>
+              <span class="sig-cat">${sample.category}</span>
+              <span class="sig-tf">${sample.timeframe}</span>
+              <span class="sig-time">sample</span>
+            </div>
+            <div class="levels">
+              <div class="lv entry"><div class="k">Entry zone</div><div class="v">${ez}</div></div>
+              <div class="lv sl"><div class="k">Stop loss</div><div class="v">${sample.sl}</div></div>
+              <div class="lv tp"><div class="k">Take profit</div><div class="v">${sample.tp}</div></div>
+              <div class="lv"><div class="k">R : R</div><div class="v">${sample.rr}</div></div>
+            </div>
+          </div>
+          <div class="preview-fade"></div>
+        </div>
+        <div style="text-align:center;margin-top:8px">
+          <a class="btn" href="/pricing.html">Unlock signals →</a>
+          <div style="font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:10px">
+            Included with Indicator Suite (forex + metals) and Bundle (all markets).</div>
+        </div>`;
+      return;
+    }
+    // filter chips: allowed = interactive, others = locked
+    const chips=ent.all_categories.map(c=>{
+      const allowed=ent.allowed.includes(c);
+      const on=allowed && (activeFilter===c || activeFilter===null);
+      if(!allowed) return `<div class="fchip locked" title="Upgrade to unlock">${LABELS[c]} <span class="lock">🔒</span></div>`;
+      return `<div class="fchip ${activeFilter===c?'on':''}" onclick="setFilter('${c}')">${LABELS[c]}</div>`;
+    }).join('');
+    const allChip=`<div class="fchip ${activeFilter===null?'on':''}" onclick="setFilter(null)">All my markets</div>`;
+
+    // telegram connect strip
+    const tgLinks=(ent.enabled||[]).map(c=>({c,link:(ent.join_links||{})[c]})).filter(x=>x.link);
+    let tel='';
+    tel=`<div class="tel"><div class="ic">📣</div><div class="txt">
+        <b>Get these on Telegram</b>
+        <p>Enable a market below and join its private SKLZ channel — signals arrive instantly, hands-free.</p>
+      </div></div>`;
+
+    document.getElementById('content').innerHTML=
+      `<div class="filters">${allChip}${chips}</div>${tel}<div id="feed"><div class="empty">Loading signals…</div></div>`;
+    loadFeed();
+  }
+
+  function setFilter(c){activeFilter=c;render();}
+
+  async function loadFeed(){
+    try{
+      const url=API+'/api/signals/feed'+(activeFilter?('?category='+activeFilter):'');
+      const r=await fetch(url,{headers:H()});
+      const d=await r.json();
+      const feed=document.getElementById('feed');
+      if(!d.signals || !d.signals.length){
+        feed.innerHTML='<div class="empty">No signals yet. When SKLZ Radar detects alignment, they appear here and on Telegram.</div>';
+        return;
+      }
+      feed.innerHTML=d.signals.map(s=>{
+        const ez=(s.entry_low!=null&&s.entry_low!==s.entry_high)?`${s.entry_low} – ${s.entry_high}`:(s.entry??'—');
+        return `<div class="sig">
+          <div class="sig-head">
+            <span class="sig-side ${s.side}">${s.side==='buy'?'🟢 BUY':'🔴 SELL'}</span>
+            <span class="sig-sym">${esc(s.symbol)}</span>
+            <span class="sig-cat">${esc(s.category)}</span>
+            <span class="sig-tf">${esc(s.timeframe||'')}</span>
+            <span class="sig-time">${new Date(s.created_at).toLocaleString()}</span>
+          </div>
+          <div class="levels">
+            <div class="lv entry"><div class="k">Entry zone</div><div class="v">${ez}</div></div>
+            <div class="lv sl"><div class="k">Stop loss</div><div class="v">${s.sl??'—'}</div></div>
+            <div class="lv tp"><div class="k">Take profit</div><div class="v">${s.tp??'—'}</div></div>
+            <div class="lv"><div class="k">R : R</div><div class="v">${s.rr??'—'}</div></div>
+          </div>
+          ${s.note?`<div style="margin-top:10px;font-size:12.5px;color:var(--muted)">${esc(s.note)}</div>`:''}
+        </div>`;}).join('');
+    }catch(e){document.getElementById('feed').innerHTML='<div class="empty">Could not load feed.</div>';}
+  }
+
+  async function logout(){
+    try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}
+    localStorage.removeItem('sklz_access');location.href='/';
+  }
+  init();
+  setInterval(()=>{if(ent&&ent.allowed&&ent.allowed.length)loadFeed();},30000);
+</script>
+</body></html>

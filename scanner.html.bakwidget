@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Crypto Scanner — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .shell{display:grid;grid-template-columns:226px 1fr;min-height:100vh}
+  @media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}}
+  .side{border-right:1px solid var(--line);background:var(--panel);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .logo{height:44px;margin:0 8px 22px}
+  .nav-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:18px 10px 7px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);font-size:13.5px;cursor:pointer;margin-bottom:2px}
+  .nav-item:hover{background:var(--panel2);color:var(--ink)}
+  .nav-item.on{background:rgba(245,166,35,.1);color:var(--gold)}
+  .nav-item .i{width:18px;text-align:center}
+  .main{padding:24px 28px 60px;min-width:0;max-width:1080px}
+  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:18px}
+  .movers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+  @media(max-width:700px){.movers{grid-template-columns:1fr}}
+  .mcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .mcard h3{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+  .mcard.up h3{color:var(--green)}.mcard.down h3{color:var(--red)}
+  .mrow{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px}
+  .mrow img{width:18px;height:18px;border-radius:50%}
+  .mrow .sym{font-weight:600}
+  .mrow .chg{margin-left:auto;font-family:var(--mono);font-size:12px}
+  .bar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .bar .lbl{font-family:var(--mono);font-size:10px;color:var(--dim)}
+  .seg{display:flex;gap:4px}
+  .seg button{font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+  .seg button.on{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,.08)}
+  .updated{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--dim)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+  th:first-child,th:nth-child(2){text-align:left}
+  th:hover{color:var(--muted)}
+  td{padding:10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono)}
+  td:first-child,td:nth-child(2){text-align:left;font-family:var(--sans)}
+  tr:hover td{background:var(--panel2)}
+  .coin{display:flex;align-items:center;gap:9px}
+  .coin img{width:22px;height:22px;border-radius:50%}
+  .coin .nm{color:var(--dim);font-size:11px}
+  .pos{color:var(--green)}.neg{color:var(--red)}
+  .read{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:5px;display:inline-block}
+  .read.su{background:rgba(52,211,153,.18);color:var(--green)}
+  .read.u{background:rgba(52,211,153,.1);color:var(--green)}
+  .read.n{background:rgba(139,148,168,.12);color:var(--muted)}
+  .read.d{background:rgba(248,113,113,.1);color:var(--red)}
+  .read.sd{background:rgba(248,113,113,.18);color:var(--red)}
+  .scorebar{display:inline-block;width:46px;height:6px;border-radius:3px;background:var(--panel2);position:relative;vertical-align:middle;margin-right:6px}
+  .scorebar i{position:absolute;top:0;bottom:0;border-radius:3px}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:30px}
+  .airead{background:radial-gradient(120% 140% at 0% 0%,rgba(167,139,250,.12),transparent 55%),var(--panel);border:1px solid rgba(167,139,250,.3);border-radius:14px;padding:18px 20px;margin-bottom:18px}
+  .airead h2{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#A78BFA;margin-bottom:12px}
+  .ai-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:700px){.ai-cols{grid-template-columns:1fr}}
+  .ai-col h3{font-family:var(--mono);font-size:10px;text-transform:uppercase;margin-bottom:8px}
+  .ai-col.good h3{color:var(--green)}.ai-col.bad h3{color:var(--red)}
+  .ai-item{padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+  .ai-item:last-child{border:none}
+  .ai-note{margin-top:12px;font-size:11.5px;color:var(--muted);font-style:italic}
+  .ai-load{color:var(--dim);font-family:var(--mono);font-size:12px}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:92vw;background:var(--panel);border-left:1px solid var(--line);padding:24px;overflow-y:auto;transform:translateX(105%);transition:transform .25s;z-index:50;box-shadow:-20px 0 40px rgba(0,0,0,.4)}
+  .drawer.open{transform:translateX(0)}
+  .drawer .x{position:absolute;top:16px;right:18px;cursor:pointer;color:var(--muted);font-size:20px}
+  .drawer h2{font-size:20px;margin-bottom:4px}
+  .bias-badge{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;padding:5px 12px;border-radius:7px;margin:10px 0}
+  .bias-badge.long{background:rgba(52,211,153,.16);color:var(--green)}
+  .bias-badge.short{background:rgba(248,113,113,.16);color:var(--red)}
+  .bias-badge.aside{background:rgba(139,148,168,.16);color:var(--muted)}
+  .conf{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:8px}
+  .drawer .sec{margin:14px 0}
+  .drawer .lbl{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+  .drawer .flag{background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.3);border-radius:8px;padding:10px;font-size:12.5px;color:var(--gold);margin-top:10px}
+  .lv-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+  .drawer .disc2{margin-top:18px;font-size:10px;color:var(--dim);font-family:var(--mono);line-height:1.6}
+  .disc{margin-top:20px;font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;line-height:1.7}
+</style></head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+    <div class="nav-sec">Workspace</div>
+    <div class="nav-item" onclick="location.href='/dashboard.html'"><span class="i">◈</span>Dashboard</div>
+    <div class="nav-item" onclick="location.href='/tradegpt.html'"><span class="i">🧠</span>TradeGPT</div>
+    <div class="nav-item" onclick="location.href='/bot.html'"><span class="i">🖥️</span>Bot Monitor</div>
+    <div class="nav-item" onclick="location.href='/signals.html'"><span class="i">📡</span>Signals</div>
+    <div class="nav-sec">Tools</div>
+    <div class="nav-item" onclick="location.href='/lotcalc.html'"><span class="i">🧮</span>Lot Calculator</div>
+    <div class="nav-item" onclick="location.href='/indicators.html'"><span class="i">📊</span>Indicators</div>
+    <div class="nav-item" onclick="location.href='/journal.html'"><span class="i">📓</span>Journal</div>
+    <div class="nav-item on"><span class="i">🛰️</span>Scanner</div>
+    <div class="nav-sec">Account</div>
+    <div class="nav-item" onclick="location.href='/pricing.html'"><span class="i">💳</span>Billing</div>
+    <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
+  </aside>
+  <main class="main">
+    <h1>Crypto Scanner</h1>
+    <div class="sub">Live momentum across the top 100 coins — what's moving right now, ranked. Updates every minute.</div>
+    <div id="airead" class="airead"><div class="ai-load">Loading today's honest read…</div></div>
+    <div id="movers" class="movers"></div>
+    <div class="bar">
+      <span class="lbl">Sort:</span>
+      <div class="seg" id="sortseg">
+        <button data-s="score" class="on">Momentum</button>
+        <button data-s="h1">1h</button>
+        <button data-s="h24">24h</button>
+        <button data-s="d7">7d</button>
+        <button data-s="volume">Volume</button>
+      </div>
+      <span class="updated" id="updated"></span>
+    </div>
+    <div id="grid"><div class="empty">Loading live market data…</div></div>
+    <div class="disc">Live data via CoinGecko · Momentum reflects current conditions, not a prediction ·
+      Software only, not financial advice · Trading involves risk of loss</div>
+  </main>
+</div>
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok()}}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  let sortKey='score';
+  const READC={'strong up':'su','up':'u','neutral':'n','down':'d','strong down':'sd'};
+  function pct(v){const c=v>=0?'pos':'neg';return `<span class="${c}">${v>=0?'+':''}${v}%</span>`;}
+  function vol(n){if(n>=1e9)return '$'+(n/1e9).toFixed(1)+'B';if(n>=1e6)return '$'+(n/1e6).toFixed(0)+'M';return '$'+(n||0).toLocaleString();}
+
+  async function load(){
+    try{
+      const r=await fetch(API+'/api/scanner/crypto?sort='+sortKey+'&limit=60',{headers:H()});
+      const d=await r.json();
+      if(d.error){document.getElementById('grid').innerHTML='<div class="empty">'+esc(d.error)+'</div>';return;}
+      // movers
+      const mk=(arr,cls)=>arr.map(c=>`<div class="mrow">
+        <img src="${c.image}" onerror="this.style.display='none'"/>
+        <span class="sym">${esc(c.symbol)}</span>
+        <span class="chg ${c.score>=0?'pos':'neg'}">${c.read}</span></div>`).join('');
+      document.getElementById('movers').innerHTML=`
+        <div class="mcard up"><h3>▲ Top momentum</h3>${mk(d.movers_up||[])}</div>
+        <div class="mcard down"><h3>▼ Weakest</h3>${mk(d.movers_down||[])}</div>`;
+      // grid
+      const rows=(d.coins||[]).map(c=>{
+        const w=Math.abs(c.score)*100, col=c.score>=0?'var(--green)':'var(--red)';
+        const bar=`<span class="scorebar"><i style="width:${w}%;background:${col};${c.score>=0?'left:50%':'right:50%'}"></i></span>`;
+        return `<tr style="cursor:pointer" onclick="openRead('${c.symbol}')">
+          <td><div class="coin"><img src="${c.image}" onerror="this.style.visibility='hidden'"/>
+            <div><div>${esc(c.symbol)}</div><div class="nm">${esc(c.name||'')}</div></div></div></td>
+          <td><span class="read ${READC[c.read]||'n'}">${c.read}</span></td>
+          <td>$${(c.price||0).toLocaleString(undefined,{maximumFractionDigits:c.price<1?4:2})}</td>
+          <td>${pct(c.h1)}</td><td>${pct(c.h24)}</td><td>${pct(c.d7)}</td>
+          <td>${vol(c.volume)}</td>
+          <td>${bar}${c.score>=0?'+':''}${c.score}</td></tr>`;}).join('');
+      document.getElementById('grid').innerHTML=`<table><thead><tr>
+        <th onclick="setSort('score')">Coin</th><th>Read</th><th>Price</th>
+        <th onclick="setSort('h1')">1h</th><th onclick="setSort('h24')">24h</th>
+        <th onclick="setSort('d7')">7d</th><th onclick="setSort('volume')">Volume</th>
+        <th onclick="setSort('score')">Momentum</th></tr></thead><tbody>${rows}</tbody></table>`;
+      if(d.updated) document.getElementById('updated').textContent='updated '+new Date(d.updated*1000).toLocaleTimeString();
+    }catch(e){document.getElementById('grid').innerHTML='<div class="empty">Could not load scanner.</div>';}
+  }
+  function setSort(k){sortKey=k;document.querySelectorAll('#sortseg button').forEach(b=>b.classList.toggle('on',b.dataset.s===k));load();}
+  document.getElementById('sortseg').addEventListener('click',e=>{if(e.target.dataset.s)setSort(e.target.dataset.s);});
+  async function logout(){try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}localStorage.removeItem('sklz_access');location.href='/';}
+  async function loadTop(){
+    try{
+      const r=await fetch(API+'/api/scanner/top',{headers:H()});
+      const d=await r.json();const t=d.top||{};
+      const setups=(t.setups||[]).map(s=>'<div class="ai-item"><b>'+esc(s.symbol)+'</b> <span style="font-family:var(--mono);font-size:10px;color:'+(s.bias==='long'?'var(--green)':'var(--red)')+'">'+esc(s.bias||'')+'</span><div style="color:var(--muted);margin-top:2px">'+esc(s.why||'')+'</div></div>').join('')||'<div class="ai-item" style="color:var(--dim)">No clean setups right now.</div>';
+      const traps=(t.traps||[]).map(s=>'<div class="ai-item"><b>'+esc(s.symbol)+'</b><div style="color:var(--muted);margin-top:2px">'+esc(s.why||'')+'</div></div>').join('')||'<div class="ai-item" style="color:var(--dim)">Nothing screaming trap.</div>';
+      document.getElementById('airead').innerHTML='<h2>\u2696 Today\u2019s honest read</h2><div class="ai-cols"><div class="ai-col good"><h3>\u2713 Cleaner setups</h3>'+setups+'</div><div class="ai-col bad"><h3>\u26a0 Traps \u2014 tempting but late</h3>'+traps+'</div></div>'+(t.note?'<div class="ai-note">'+esc(t.note)+'</div>':'');
+    }catch(e){document.getElementById('airead').innerHTML='<div class="ai-load">Honest read unavailable right now.</div>';}
+  }
+  async function openRead(sym){
+    let dr=document.getElementById('drawer');
+    if(!dr){dr=document.createElement('div');dr.id='drawer';dr.className='drawer';document.body.appendChild(dr);}
+    dr.innerHTML='<span class="x" onclick="closeRead()">\u2715</span><div class="ai-load" style="margin-top:40px">Reading '+esc(sym)+'\u2026</div>';
+    dr.classList.add('open');
+    try{
+      const r=await fetch(API+'/api/scanner/read/'+encodeURIComponent(sym),{headers:H()});
+      const d=await r.json();const v=d.read||{};
+      const bc=v.bias==='long'?'long':v.bias==='short'?'short':'aside';
+      const act=v.if_you_act||{};
+      dr.innerHTML='<span class="x" onclick="closeRead()">\u2715</span><h2>'+esc(sym)+'</h2>'+
+        '<span class="bias-badge '+bc+'">'+esc((v.bias||'').toUpperCase())+'</span><span class="conf">'+esc(v.confidence||'')+' confidence</span>'+
+        '<div class="sec">'+esc(v.headline||'')+'</div>'+
+        '<div class="sec"><div class="lbl">The read</div>'+esc(v.why||'')+'</div>'+
+        '<div class="sec"><div class="lbl">If you act</div>'+
+        '<div class="lv-row"><span>Entry</span><span>'+esc(act.entry||'\u2014')+'</span></div>'+
+        '<div class="lv-row"><span>Invalidation</span><span>'+esc(act.invalidation||'\u2014')+'</span></div>'+
+        '<div class="lv-row"><span>Target</span><span>'+esc(act.target||'\u2014')+'</span></div></div>'+
+        (v.honest_flag?'<div class="flag">\u26a0 '+esc(v.honest_flag)+'</div>':'')+
+        '<div class="disc2">This is analysis for education, not financial advice. Bias is a lean based on current conditions and historical base rates \u2014 not a prediction. SKLZ research shows momentum setups are frequently coin-flips out-of-sample. Trade your own plan; risk only what you can lose.</div>';
+    }catch(e){dr.innerHTML='<span class="x" onclick="closeRead()">\u2715</span><div class="ai-load" style="margin-top:40px">Read unavailable.</div>';}
+  }
+  function closeRead(){const d=document.getElementById('drawer');if(d)d.classList.remove('open');}
+  load(); loadTop(); setInterval(load,60000); setInterval(loadTop,120000);
+
+</script>
+</body></html>
