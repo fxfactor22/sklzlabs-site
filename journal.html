@@ -178,8 +178,10 @@
       const r=await fetch(API+'/api/journal/accounts',{headers:H()});
       const d=await r.json();ACCOUNTS=d.accounts||[];
       const sel=document.getElementById('acctsel');
+      const prev=CURRENT_ACCT;
       sel.innerHTML='<option value="">All accounts</option>'+ACCOUNTS.map(a=>
         '<option value="'+a.id+'">'+(a.connected?'● ':'')+esc(a.label)+' ('+esc(a.platform)+')</option>').join('');
+      if(prev && ACCOUNTS.some(a=>a.id===prev)){sel.value=prev;CURRENT_ACCT=prev;}
       updateAcctMeta();
     }catch(e){}
   }
@@ -190,9 +192,12 @@
     m.textContent=[a.platform,a.broker,a.server,a.account_no?('#'+a.account_no):'',a.kind,
       (a.trade_count||0)+' trades',(a.net_pnl>=0?'+':'')+'$'+(a.net_pnl||0)].filter(Boolean).join(' · ');
   }
-  function switchAccount(){CURRENT_ACCT=document.getElementById('acctsel').value;updateAcctMeta();
-    loadAccounts();
-  loadAnalytics();if(document.querySelector('.tab.on')?.textContent.includes('Trades'))loadTrades();}
+  function switchAccount(){
+    CURRENT_ACCT=document.getElementById('acctsel').value;
+    updateAcctMeta();
+    loadAnalytics();
+    if(document.querySelector('.tab.on')?.textContent.includes('Trades'))loadTrades();
+  }
   function acctParam(){return CURRENT_ACCT?('&account_id='+encodeURIComponent(CURRENT_ACCT)):'';}
   function showAddAccount(){document.getElementById('addacct-modal').style.display='flex';}
   async function saveAccount(){
