@@ -99,6 +99,14 @@
     if(s<5400) return Math.round(s/60)+'m ago';
     return Math.round(s/3600)+'h ago';
   }
+  async function botCmd(bot,cmd){
+    try{
+      const r=await fetch(API+'/api/bot/control?bot_name='+encodeURIComponent(bot)+'&command='+cmd,
+        {method:'POST',headers:{'Authorization':'Bearer '+tok()}});
+      const d=await r.json();
+      alert(d.ok?(cmd==='run'?'▶ '+bot+' set to RUN — applies within ~30s':'⏸ '+bot+' PAUSED — no new entries within ~30s'):(d.reason||'failed'));
+    }catch(e){alert('Command failed');}
+  }
   function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
 
   async function loadAll(){
@@ -171,6 +179,10 @@
           <div class="m"><div class="k">Realized</div>
             <div class="v ${ (st.realized_pl||0)>=0?'up':'down'}">${st.realized_pl!=null?fmtMoney(st.realized_pl):'—'}</div></div>
         </div>`}
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="event.stopPropagation();botCmd('${esc(s.bot_name)}','run')" style="flex:1;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:var(--up,#34D399);border-radius:8px;padding:8px;font-family:var(--mono);font-size:11px;cursor:pointer">▶ START</button>
+          <button onclick="event.stopPropagation();botCmd('${esc(s.bot_name)}','pause')" style="flex:1;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.4);color:var(--down,#F87171);border-radius:8px;padding:8px;font-family:var(--mono);font-size:11px;cursor:pointer">⏸ PAUSE</button>
+        </div>
       </div>`;
     }).join('');
 
