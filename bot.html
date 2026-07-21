@@ -75,7 +75,17 @@
 
 <div class="wrap">
   <h1>Bot Monitor</h1>
-  <div id="content"><div class="loading">Loading sessions…</div></div>
+  <div id="adminpanel" style="display:none;background:#0F131C;border:1px solid rgba(245,166,35,.35);border-radius:12px;padding:16px;margin-bottom:16px">
+  <div style="font-family:monospace;font-size:10px;color:#F5A623;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Admin — manual entry (learning)</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <input id="o-bot" placeholder="bot (learning-runner)" style="flex:1;min-width:130px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"/>
+    <input id="o-sym" placeholder="SYMBOL e.g. XAUUSD" style="flex:1;min-width:120px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12px"/>
+    <input id="o-note" placeholder="your reasoning (the AI learns from this)" style="flex:2;min-width:200px;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-size:12.5px"/>
+    <button onclick="sendOrder('buy')" style="background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.5);color:#34D399;border-radius:8px;padding:9px 16px;font-family:monospace;font-weight:700;cursor:pointer">▲ BUY</button>
+    <button onclick="sendOrder('sell')" style="background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.5);color:#F87171;border-radius:8px;padding:9px 16px;font-family:monospace;font-weight:700;cursor:pointer">▼ SELL</button>
+  </div>
+</div>
+<div id="content"><div class="loading">Loading sessions…</div></div>
   <div class="foot-note">Auto-refreshes every 10s · Read-only monitor · Software only, not financial advice</div>
 </div>
 
@@ -99,6 +109,31 @@
     if(s<5400) return Math.round(s/60)+'m ago';
     return Math.round(s/3600)+'h ago';
   }
+
+  async function checkAdmin(){
+    try{
+      const r=await fetch(API_BASE+'/api/billing/status',{headers:{'Authorization':'Bearer '+token()}});
+      const d=await r.json();
+      if(d.owner) document.getElementById('adminpanel').style.display='block';
+    }catch(e){}
+  }
+  async function sendOrder(side){
+    const bot=document.getElementById('o-bot').value.trim()||'learning-runner';
+    const sym=document.getElementById('o-sym').value.trim().toUpperCase();
+    const note=document.getElementById('o-note').value.trim();
+    if(!sym){alert('Enter a symbol');return;}
+    if(!note){alert('Add a note — the AI learns from your reasoning');return;}
+    if(!confirm((side==='buy'?'BUY ':'SELL ')+sym+'\nNote: '+note+'\n\nSend to '+bot+'?'))return;
+    try{
+      const r=await fetch(API_BASE+'/api/bot/order',{method:'POST',
+        headers:{'Authorization':'Bearer '+token(),'Content-Type':'application/json'},
+        body:JSON.stringify({bot_name:bot,symbol:sym,side:side,note:note})});
+      const d=await r.json();
+      alert(d.ok?'✓ Order queued — executes within ~30s':(d.reason||d.detail||'failed'));
+      if(d.ok)document.getElementById('o-note').value='';
+    }catch(e){alert('Network error');}
+  }
+  checkAdmin();
   async function botCmd(bot,cmd){
     try{
       const r=await fetch(API_BASE+'/api/bot/control?bot_name='+encodeURIComponent(bot)+'&command='+cmd,
