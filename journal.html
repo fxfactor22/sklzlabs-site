@@ -100,6 +100,7 @@
       <span style="font-family:monospace;font-size:10px;color:#5B6377;text-transform:uppercase">Account</span>
       <select id="acctsel" onchange="switchAccount()" style="background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:8px 11px;color:#EAEEF6;font-family:monospace;font-size:12.5px;min-width:220px"><option value="">All accounts</option></select>
       <span id="acctmeta" style="font-family:monospace;font-size:11px;color:#8B94A8"></span>
+      <button id="sharebtn" onclick="shareAccount()" style="background:rgba(29,169,224,.12);border:1px solid rgba(29,169,224,.4);color:#1DA9E0;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;display:none">🔗 Share performance</button>
       <button onclick="showAddAccount()" style="margin-left:auto;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.4);color:#F5A623;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer">+ Add account</button>
     </div>
     <div class="tabs">
@@ -186,6 +187,7 @@
     }catch(e){}
   }
   function updateAcctMeta(){
+    const sb=document.getElementById('sharebtn');if(sb)sb.style.display=CURRENT_ACCT?'inline-block':'none';
     const a=ACCOUNTS.find(x=>x.id===CURRENT_ACCT);
     const m=document.getElementById('acctmeta');
     if(!a){m.textContent=ACCOUNTS.length?(ACCOUNTS.length+' accounts'):'no accounts yet';return;}
@@ -197,6 +199,16 @@
     updateAcctMeta();
     loadAnalytics();
     if(document.querySelector('.tab.on')?.textContent.includes('Trades'))loadTrades();
+  }
+  async function shareAccount(){
+    if(!CURRENT_ACCT){alert('Select an account first');return;}
+    if(!confirm('Make this account\'s performance publicly viewable by anyone with the link?'))return;
+    try{
+      const r=await fetch(API+'/api/journal/accounts/'+CURRENT_ACCT+'/share?public=true',{method:'POST',headers:H()});
+      const d=await r.json();
+      if(d.ok&&d.share_link){prompt('Your public performance link (anyone can view):',d.share_link);}
+      else alert(d.detail||'failed');
+    }catch(e){alert('error');}
   }
   function acctParam(){return CURRENT_ACCT?('&account_id='+encodeURIComponent(CURRENT_ACCT)):'';}
   function showAddAccount(){document.getElementById('addacct-modal').style.display='flex';}
