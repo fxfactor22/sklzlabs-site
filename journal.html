@@ -96,6 +96,12 @@
   <main class="main">
     <h1>Trading Journal</h1>
     <div class="sub">The journal that tells you the truth — which of your setups actually have edge, and which just feel like they do.</div>
+    <div id="acctbar" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#0F131C;border:1px solid #1E2735;border-radius:12px;padding:12px 16px;margin-bottom:16px">
+      <span style="font-family:monospace;font-size:10px;color:#5B6377;text-transform:uppercase">Account</span>
+      <select id="acctsel" onchange="switchAccount()" style="background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:8px 11px;color:#EAEEF6;font-family:monospace;font-size:12.5px;min-width:220px"><option value="">All accounts</option></select>
+      <span id="acctmeta" style="font-family:monospace;font-size:11px;color:#8B94A8"></span>
+      <button onclick="showAddAccount()" style="margin-left:auto;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.4);color:#F5A623;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer">+ Add account</button>
+    </div>
     <div class="tabs">
       <div class="tab on" onclick="tab('overview')">Overview</div>
       <div class="tab" onclick="tab('trades')">Trades</div>
@@ -165,6 +171,39 @@
 <div class="toast" id="toast"></div>
 <script>
   const API="https://api.sklzlabs.com";
+  let CURRENT_ACCT="";
+  let ACCOUNTS=[];
+  async function loadAccounts(){
+    try{
+      const r=await fetch(API+'/api/journal/accounts',{headers:H()});
+      const d=await r.json();ACCOUNTS=d.accounts||[];
+      const sel=document.getElementById('acctsel');
+      sel.innerHTML='<option value="">All accounts</option>'+ACCOUNTS.map(a=>
+        '<option value="'+a.id+'">'+(a.connected?'● ':'')+esc(a.label)+' ('+esc(a.platform)+')</option>').join('');
+      updateAcctMeta();
+    }catch(e){}
+  }
+  function updateAcctMeta(){
+    const a=ACCOUNTS.find(x=>x.id===CURRENT_ACCT);
+    const m=document.getElementById('acctmeta');
+    if(!a){m.textContent=ACCOUNTS.length?(ACCOUNTS.length+' accounts'):'no accounts yet';return;}
+    m.textContent=[a.platform,a.broker,a.server,a.account_no?('#'+a.account_no):'',a.kind,
+      (a.trade_count||0)+' trades',(a.net_pnl>=0?'+':'')+'$'+(a.net_pnl||0)].filter(Boolean).join(' · ');
+  }
+  function switchAccount(){CURRENT_ACCT=document.getElementById('acctsel').value;updateAcctMeta();
+    loadAccounts();
+  loadAnalytics();if(document.querySelector('.tab.on')?.textContent.includes('Trades'))loadTrades();}
+  function acctParam(){return CURRENT_ACCT?('&account_id='+encodeURIComponent(CURRENT_ACCT)):'';}
+  function showAddAccount(){document.getElementById('addacct-modal').style.display='flex';}
+  async function saveAccount(){
+    const b={label:gv('aa-label'),platform:gv('aa-plat'),broker:gv('aa-broker')==='__custom__'?gv('aa-broker-custom'):gv('aa-broker'),
+      server:gv('aa-server'),account_no:gv('aa-no'),kind:gv('aa-kind')};
+    if(!b.label){alert('Give the account a label');return;}
+    try{const r=await fetch(API+'/api/journal/accounts',{method:'POST',headers:H(),body:JSON.stringify(b)});
+      const d=await r.json();if(d.ok){document.getElementById('addacct-modal').style.display='none';loadAccounts();}
+      else alert(d.detail||'failed');}catch(e){alert('error');}
+  }
+  function gv(id){const e=document.getElementById(id);return e?e.value.trim():'';}
   function tok(){return localStorage.getItem('sklz_access')}
   if(!tok()) location.href='/login.html';
   function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
@@ -184,7 +223,7 @@
 
   async function loadAnalytics(){
     try{
-      const r=await fetch(API+'/api/journal/analytics',{headers:H()});
+      const r=await fetch(API+'/api/journal/analytics?x=1'+acctParam(),{headers:H()});
       const a=await r.json();
       if(a.empty || !a.trades){
         document.getElementById('kpis').innerHTML='<div class="empty" style="grid-column:1/-1">No trades yet — log your first one to see your edge.</div>';
@@ -254,7 +293,7 @@
 
   async function loadTrades(){
     try{
-      const r=await fetch(API+'/api/journal/trades?limit=200',{headers:H()});
+      const r=await fetch(API+'/api/journal/trades?limit=200'+acctParam(),{headers:H()});
       const d=await r.json();
       const body=document.getElementById('trades-body');
       if(!d.trades||!d.trades.length){body.innerHTML='<tr><td colspan="8" class="empty">No trades yet.</td></tr>';return;}
@@ -287,6 +326,7 @@
     };
     if(!body.symbol){toast('Enter a symbol');return;}
     try{
+      body.account_id=CURRENT_ACCT;const acc=ACCOUNTS.find(x=>x.id===CURRENT_ACCT);if(acc){body.account_no=acc.account_no;body.server=acc.server;}
       const r=await fetch(API+'/api/journal/trade',{method:'POST',headers:H(),body:JSON.stringify(body)});
       if(!r.ok){const e=await r.json();toast(e.detail||'Save failed');return;}
       toast('Trade logged');
@@ -350,4 +390,26 @@
 })();
 </script>
 <!-- /ISKRA widget -->
+<div id="addacct-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);align-items:center;justify-content:center;z-index:80;padding:20px">
+  <div style="background:#0F131C;border:1px solid #1E2735;border-radius:14px;max-width:460px;width:100%;padding:22px;position:relative">
+    <span onclick="document.getElementById('addacct-modal').style.display='none'" style="position:absolute;top:14px;right:16px;cursor:pointer;color:#8B94A8;font-size:20px">✕</span>
+    <h2 style="font-size:18px;margin-bottom:14px">Add trading account</h2>
+    <div style="display:grid;gap:10px">
+      <div><label class="jl">Label</label><input id="aa-label" placeholder="FTMO Challenge #1" class="jin"/></div>
+      <div><label class="jl">Platform</label><select id="aa-plat" class="jin"><option>MT5</option><option>MT4</option><option>cTrader</option><option>MatchTrader</option><option>custom</option></select></div>
+      <div><label class="jl">Broker / Prop firm</label><select id="aa-broker" class="jin" onchange="document.getElementById('aa-broker-custom').style.display=this.value==='__custom__'?'block':'none'">
+        <option value="">— select —</option>
+        <optgroup label="Brokers"><option>IC Markets</option><option>Pepperstone</option><option>FxPro</option><option>Exness</option><option>OANDA</option><option>Vantage</option><option>XM</option></optgroup>
+        <optgroup label="Prop firms"><option>FTMO</option><option>MyForexFunds</option><option>The5ers</option><option>FundedNext</option><option>E8 Funding</option><option>Apex Trader</option><option>Topstep</option></optgroup>
+        <option value="__custom__">Custom…</option></select>
+        <input id="aa-broker-custom" placeholder="Custom broker name" class="jin" style="display:none;margin-top:6px"/></div>
+      <div style="display:flex;gap:10px"><div style="flex:1"><label class="jl">Server</label><input id="aa-server" placeholder="ICMarketsSC-Demo" class="jin"/></div>
+        <div style="flex:1"><label class="jl">Account #</label><input id="aa-no" placeholder="52952532" class="jin"/></div></div>
+      <div><label class="jl">Type</label><select id="aa-kind" class="jin"><option value="demo">Demo</option><option value="live">Live</option><option value="prop">Prop / Funded</option></select></div>
+      <button onclick="saveAccount()" style="background:linear-gradient(135deg,#F5A623,#FFC24B);color:#08101A;border:none;border-radius:9px;padding:12px;font-weight:700;cursor:pointer;margin-top:6px">Add account</button>
+    </div>
+  </div>
+</div>
+<style>.jl{display:block;font-family:monospace;font-size:9.5px;color:#8B94A8;text-transform:uppercase;margin-bottom:4px}
+.jin{width:100%;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12.5px}</style>
 </body></html>
