@@ -374,6 +374,7 @@
     try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}
     localStorage.removeItem('sklz_access');location.href='/';
   }
+  loadAccounts();
   loadAnalytics();
 </script>
 <!-- ISKRA AI webchat widget -->
