@@ -132,8 +132,8 @@
   </div>
   <input id="tp-note" class="in" placeholder="Why this trade? (kept with the record)" style="margin-top:9px"/>
   <div class="trow" style="margin-top:11px">
-    <button class="btn buy" onclick="doTrade('buy')">\u25B2 BUY</button>
-    <button class="btn sell" onclick="doTrade('sell')">\u25BC SELL</button>
+    <button class="btn buy" onclick="doTrade('buy')">▲ BUY</button>
+    <button class="btn sell" onclick="doTrade('sell')">▼ SELL</button>
   </div>
   <div id="tp-msg" class="msg"></div>
   <div class="risknote" id="tp-warn"></div>
@@ -188,15 +188,15 @@
       const p=c.permissions||{};
       const verified=p.verified_by_exchange;
       const badge = verified
-        ? '<span class="ok">\u2713 verified by exchange</span>'
-        : '<span class="warn">\u26a0 permissions self-declared</span>';
+        ? '<span class="ok">✓ verified by exchange</span>'
+        : '<span class="warn">⚠ permissions self-declared</span>';
       const stat = c.status==='active'
         ? '<span class="ok">active</span>'
         : '<span class="bad">'+esc(c.status)+'</span>';
       return '<div class="row">'+
         '<div><div class="rt">'+esc(c.exchange_name||c.exchange_id)+
           ' <span class="dim">'+esc(c.key_masked||'')+'</span></div>'+
-          '<div class="rs">'+badge+' \u00b7 '+stat+'</div></div>'+
+          '<div class="rs">'+badge+' · '+stat+'</div></div>'+
         '<div class="ractions">'+
           '<button class="mini" onclick="viewBalances(\''+c.id+'\')">Balances</button>'+
           '<button class="mini" onclick="recheck(\''+c.id+'\')">Re-check</button>'+
@@ -206,7 +206,7 @@
   }
 
   async function viewBalances(id){
-    toast('Loading balances\u2026');
+    toast('Loading balances…');
     try{
       const d=await (await fetch(API+'/api/copy/connections/'+id+'/balances',{headers:H()})).json();
       const b=d.balances||[];
@@ -218,7 +218,7 @@
   }
 
   async function recheck(id){
-    toast('Re-checking permissions\u2026');
+    toast('Re-checking permissions…');
     try{
       const d=await (await fetch(API+'/api/copy/connections/'+id+'/recheck',{method:'POST',headers:H()})).json();
       toast(d.message||'Checked');
@@ -270,12 +270,12 @@
       label:document.getElementById('cx-label').value.trim(),
       confirm_no_withdrawal:document.getElementById('cx-confirm').checked};
     if(!body.api_key||!body.secret){msg.textContent='Key and secret are required.';return;}
-    msg.textContent='Verifying with the exchange\u2026';
+    msg.textContent='Verifying with the exchange…';
     try{
       const r=await fetch(API+'/api/copy/connect',{method:'POST',headers:H(),body:JSON.stringify(body)});
       const d=await r.json();
       if(r.ok&&d.ok){
-        msg.innerHTML='<span class="ok">\u2713 '+esc(d.message)+'</span>';
+        msg.innerHTML='<span class="ok">✓ '+esc(d.message)+'</span>';
         setTimeout(()=>{closeModal();loadConnections();},1200);
       } else {
         const det=d.detail;
@@ -308,8 +308,8 @@
       return '<div class="scard'+(stopped?' stopped':'')+'">'+
         '<div class="shead"><div>'+
           '<div class="rt">'+esc((s.leader||{}).display_name||'—')+'</div>'+
-          '<div class="rs">'+esc((s.leader||{}).strategy||'')+' \u00b7 '+
-          esc(s.risk_level)+' risk \u00b7 '+money(s.allocation)+' allocated</div>'+
+          '<div class="rs">'+esc((s.leader||{}).strategy||'')+' · '+
+          esc(s.risk_level)+' risk · '+money(s.allocation)+' allocated</div>'+
         '</div>'+
         '<div class="ractions">'+
           '<button class="mini" onclick="editSub(\''+s.id+'\')">Settings</button>'+
@@ -329,7 +329,7 @@
           '<span>Per trade <b>'+pct(h.risk_per_trade_pct)+'</b></span>'+
         '</div>'+
         (flags?'<div class="flags">'+flags+'</div>':'')+
-        (stopped?'<div class="stopnote">Emergency stop active \u2014 no new trades will be copied. '+
+        (stopped?'<div class="stopnote">Emergency stop active — no new trades will be copied. '+
           'Open positions remain yours to manage.</div>':'')+
       '</div>';
     }).join('');
@@ -351,8 +351,8 @@
     }
     el.innerHTML=LEADERS.map(l=>
       '<div class="lcard"><div class="rt">'+esc(l.display_name)+'</div>'+
-      '<div class="rs">'+esc(l.strategy||'')+(l.country?' \u00b7 '+esc(l.country):'')+
-      ' \u00b7 '+(l.follower_count||0)+' follower'+((l.follower_count||0)===1?'':'s')+'</div>'+
+      '<div class="rs">'+esc(l.strategy||'')+(l.country?' · '+esc(l.country):'')+
+      ' · '+(l.follower_count||0)+' follower'+((l.follower_count||0)===1?'':'s')+'</div>'+
       (l.headline?'<div class="lhead">'+esc(l.headline)+'</div>':'')+
       '<button class="btn small" onclick="showFollow(\''+l.id+'\',\''+esc(l.display_name).replace(/\\\\/g,'')+'\')">Copy this trader</button>'+
       '</div>').join('');
@@ -366,11 +366,11 @@
     const opts=CONNECTIONS.map(c=>'<option value="'+c.id+'">'+esc(c.exchange_name||c.exchange_id)+' '+esc(c.key_masked||'')+'</option>').join('');
     openModal('Copy '+name,
       '<div class="note">Two decisions: how much of your capital may be used, and how '+
-      'aggressively. Everything else \u2014 position sizing, exposure limits, minimum order '+
-      'handling \u2014 is worked out for you.</div>'+
+      'aggressively. Everything else — position sizing, exposure limits, minimum order '+
+      'handling — is worked out for you.</div>'+
       '<label class="l">Exchange account</label><select id="fw-conn" class="in">'+opts+'</select>'+
       '<label class="l">Allocation (USDT)</label><input id="fw-alloc" class="in" type="number" min="50" step="10" value="100"/>'+
-      '<div class="dim" style="font-size:11px;margin-top:4px">Minimum 50. Only this amount is ever used \u2014 the rest of your account is untouched.</div>'+
+      '<div class="dim" style="font-size:11px;margin-top:4px">Minimum 50. Only this amount is ever used — the rest of your account is untouched.</div>'+
       '<label class="l">Risk level</label>'+
       '<div class="risks">'+
         '<label class="risk"><input type="radio" name="rl" value="low"/><b>Low</b><span>~5% per trade</span></label>'+
@@ -390,13 +390,13 @@
       connection_id:document.getElementById('fw-conn').value,
       allocation:parseFloat(document.getElementById('fw-alloc').value||'0'),
       risk_level:rl?rl.value:'medium'};
-    msg.textContent='Setting up\u2026';
+    msg.textContent='Setting up…';
     try{
       const r=await fetch(API+'/api/copy/subscribe',{method:'POST',headers:H(),body:JSON.stringify(body)});
       const d=await r.json();
       if(r.ok&&d.ok){
-        let t='<span class="ok">\u2713 Copying started.</span>';
-        (d.warnings||[]).forEach(w=>{t+='<div class="warn">\u26a0 '+esc(w)+'</div>';});
+        let t='<span class="ok">✓ Copying started.</span>';
+        (d.warnings||[]).forEach(w=>{t+='<div class="warn">⚠ '+esc(w)+'</div>';});
         msg.innerHTML=t;
         setTimeout(()=>{closeModal();loadSubs();},1800);
       } else {
@@ -438,7 +438,7 @@
     try{
       const r=await fetch(API+'/api/copy/subscriptions/'+id,{method:'PATCH',headers:H(),body:JSON.stringify(body)});
       const d=await r.json();
-      if(d.ok){msg.innerHTML='<span class="ok">\u2713 Saved</span>';setTimeout(()=>{closeModal();loadSubs();},900);}
+      if(d.ok){msg.innerHTML='<span class="ok">✓ Saved</span>';setTimeout(()=>{closeModal();loadSubs();},900);}
       else msg.innerHTML='<span class="bad">'+esc(d.detail||'Could not save')+'</span>';
     }catch(e){ msg.textContent='Network error.'; }
   }
@@ -454,7 +454,7 @@
   function openModal(title, html){
     let m=document.getElementById('modal');
     if(!m){m=document.createElement('div');m.id='modal';m.className='modal';document.body.appendChild(m);}
-    m.innerHTML='<div class="mbox"><span class="x" onclick="closeModal()">\u2715</span>'+
+    m.innerHTML='<div class="mbox"><span class="x" onclick="closeModal()">✕</span>'+
       '<h2>'+esc(title)+'</h2>'+html+'</div>';
     m.classList.add('on');
   }
@@ -468,7 +468,7 @@
       const d=await (await fetch(API+'/api/copy/execution-mode')).json();
       const p=document.getElementById('modepill');
       const w=document.getElementById('tp-warn');
-      if(p){p.textContent=d.live?'\u25CF LIVE — real orders':'\u25CF DRY RUN — nothing is sent';
+      if(p){p.textContent=d.live?'● LIVE — real orders':'● DRY RUN — nothing is sent';
         p.style.color=d.live?'var(--red)':'var(--green)';
         p.style.borderColor=d.live?'rgba(248,113,113,.5)':'rgba(52,211,153,.4)';}
       if(w) w.textContent=d.description||'';
@@ -495,7 +495,7 @@
     if(!body.symbol||!body.notional){msg.textContent='Symbol and amount are required.';return;}
     if(!confirm(side.toUpperCase()+' '+body.symbol+' for '+body.notional+' USDT?\n\n'+
       'If you are a master trader, this trade will be copied to your followers.'))return;
-    msg.textContent='Placing\u2026';
+    msg.textContent='Placing…';
     try{
       const r=await fetch(API+'/api/copy/trade',{method:'POST',headers:H(),body:JSON.stringify(body)});
       const d=await r.json();
@@ -522,7 +522,7 @@
         const st=a.approval_status||'pending';
         return '<div class="applycard"><div class="rt">'+esc(a.display_name)+
           ' <span class="status-pill '+st+'">'+esc(st)+'</span></div>'+
-          '<div class="rs">'+esc(a.strategy||'')+' \u00b7 '+(a.follower_count||0)+' followers</div>'+
+          '<div class="rs">'+esc(a.strategy||'')+' · '+(a.follower_count||0)+' followers</div>'+
           (st==='pending'?'<div class="note" style="margin-top:11px">Your application is under review. '+
             'You will not appear publicly until an admin approves it.</div>':'')+
           (st==='rejected'&&a.review_note?'<div class="note" style="margin-top:11px">'+esc(a.review_note)+'</div>':'')+
@@ -533,7 +533,7 @@
     }
     box.innerHTML='<div class="applycard">'+
       '<div class="note">Master traders can be copied by other SKLZ users. '+
-      'Applications are reviewed before you appear publicly \u2014 followers are '+
+      'Applications are reviewed before you appear publicly — followers are '+
       'risking real money on your decisions.</div>'+
       '<button class="btn" onclick="showApply()">Apply to become a master trader</button></div>';
   }
@@ -552,7 +552,7 @@
           .map(s=>'<option>'+s+'</option>').join('')+'</select>'+
       '<label class="l">Country</label><input id="ap-country" class="in"/>'+
       '<label class="l">Trading experience</label><textarea id="ap-exp" class="in" rows="2" placeholder="How long, what markets"></textarea>'+
-      '<label class="l">Track record</label><textarea id="ap-track" class="in" rows="2" placeholder="Honest summary \u2014 including drawdowns"></textarea>'+
+      '<label class="l">Track record</label><textarea id="ap-track" class="in" rows="2" placeholder="Honest summary — including drawdowns"></textarea>'+
       '<button class="btn" onclick="doApply()">Submit application</button>'+
       '<div id="ap-msg" class="msg"></div>');
   }
@@ -567,11 +567,11 @@
       experience:document.getElementById('ap-exp').value.trim(),
       track_record:document.getElementById('ap-track').value.trim()};
     if(!body.display_name){msg.textContent='Display name is required.';return;}
-    msg.textContent='Submitting\u2026';
+    msg.textContent='Submitting…';
     try{
       const r=await fetch(API+'/api/copy/apply-master',{method:'POST',headers:H(),body:JSON.stringify(body)});
       const d=await r.json();
-      if(r.ok&&d.ok){msg.innerHTML='<span class="ok">\u2713 '+esc(d.message)+'</span>';
+      if(r.ok&&d.ok){msg.innerHTML='<span class="ok">✓ '+esc(d.message)+'</span>';
         setTimeout(()=>{closeModal();loadApplication();},1800);}
       else msg.innerHTML='<span class="bad">'+esc(d.detail||'Could not submit')+'</span>';
     }catch(e){ msg.textContent='Network error.'; }
