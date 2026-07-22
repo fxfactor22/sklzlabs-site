@@ -82,6 +82,18 @@
   .lv-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px}
   .drawer .disc2{margin-top:18px;font-size:10px;color:var(--dim);font-family:var(--mono);line-height:1.6}
   .disc{margin-top:20px;font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;line-height:1.7}
+
+  .sklz-lock{position:fixed;inset:0;background:rgba(8,10,15,.92);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+  .sklz-lock.on{display:flex}
+  .sklz-lock .box{background:#0F131C;border:1px solid rgba(245,166,35,.35);border-radius:16px;
+    max-width:440px;width:100%;padding:30px;text-align:center}
+  .sklz-lock h2{font-size:21px;margin-bottom:10px}
+  .sklz-lock p{color:#8B94A8;font-size:13.5px;line-height:1.6;margin-bottom:20px}
+  .sklz-lock .btn{display:inline-block;background:linear-gradient(135deg,#F5A623,#FFC24B);
+    color:#08101A;border:none;border-radius:10px;padding:13px 26px;font-weight:700;font-size:14.5px;
+    cursor:pointer;text-decoration:none}
+  .sklz-lock .back{display:block;margin-top:14px;color:#5B6377;font-size:12px;text-decoration:none}
 </style></head>
 <body>
 <div class="shell">
@@ -233,6 +245,22 @@
   document.getElementById('ikGo').onclick=send;
   document.getElementById('ikI').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
 })();
+
+  (async function sklzGate(){
+    try{
+      const r=await fetch("https://api.sklzlabs.com/api/billing/status",
+        {headers:{"Authorization":"Bearer "+localStorage.getItem("sklz_access")}});
+      const d=await r.json();
+      if(d.owner||d.active) return;                     // paid or admin -> full access
+      const el=document.createElement("div");
+      el.className="sklz-lock on";
+      el.innerHTML='<div class="box"><h2>&#128274; The Crypto Scanner is a paid feature</h2>'+
+        '<p>Live momentum across the top 100 coins, plus the daily honest read that flags traps instead of pumping them. Included with any SKLZ subscription.</p>'+
+        '<a class="btn" href="/pricing.html">See plans &rarr;</a>'+
+        '<a class="back" href="/dashboard.html">Back to dashboard</a></div>';
+      document.body.appendChild(el);
+    }catch(e){}
+  })();
 </script>
 <!-- /ISKRA widget -->
 </body></html>
