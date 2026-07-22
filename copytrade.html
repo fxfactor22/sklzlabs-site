@@ -95,6 +95,18 @@
   .msg{font-size:12.5px;margin-top:11px;text-align:center;line-height:1.6}
   .risknote{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:13px;
     line-height:1.7;text-align:center}
+  .tradebox{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px}
+  .trow{display:flex;gap:9px;flex-wrap:wrap}
+  .trow .in{flex:1;min-width:120px}
+  .trow .btn{margin-top:0;flex:1}
+  .btn.buy{background:linear-gradient(135deg,#34D399,#6EE7B7)}
+  .btn.sell{background:linear-gradient(135deg,#F87171,#FCA5A5)}
+  .applycard{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:17px}
+  .status-pill{display:inline-block;font-family:var(--mono);font-size:10px;padding:4px 10px;
+    border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
+  .status-pill.pending{background:rgba(245,166,35,.14);color:var(--gold)}
+  .status-pill.approved{background:rgba(52,211,153,.14);color:var(--green)}
+  .status-pill.rejected{background:rgba(248,113,113,.14);color:var(--red)}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
     background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;
     font-size:13px;transition:transform .28s;z-index:99}
@@ -110,6 +122,26 @@
   <div class="safety"><b>How your keys are handled.</b> SKLZ only accepts API keys with <b>read and spot-trade</b> permissions — keys that can withdraw are rejected outright and never stored. Your credentials are encrypted before they touch our database and are never displayed again. You can revoke a connection here at any time, and you should also delete the key on the exchange itself.</div>
   <section><div class="shead"><h2>Your exchange accounts</h2><button class="btn" onclick="showConnect()">+ Connect exchange</button></div><div id="conns"></div></section>
   <section><div class="shead"><h2>Who you are copying</h2></div><div id="subs"></div></section>
+  <section id="tradesec" style="display:none"><div class="shead"><h2>Place a trade</h2>
+<span id="modepill" class="pill" style="cursor:default"></span></div>
+<div class="tradebox">
+  <div class="trow">
+    <select id="tp-conn" class="in"></select>
+    <input id="tp-sym" class="in" placeholder="BTC/USDT" value="BTC/USDT"/>
+    <input id="tp-notional" class="in" type="number" placeholder="USDT amount" value="20"/>
+  </div>
+  <input id="tp-note" class="in" placeholder="Why this trade? (kept with the record)" style="margin-top:9px"/>
+  <div class="trow" style="margin-top:11px">
+    <button class="btn buy" onclick="doTrade('buy')">\u25B2 BUY</button>
+    <button class="btn sell" onclick="doTrade('sell')">\u25BC SELL</button>
+  </div>
+  <div id="tp-msg" class="msg"></div>
+  <div class="risknote" id="tp-warn"></div>
+</div></section>
+
+  <section><div class="shead"><h2>Become a master trader</h2></div>
+<div id="applybox"></div></section>
+
   <section><div class="shead"><h2>Traders accepting followers</h2></div><div id="leaders"></div></section>
   <div class="risknote">Copy trading involves risk of loss. Past performance does not guarantee future results. SKLZ provides software and never takes custody of your funds.</div>
 </div>
@@ -431,6 +463,128 @@
   async function logout(){try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}
     localStorage.removeItem('sklz_access');location.href='/';}
 
+  async function loadMode(){
+    try{
+      const d=await (await fetch(API+'/api/copy/execution-mode')).json();
+      const p=document.getElementById('modepill');
+      const w=document.getElementById('tp-warn');
+      if(p){p.textContent=d.live?'\u25CF LIVE — real orders':'\u25CF DRY RUN — nothing is sent';
+        p.style.color=d.live?'var(--red)':'var(--green)';
+        p.style.borderColor=d.live?'rgba(248,113,113,.5)':'rgba(52,211,153,.4)';}
+      if(w) w.textContent=d.description||'';
+    }catch(e){}
+  }
+
+  function renderTradePanel(){
+    const sec=document.getElementById('tradesec');
+    if(!CONNECTIONS.length){ if(sec) sec.style.display='none'; return; }
+    sec.style.display='block';
+    const sel=document.getElementById('tp-conn');
+    if(sel) sel.innerHTML=CONNECTIONS.map(c=>'<option value="'+c.id+'">'+
+      esc(c.exchange_name||c.exchange_id)+' '+esc(c.key_masked||'')+'</option>').join('');
+  }
+
+  async function doTrade(side){
+    const msg=document.getElementById('tp-msg');
+    const body={connection_id:document.getElementById('tp-conn').value,
+      symbol:document.getElementById('tp-sym').value.trim().toUpperCase(),
+      side:side,
+      notional:parseFloat(document.getElementById('tp-notional').value||'0'),
+      note:document.getElementById('tp-note').value.trim(),
+      confirm:true};
+    if(!body.symbol||!body.notional){msg.textContent='Symbol and amount are required.';return;}
+    if(!confirm(side.toUpperCase()+' '+body.symbol+' for '+body.notional+' USDT?\n\n'+
+      'If you are a master trader, this trade will be copied to your followers.'))return;
+    msg.textContent='Placing\u2026';
+    try{
+      const r=await fetch(API+'/api/copy/trade',{method:'POST',headers:H(),body:JSON.stringify(body)});
+      const d=await r.json();
+      if(r.ok&&d.ok){
+        msg.innerHTML='<span class="'+(d.mode==='live'?'ok':'warn')+'">'+esc(d.message)+'</span>';
+      } else {
+        msg.innerHTML='<span class="bad">'+esc(typeof d.detail==='string'?d.detail:'Order failed')+'</span>';
+      }
+    }catch(e){ msg.textContent='Network error.'; }
+  }
+
+  async function loadApplication(){
+    const box=document.getElementById('applybox');
+    if(!box) return;
+    if(!CONNECTIONS.length){
+      box.innerHTML='<div class="empty">Connect an exchange first to apply.</div>';
+      return;
+    }
+    let apps=[];
+    try{ apps=(await (await fetch(API+'/api/copy/my-application',{headers:H()})).json()).applications||[]; }
+    catch(e){}
+    if(apps.length){
+      box.innerHTML=apps.map(a=>{
+        const st=a.approval_status||'pending';
+        return '<div class="applycard"><div class="rt">'+esc(a.display_name)+
+          ' <span class="status-pill '+st+'">'+esc(st)+'</span></div>'+
+          '<div class="rs">'+esc(a.strategy||'')+' \u00b7 '+(a.follower_count||0)+' followers</div>'+
+          (st==='pending'?'<div class="note" style="margin-top:11px">Your application is under review. '+
+            'You will not appear publicly until an admin approves it.</div>':'')+
+          (st==='rejected'&&a.review_note?'<div class="note" style="margin-top:11px">'+esc(a.review_note)+'</div>':'')+
+          (st==='approved'?'<div class="note" style="margin-top:11px">You are an approved master trader. '+
+            'Your trades are copied to followers on the next poll.</div>':'')+
+        '</div>';}).join('');
+      return;
+    }
+    box.innerHTML='<div class="applycard">'+
+      '<div class="note">Master traders can be copied by other SKLZ users. '+
+      'Applications are reviewed before you appear publicly \u2014 followers are '+
+      'risking real money on your decisions.</div>'+
+      '<button class="btn" onclick="showApply()">Apply to become a master trader</button></div>';
+  }
+
+  function showApply(){
+    const opts=CONNECTIONS.map(c=>'<option value="'+c.id+'">'+
+      esc(c.exchange_name||c.exchange_id)+' '+esc(c.key_masked||'')+'</option>').join('');
+    openModal('Apply as a master trader',
+      '<div class="note">Tell us how you trade. An admin reviews every application '+
+      'because followers commit real capital to your decisions.</div>'+
+      '<label class="l">Account to publish</label><select id="ap-conn" class="in">'+opts+'</select>'+
+      '<label class="l">Display name</label><input id="ap-name" class="in"/>'+
+      '<label class="l">Headline</label><input id="ap-head" class="in" placeholder="Your approach in one line"/>'+
+      '<label class="l">Strategy</label><select id="ap-strat" class="in">'+
+        ['Balanced','Low Risk','Momentum','Swing','Trend Following','Scalping','BTC Specialist','Altcoin Specialist']
+          .map(s=>'<option>'+s+'</option>').join('')+'</select>'+
+      '<label class="l">Country</label><input id="ap-country" class="in"/>'+
+      '<label class="l">Trading experience</label><textarea id="ap-exp" class="in" rows="2" placeholder="How long, what markets"></textarea>'+
+      '<label class="l">Track record</label><textarea id="ap-track" class="in" rows="2" placeholder="Honest summary \u2014 including drawdowns"></textarea>'+
+      '<button class="btn" onclick="doApply()">Submit application</button>'+
+      '<div id="ap-msg" class="msg"></div>');
+  }
+
+  async function doApply(){
+    const msg=document.getElementById('ap-msg');
+    const body={connection_id:document.getElementById('ap-conn').value,
+      display_name:document.getElementById('ap-name').value.trim(),
+      headline:document.getElementById('ap-head').value.trim(),
+      strategy:document.getElementById('ap-strat').value,
+      country:document.getElementById('ap-country').value.trim(),
+      experience:document.getElementById('ap-exp').value.trim(),
+      track_record:document.getElementById('ap-track').value.trim()};
+    if(!body.display_name){msg.textContent='Display name is required.';return;}
+    msg.textContent='Submitting\u2026';
+    try{
+      const r=await fetch(API+'/api/copy/apply-master',{method:'POST',headers:H(),body:JSON.stringify(body)});
+      const d=await r.json();
+      if(r.ok&&d.ok){msg.innerHTML='<span class="ok">\u2713 '+esc(d.message)+'</span>';
+        setTimeout(()=>{closeModal();loadApplication();},1800);}
+      else msg.innerHTML='<span class="bad">'+esc(d.detail||'Could not submit')+'</span>';
+    }catch(e){ msg.textContent='Network error.'; }
+  }
+
+  const _origLoadConns = loadConnections;
+  loadConnections = async function(){
+    await _origLoadConns();
+    renderTradePanel();
+    loadApplication();
+  };
+
+  loadMode();
   loadAll();
 
 </script>
