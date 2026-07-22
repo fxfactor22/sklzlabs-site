@@ -57,6 +57,7 @@
   .brand .mark::before{content:"";width:8px;height:8px;background:var(--acc);
     border-radius:2px;box-shadow:0 0 12px var(--acc)}
   .nav-links{display:flex;gap:30px;align-items:center}
+  .nav{position:relative}
   .nav-links a{font-size:14px;color:var(--muted);transition:color .2s}
   .nav-links a:hover{color:var(--ink)}
   .nav-cta{
@@ -64,7 +65,19 @@
     border-radius:8px;color:var(--ink);transition:all .2s;background:var(--panel)
   }
   .nav-cta:hover{border-color:var(--acc);color:var(--acc)}
-  @media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+  .lnav-btn{display:none;width:40px;height:40px;border-radius:9px;cursor:pointer;
+    background:#0F131C;border:1px solid #1E2735;color:#EAEEF6;
+    align-items:center;justify-content:center;font-size:17px;margin-left:auto}
+  @media(max-width:760px){
+    .lnav-btn{display:flex !important}
+    .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;
+      align-items:stretch;gap:0;background:#0F131C;border-bottom:1px solid #1E2735;
+      padding:8px 0;display:none;box-shadow:0 18px 40px rgba(0,0,0,.5)}
+    .nav-links.open{display:flex !important}
+    .nav-links a{padding:13px 22px;font-size:15px}
+    .nav-links a.nav-cta{margin:8px 22px 4px;text-align:center}
+  }
+
 
   /* ---- hero ---- */
   .hero{padding:96px 0 72px;position:relative}
@@ -221,12 +234,12 @@
 <nav>
   <div class="wrap nav-in">
     <div class="brand"><img src="./sklz-logo.png" alt="SKLZ Labs" class="logo-img"/></div>
-    <div class="nav-links">
+    <div class="lnav-btn" onclick="sklzToggleNav()">&#9776;</div>
+    <div class="nav-links" id="navLinks">
       <a href="#products">Products</a>
       <a href="#how">How it works</a>
       <a href="#copy">Copy strategy</a>
       <a href="#affiliate">Affiliate</a>
-      <a href="#pricing">Pricing</a>
       <a href="#pricing">Pricing</a>
       <a href="/login.html">Log in</a>
       <a href="#products" class="nav-cta">Get the bot</a>
@@ -664,6 +677,15 @@
   document.getElementById('ikGo').onclick=send;
   document.getElementById('ikI').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
 })();
+
+  function sklzToggleNav(){
+    var n=document.getElementById('navLinks');
+    if(n) n.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('#navLinks a') : null;
+    if(a){ var n=document.getElementById('navLinks'); if(n) n.classList.remove('open'); }
+  });
 </script>
 <!-- /ISKRA widget -->
 </body>
