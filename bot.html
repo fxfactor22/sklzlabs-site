@@ -115,11 +115,14 @@
     return Math.round(s/3600)+'h ago';
   }
 
+  let IS_OWNER=false;
   async function checkAdmin(){
     try{
       const r=await fetch(API_BASE+'/api/billing/status',{headers:{'Authorization':'Bearer '+token()}});
       const d=await r.json();
-      if(d.owner) document.getElementById('adminpanel').style.display='block';
+      IS_OWNER = !!d.owner;
+      if(IS_OWNER) document.getElementById('adminpanel').style.display='block';
+      applyOwnerUI();
     }catch(e){}
   }
   async function sendOrder(side){
@@ -146,6 +149,7 @@
   checkAdmin();
   const BOTSTATE={};
   async function refreshState(bot){
+    if(!IS_OWNER) return;
     try{
       const r=await fetch(API_BASE+'/api/bot/state?bot_name='+encodeURIComponent(bot),{headers:{'Authorization':'Bearer '+token()}});
       const d=await r.json(); if(!d.ok)return;
@@ -157,6 +161,12 @@
         const on=el.dataset.cmd===(d.state==='pause'?'pause':'run');
         el.style.outline=on?'2px solid currentColor':'none';el.style.opacity=on?'1':'.6';});
     }catch(e){}
+  }
+  function applyOwnerUI(){
+    document.querySelectorAll('[data-botctl]').forEach(el=>{
+      el.style.display = IS_OWNER ? 'flex' : 'none';});
+    document.querySelectorAll('[data-botpill]').forEach(el=>{
+      el.style.display = IS_OWNER ? 'inline' : 'none';});
   }
   async function botCmd(bot,cmd){
     try{
@@ -238,7 +248,7 @@
           <div class="m"><div class="k">Realized</div>
             <div class="v ${ (st.realized_pl||0)>=0?'up':'down'}">${st.realized_pl!=null?fmtMoney(st.realized_pl):'—'}</div></div>
         </div>`}
-        <div style="display:flex;gap:8px;margin-top:12px">
+        <div data-botctl="1" style="display:flex;gap:8px;margin-top:12px">
           <button data-botbtn="${esc(s.bot)}" data-cmd="run" onclick="event.stopPropagation();botCmd('${esc(s.bot)}','run')" style="flex:1;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:var(--up,#34D399);border-radius:8px;padding:8px;font-family:var(--mono);font-size:11px;cursor:pointer">▶ START</button>
           <button data-botbtn="${esc(s.bot)}" data-cmd="pause" onclick="event.stopPropagation();botCmd('${esc(s.bot)}','pause')" style="flex:1;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.4);color:var(--down,#F87171);border-radius:8px;padding:8px;font-family:var(--mono);font-size:11px;cursor:pointer">⏸ PAUSE</button>
         </div>
@@ -253,6 +263,7 @@
       <div id="ai-slot"></div>`;
     document.getElementById('content').innerHTML = html;
     try{fillBots([...new Set(ss.map(s=>s.bot).filter(Boolean))]);}catch(e){}
+    applyOwnerUI();
     try{[...new Set(ss.map(s=>s.bot).filter(Boolean))].forEach(refreshState);}catch(e){}
     loadEvents(ss.find(s=>s.id===selected));
   }
