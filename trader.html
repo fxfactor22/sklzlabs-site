@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Trader — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;padding:22px}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:900px;margin:0 auto}
+  .back{font-family:var(--mono);font-size:11.5px;color:var(--muted);display:inline-block;margin-bottom:16px}
+  .back:hover{color:var(--gold)}
+  .hero{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;
+    background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:22px;flex-wrap:wrap}
+  h1{font-size:24px;letter-spacing:-.02em}
+  .hmeta{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:5px}
+  .hhead{color:var(--ink);font-size:14px;margin-top:11px;line-height:1.55}
+  .hbio{color:var(--muted);font-size:13px;margin-top:9px;line-height:1.6;max-width:60ch}
+  .hscore{border:1px solid;border-radius:13px;padding:12px 18px;text-align:center;min-width:96px}
+  .hscore .sv{font-family:var(--mono);font-size:32px;font-weight:700;line-height:1}
+  .hscore .sg{font-family:var(--mono);font-size:10px;text-transform:uppercase;
+    letter-spacing:.05em;margin-top:5px;color:var(--muted)}
+  .hscore .sx{font-family:var(--mono);font-size:8px;color:var(--dim);margin-top:3px}
+  .conf{background:var(--panel);border:1px solid var(--line);border-left-width:3px;
+    border-radius:11px;padding:14px 17px;margin-top:14px;font-size:13px;line-height:1.6}
+  .conf div{color:var(--muted);margin-top:5px}
+  .conf .damp{color:var(--gold);font-size:12px;margin-top:9px}
+  .flags{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+  .flag{font-family:var(--mono);font-size:10px;background:rgba(245,166,35,.1);
+    border:1px solid rgba(245,166,35,.3);color:var(--gold);padding:4px 9px;border-radius:6px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-top:16px}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .st{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px}
+  .st .k{font-family:var(--mono);font-size:8.5px;color:var(--dim);text-transform:uppercase}
+  .st .v{font-family:var(--mono);font-size:17px;font-weight:700;margin-top:5px}
+  .up{color:var(--green)}.down{color:var(--red)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:19px;margin-top:16px}
+  .card h2{font-family:var(--mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:.05em;color:var(--muted);margin-bottom:14px}
+  .card.ai{background:radial-gradient(120% 140% at 0% 0%,rgba(167,139,250,.1),transparent 55%),var(--panel);
+    border-color:rgba(167,139,250,.3)}
+  .card.ai h2{color:#A78BFA}
+  svg{width:100%;height:220px}
+  .cbar{margin-bottom:11px}
+  .cl{display:flex;justify-content:space-between;font-family:var(--mono);
+    font-size:10.5px;color:var(--muted);text-transform:capitalize;margin-bottom:5px}
+  .cl span{color:var(--dim)}
+  .ctrack{height:7px;background:var(--panel2);border-radius:4px;overflow:hidden}
+  .ctrack i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:4px}
+  .cnote{color:var(--muted);font-size:12.5px;margin-top:12px;line-height:1.6;font-style:italic}
+  .airead{font-size:14px;line-height:1.7}
+  .aigrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:15px}
+  @media(max-width:640px){.aigrid{grid-template-columns:1fr}}
+  .aigrid .k{font-family:var(--mono);font-size:9px;color:var(--dim);
+    text-transform:uppercase;margin-bottom:3px}
+  .aigrid>div{font-size:12.5px;line-height:1.55;color:var(--ink)}
+  .syms{display:flex;flex-wrap:wrap;gap:9px}
+  .sym{font-family:var(--mono);font-size:12px;background:var(--panel2);
+    border:1px solid var(--line);border-radius:7px;padding:6px 11px;color:var(--muted)}
+  .sym b{color:var(--ink)}
+  .nodata{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:26px}
+  .foot{font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;
+    line-height:1.9;margin-top:22px}
+  .foot b{color:var(--muted)}
+</style></head>
+<body>
+<div class="wrap" id="wrap"><div class="nodata" style="padding:70px">Loading…</div></div>
+<script>
+  const API = "https://api.sklzlabs.com";
+  const SLUG = new URLSearchParams(location.search).get('t') || '';
+
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function money(n){const v=+n||0;return (v>=0?'+$':'-$')+Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function pct(n){return Math.round((+n||0)*100)+'%'}
+
+  const GRADE_COLOR = {'Exceptional':'#F5A623','Strong':'#34D399','Solid':'#1DA9E0','Developing':'#8B94A8','Unrated':'#5B6377'};
+  const CONF_COLOR = {high:'#34D399', medium:'#1DA9E0', low:'#F5A623', none:'#5B6377'};
+
+  function curve(eq){
+    if (!eq || eq.length < 2)
+      return '<div class="nodata">Not enough closed trades to chart.</div>';
+    const w=860, h=220, min=Math.min(...eq), max=Math.max(...eq), rng=(max-min)||1;
+    const pts = eq.map((v,i)=>[(i/(eq.length-1))*w, h-((v-min)/rng)*(h*0.86)-16]);
+    const path = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const up = eq[eq.length-1] >= 0;
+    const col = up ? 'var(--green)' : 'var(--red)';
+    const area = path + ' L ' + w + ' ' + h + ' L 0 ' + h + ' Z';
+    return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">' +
+      '<path d="'+area+'" fill="'+col+'" opacity="0.08"/>' +
+      '<path d="'+path+'" fill="none" stroke="'+col+'" stroke-width="2"/></svg>';
+  }
+
+  function stat(k, v, cls){
+    return '<div class="st"><div class="k">'+esc(k)+'</div>' +
+           '<div class="v '+(cls||'')+'">'+v+'</div></div>';
+  }
+
+  function render(t){
+    const m=t.metrics||{}, r=t.rating||{}, c=m.confidence||{};
+    const gc=GRADE_COLOR[r.grade]||'#5B6377', cc=CONF_COLOR[c.level]||'#5B6377';
+    const comps = r.components||{};
+    const compBars = Object.keys(comps).map(function(k){
+      const max = {profitability:30, risk_control:25, consistency:25, risk_adjusted:20}[k]||25;
+      const w = Math.max(0, Math.min(100, (comps[k]/max)*100));
+      return '<div class="cbar"><div class="cl">'+esc(k.replace(/_/g,' '))+
+        '<span>'+comps[k]+'/'+max+'</span></div>'+
+        '<div class="ctrack"><i style="width:'+w+'%"></i></div></div>';
+    }).join('');
+    const flags=(r.flags||[]).map(f=>'<span class="flag">'+esc(f)+'</span>').join('');
+
+    document.getElementById('wrap').innerHTML =
+      '<a class="back" href="/marketplace.html">&larr; All traders</a>' +
+      '<div class="hero">' +
+        '<div class="hleft">' +
+          '<h1>'+esc(t.display_name)+'</h1>' +
+          '<div class="hmeta">'+esc(t.category)+
+            (t.country?' \u00b7 '+esc(t.country):'')+' \u00b7 '+esc(t.platform||'')+
+            (t.broker?' \u00b7 '+esc(t.broker):'')+'</div>' +
+          (t.headline?'<div class="hhead">'+esc(t.headline)+'</div>':'') +
+          (t.bio?'<div class="hbio">'+esc(t.bio)+'</div>':'') +
+        '</div>' +
+        '<div class="hscore" style="border-color:'+gc+'">' +
+          '<div class="sv" style="color:'+gc+'">'+(r.score==null?'\u2014':r.score)+'</div>' +
+          '<div class="sg">'+esc(r.grade||'')+'</div>' +
+          '<div class="sx">honest rating</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="conf" style="border-color:'+cc+'55">' +
+        '<b style="color:'+cc+'">'+esc(c.label||'')+'</b>' +
+        '<div>'+esc(c.note||'')+'</div>' +
+        (r.confidence_multiplier!=null && r.confidence_multiplier<1 ?
+          '<div class="damp">Raw score '+r.raw_score+' was reduced to '+r.score+
+          ' because the sample is small \u2014 SKLZ does not let a short lucky run outrank a long record.</div>':'') +
+      '</div>' +
+
+      (flags?'<div class="flags">'+flags+'</div>':'') +
+
+      '<div class="stats">' +
+        stat('Net P/L', money(m.net_pnl), (m.net_pnl||0)>=0?'up':'down') +
+        stat('Win rate', pct(m.win_rate)) +
+        stat('Trades', m.trades||0) +
+        stat('Profit factor', m.profit_factor??'\u2014') +
+        stat('Max drawdown', '-$'+Math.round(m.max_drawdown||0), 'down') +
+        stat('Recovery factor', m.recovery_factor??'\u2014') +
+        stat('Sharpe', m.sharpe??'\u2014') +
+        stat('Sortino', m.sortino??'\u2014') +
+        stat('Expectancy', money(m.expectancy)) +
+        stat('Consistency', m.consistency!=null?pct(m.consistency):'\u2014') +
+        stat('Profitable months', (m.profitable_months||0)+'/'+(m.months_traded||0)) +
+        stat('Worst losing streak', m.max_consecutive_losses||0) +
+      '</div>' +
+
+      '<div class="card"><h2>Equity curve</h2>'+curve(m.equity_curve)+'</div>' +
+
+      '<div class="card"><h2>Rating breakdown</h2>'+compBars+
+        '<div class="cnote">'+esc(r.summary||'')+'</div></div>' +
+
+      '<div class="card ai" id="aicard"><h2>\u2696 AI read</h2>' +
+        '<div class="nodata">Loading honest assessment\u2026</div></div>' +
+
+      '<div class="card"><h2>Most traded</h2><div class="syms">' +
+        ((m.top_symbols||[]).map(function(s){
+          return '<span class="sym">'+esc(s.symbol)+' <b>'+s.trades+'</b></span>';
+        }).join('') || '<span class="nodata">\u2014</span>') +
+      '</div></div>' +
+
+      '<div class="foot">Data source: <b>'+esc(t.data_source)+'</b> \u00b7 '+
+        esc(t.account_kind||'')+' account'+
+        (m.days_active?' \u00b7 '+m.days_active+' days of records':'')+'<br>'+
+        'Self-published via SKLZ tracking \u2014 not broker-verified. '+
+        'Past performance does not guarantee future results. Not financial advice.</div>';
+
+    loadAI();
+  }
+
+  async function loadAI(){
+    try{
+      const d = await (await fetch(API+'/api/marketplace/trader/'+encodeURIComponent(SLUG)+'/ai-read')).json();
+      const a = d.ai||{};
+      const tl = a.trust_level||'low';
+      const tc = CONF_COLOR[tl]||'#5B6377';
+      document.getElementById('aicard').innerHTML =
+        '<h2>\u2696 AI read</h2>' +
+        '<div class="airead">'+esc(a.read||'')+'</div>' +
+        '<div class="aigrid">' +
+          '<div><div class="k">Strength</div><div>'+esc(a.strength||'\u2014')+'</div></div>' +
+          '<div><div class="k">Weakness</div><div>'+esc(a.weakness||'\u2014')+'</div></div>' +
+          '<div><div class="k">Suits</div><div>'+esc(a.who_its_for||'\u2014')+'</div></div>' +
+          '<div><div class="k">Trust level</div><div style="color:'+tc+'">'+esc(tl)+'</div></div>' +
+        '</div>' +
+        (d.source==='deterministic'?'<div class="cnote">Computed assessment.</div>':'');
+    }catch(e){
+      document.getElementById('aicard').innerHTML =
+        '<h2>\u2696 AI read</h2><div class="nodata">Assessment unavailable.</div>';
+    }
+  }
+
+  async function load(){
+    if(!SLUG){
+      document.getElementById('wrap').innerHTML =
+        '<div class="nodata" style="padding:70px">No trader specified.</div>';
+      return;
+    }
+    try{
+      const res = await fetch(API+'/api/marketplace/trader/'+encodeURIComponent(SLUG));
+      if(!res.ok){
+        document.getElementById('wrap').innerHTML =
+          '<div class="nodata" style="padding:70px">This trader profile is not available.</div>';
+        return;
+      }
+      render(await res.json());
+    }catch(e){
+      document.getElementById('wrap').innerHTML =
+        '<div class="nodata" style="padding:70px">Could not load this profile.</div>';
+    }
+  }
+  load();
+
+</script>
+</body></html>

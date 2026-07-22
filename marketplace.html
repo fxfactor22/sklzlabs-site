@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Trader Marketplace — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .top{border-bottom:1px solid var(--line);background:var(--panel);padding:14px 22px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .top img{height:30px}
+  .top .brand{font-weight:700}
+  .top .right{margin-left:auto;display:flex;gap:10px}
+  .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;
+    border:none;border-radius:9px;padding:10px 18px;font-weight:700;font-size:13.5px;cursor:pointer}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .wrap{max-width:1120px;margin:0 auto;padding:26px 22px 70px}
+  h1{font-size:26px;letter-spacing:-.02em;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:8px;max-width:70ch;line-height:1.6}
+  .honest{background:rgba(29,169,224,.07);border:1px solid rgba(29,169,224,.28);
+    border-radius:12px;padding:13px 16px;font-size:12.5px;color:var(--muted);
+    line-height:1.65;margin:16px 0 20px}
+  .honest b{color:var(--ink)}
+  .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+  .bar .lbl{font-family:var(--mono);font-size:10px;color:var(--dim);text-transform:uppercase}
+  .seg{display:flex;gap:4px;flex-wrap:wrap}
+  .seg button{font-family:var(--mono);font-size:11px;padding:7px 13px;border-radius:7px;
+    border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+  .seg button.on{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,.08)}
+  select{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    padding:8px 11px;color:var(--ink);font-family:var(--mono);font-size:12px}
+  #count{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+  .tcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:18px;display:block;transition:border-color .15s,transform .15s}
+  .tcard:hover{border-color:var(--gold);transform:translateY(-2px)}
+  .thead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .tname{font-size:16px;font-weight:700}
+  .tmeta{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:3px}
+  .thead2{color:var(--muted);font-size:12.5px;margin-top:9px;line-height:1.5}
+  .tscore{border:1px solid;border-radius:11px;padding:7px 11px;text-align:center;min-width:64px}
+  .tscore .sv{font-family:var(--mono);font-size:20px;font-weight:700;line-height:1}
+  .tscore .sg{font-family:var(--mono);font-size:8.5px;color:var(--dim);
+    text-transform:uppercase;margin-top:3px;letter-spacing:.04em}
+  .tstats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:14px}
+  .tstats>div{display:flex;flex-direction:column;gap:2px}
+  .tstats .k{font-family:var(--mono);font-size:8.5px;color:var(--dim);text-transform:uppercase}
+  .tstats .v{font-family:var(--mono);font-size:13px;font-weight:600}
+  .up{color:var(--green)}.down{color:var(--red)}
+  .tconf{font-family:var(--mono);font-size:10.5px;margin-top:13px}
+  .tflags{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+  .flag{font-family:var(--mono);font-size:9px;background:rgba(245,166,35,.1);
+    border:1px solid rgba(245,166,35,.3);color:var(--gold);padding:2px 7px;border-radius:5px}
+  .tsrc{font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-top:11px;
+    padding-top:10px;border-top:1px solid var(--line)}
+  .empty{grid-column:1/-1;text-align:center;color:var(--dim);font-family:var(--mono);
+    font-size:13px;padding:60px 20px;line-height:1.8}
+  .foot{margin-top:34px;font-family:var(--mono);font-size:10px;color:var(--dim);
+    text-align:center;line-height:1.9}
+</style></head>
+<body>
+<div class="top">
+  <a href="/" class="brand"><img src="/sklz-logo.png" alt="SKLZ"/></a>
+  <span class="brand">SKLZ Labs</span>
+  <div class="right">
+    <a class="btn ghost" href="/dashboard.html">Dashboard</a>
+    <a class="btn" href="/login.html">Join free</a>
+  </div>
+</div>
+<div class="wrap">
+  <h1>Trader Marketplace</h1>
+  <div class="sub">Real track records, honestly rated. Every number below is computed from actual journaled trades — not marketing screenshots.</div>
+  <div class="honest"><b>How these ratings work.</b> Scores are <b>discounted for small samples</b>: a brilliant record over 15 trades cannot outrank a steady one over 200, because it has not earned it. Setups whose win rate and profit factor sit where randomness lives get flagged as <b>coin-flips</b> — SKLZ’s own 27M-tick research is why. Performance is self-published through SKLZ tracking; we do not verify with brokers, and we say so rather than printing a fake badge.</div>
+  <div class="bar">
+    <span class="lbl">Sort</span>
+    <div class="seg" id="sortseg">
+      <button data-s="rating" class="on">Honest rating</button>
+      <button data-s="return">Net return</button>
+      <button data-s="consistency">Consistency</button>
+      <button data-s="drawdown">Lowest drawdown</button>
+      <button data-s="trades">Most trades</button>
+    </div>
+    <select id="cat"><option value="">All categories</option></select>
+    <span id="count"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="foot">Past performance does not guarantee future results · Software and analytics only — not financial advice · Trading involves risk of loss<br>© 2026 SKLZ Labs</div>
+</div>
+<script>
+  const API = "https://api.sklzlabs.com";
+  let SORT = "rating";
+  let CAT = "";
+
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function money(n){const v=+n||0;return (v>=0?'+$':'-$')+Math.abs(v).toLocaleString(undefined,{maximumFractionDigits:0})}
+  function pct(n){return Math.round((+n||0)*100)+'%'}
+
+  const GRADE_COLOR = {
+    'Exceptional':'#F5A623','Strong':'#34D399','Solid':'#1DA9E0',
+    'Developing':'#8B94A8','Unrated':'#5B6377'
+  };
+  const CONF_COLOR = {high:'#34D399', medium:'#1DA9E0', low:'#F5A623', none:'#5B6377'};
+
+  function card(t){
+    const m = t.metrics || {}, r = t.rating || {};
+    const gc = GRADE_COLOR[r.grade] || '#5B6377';
+    const cc = CONF_COLOR[(m.confidence||{}).level] || '#5B6377';
+    const flags = (r.flags||[]).map(f =>
+      '<span class="flag">' + esc(f) + '</span>').join('');
+    const score = r.score == null ? '—' : r.score;
+    return '' +
+      '<a class="tcard" href="/trader.html?t=' + encodeURIComponent(t.slug) + '">' +
+        '<div class="thead">' +
+          '<div>' +
+            '<div class="tname">' + esc(t.display_name) + '</div>' +
+            '<div class="tmeta">' + esc(t.category) +
+              (t.country ? ' · ' + esc(t.country) : '') +
+              ' · ' + esc(t.platform || '') + '</div>' +
+          '</div>' +
+          '<div class="tscore" style="border-color:' + gc + '">' +
+            '<div class="sv" style="color:' + gc + '">' + score + '</div>' +
+            '<div class="sg">' + esc(r.grade || '') + '</div>' +
+          '</div>' +
+        '</div>' +
+        (t.headline ? '<div class="thead2">' + esc(t.headline) + '</div>' : '') +
+        '<div class="tstats">' +
+          '<div><span class="k">Net</span><span class="v ' + ((m.net_pnl||0)>=0?'up':'down') + '">' + money(m.net_pnl) + '</span></div>' +
+          '<div><span class="k">Win rate</span><span class="v">' + pct(m.win_rate) + '</span></div>' +
+          '<div><span class="k">Trades</span><span class="v">' + (m.trades||0) + '</span></div>' +
+          '<div><span class="k">Max DD</span><span class="v down">-$' + Math.round(m.max_drawdown||0) + '</span></div>' +
+          '<div><span class="k">Profit factor</span><span class="v">' + (m.profit_factor ?? '—') + '</span></div>' +
+          '<div><span class="k">Consistency</span><span class="v">' + (m.consistency!=null?pct(m.consistency):'—') + '</span></div>' +
+        '</div>' +
+        '<div class="tconf" style="color:' + cc + '">● ' + esc((m.confidence||{}).label || '') + '</div>' +
+        (flags ? '<div class="tflags">' + flags + '</div>' : '') +
+        '<div class="tsrc">' + esc(t.data_source) + ' · ' + esc(t.account_kind||'') + '</div>' +
+      '</a>';
+  }
+
+  async function load(){
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '<div class="empty">Loading traders…</div>';
+    try{
+      let url = API + '/api/marketplace/traders?sort=' + SORT;
+      if (CAT) url += '&category=' + encodeURIComponent(CAT);
+      const res = await fetch(url);
+      const d = await res.json();
+      const list = d.traders || [];
+      if (!list.length){
+        grid.innerHTML = '<div class="empty">No traders listed yet.<br>' +
+          '<span style="font-size:11px">Traders appear here once they publish an account with at least 10 closed trades.</span></div>';
+        return;
+      }
+      grid.innerHTML = list.map(card).join('');
+      document.getElementById('count').textContent =
+        list.length + ' trader' + (list.length>1?'s':'');
+    }catch(e){
+      grid.innerHTML = '<div class="empty">Could not load the marketplace.</div>';
+    }
+  }
+
+  async function loadCats(){
+    try{
+      const d = await (await fetch(API + '/api/marketplace/categories')).json();
+      const sel = document.getElementById('cat');
+      sel.innerHTML = '<option value="">All categories</option>' +
+        (d.categories||[]).map(c => '<option>' + esc(c) + '</option>').join('');
+    }catch(e){}
+  }
+
+  function setSort(s){
+    SORT = s;
+    document.querySelectorAll('#sortseg button').forEach(b =>
+      b.classList.toggle('on', b.dataset.s === s));
+    load();
+  }
+
+  document.getElementById('sortseg').addEventListener('click', e => {
+    if (e.target.dataset && e.target.dataset.s) setSort(e.target.dataset.s);
+  });
+  document.getElementById('cat').addEventListener('change', e => {
+    CAT = e.target.value; load();
+  });
+
+  loadCats();
+  load();
+
+</script>
+</body></html>
