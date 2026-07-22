@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CopyTrader — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
+    --green:#34D399;--red:#F87171;--purple:#A78BFA;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',-apple-system,system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  nav{border-bottom:1px solid var(--line);background:var(--panel);padding:13px 20px;
+    display:flex;align-items:center;gap:12px}
+  nav img{height:28px}
+  nav .sp{margin-left:auto;display:flex;gap:8px}
+  .pill{border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-size:12.5px;
+    color:var(--muted);cursor:pointer}
+  .pill:hover{color:var(--ink);border-color:var(--gold)}
+  .wrap{max-width:1000px;margin:0 auto;padding:24px 20px 70px}
+  h1{font-size:25px;letter-spacing:-.02em;margin-bottom:5px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:20px;max-width:72ch;line-height:1.6}
+  .safety{background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.25);
+    border-radius:12px;padding:13px 16px;font-size:12.5px;color:var(--muted);
+    line-height:1.7;margin-bottom:22px}
+  .safety b{color:var(--ink)}
+  section{margin-bottom:26px}
+  .shead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  h2{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--muted)}
+  .shead .btn{margin-left:auto}
+  .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;
+    border-radius:9px;padding:11px 18px;font-weight:700;font-size:13.5px;cursor:pointer;width:100%;
+    margin-top:14px}
+  .btn.small{width:auto;padding:9px 15px;font-size:12.5px;margin-top:12px}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);margin-top:8px}
+  .shead .btn{width:auto;padding:9px 15px;font-size:12.5px;margin-top:0}
+  .mini{background:var(--panel2);border:1px solid var(--line);color:var(--muted);
+    border-radius:7px;padding:6px 11px;font-size:11.5px;cursor:pointer;font-family:var(--mono)}
+  .mini:hover{color:var(--ink)}
+  .mini.danger{border-color:rgba(248,113,113,.4);color:var(--red)}
+  .row{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:14px 16px;margin-bottom:9px;flex-wrap:wrap}
+  .rt{font-size:14px;font-weight:600}
+  .rs{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:4px}
+  .ractions{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap}
+  .ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--gold)}.dim{color:var(--dim)}
+  .scard{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:17px;margin-bottom:11px}
+  .scard.stopped{border-color:rgba(248,113,113,.45)}
+  .scard .shead{margin-bottom:14px}
+  .bars{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:13px}
+  @media(max-width:620px){.bars{grid-template-columns:1fr}}
+  .bl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;
+    color:var(--dim);margin-bottom:5px}
+  .tr{height:7px;background:var(--panel2);border-radius:4px;overflow:hidden}
+  .tr i{display:block;height:100%;background:var(--blue);border-radius:4px}
+  .tr i.red{background:var(--red)}
+  .mini-stats{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .mini-stats b{color:var(--ink)}
+  .flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+  .flag{font-family:var(--mono);font-size:9.5px;background:rgba(245,166,35,.1);
+    border:1px solid rgba(245,166,35,.3);color:var(--gold);padding:3px 8px;border-radius:5px}
+  .stopnote{margin-top:11px;font-size:12px;color:var(--red);line-height:1.5}
+  .lcard{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px;
+    display:inline-block;width:calc(50% - 6px);vertical-align:top;margin:0 0 11px 0}
+  .lcard:nth-child(odd){margin-right:11px}
+  @media(max-width:680px){.lcard{width:100%;margin-right:0!important}}
+  .lhead{color:var(--muted);font-size:12.5px;margin-top:9px;line-height:1.5}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:12.5px;text-align:center;
+    padding:34px 18px;line-height:2;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;
+    justify-content:center;z-index:80;padding:20px}
+  .modal.on{display:flex}
+  .mbox{background:var(--panel);border:1px solid var(--line);border-radius:15px;max-width:460px;
+    width:100%;padding:24px;position:relative;max-height:92vh;overflow-y:auto}
+  .mbox h2{font-family:var(--sans);font-size:19px;text-transform:none;letter-spacing:0;
+    color:var(--ink);margin-bottom:12px}
+  .mbox .x{position:absolute;top:15px;right:17px;cursor:pointer;color:var(--muted);font-size:19px}
+  .note{background:var(--panel2);border-radius:9px;padding:12px 14px;font-size:12.5px;
+    color:var(--muted);line-height:1.65;margin-bottom:15px}
+  .note b{color:var(--ink)}
+  .l{display:block;font-family:var(--mono);font-size:9.5px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em;margin:13px 0 5px}
+  .in{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px;color:var(--ink);font-family:var(--mono);font-size:13px}
+  .in:focus{outline:none;border-color:var(--gold)}
+  .check{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-top:14px}
+  .risks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  @media(max-width:520px){.risks{grid-template-columns:1fr}}
+  .risk{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px;
+    cursor:pointer;text-align:center;display:block}
+  .risk b{display:block;font-size:13px;margin:5px 0 3px}
+  .risk span{font-family:var(--mono);font-size:9.5px;color:var(--dim)}
+  .risk:has(input:checked){border-color:var(--gold);background:rgba(245,166,35,.07)}
+  .msg{font-size:12.5px;margin-top:11px;text-align:center;line-height:1.6}
+  .risknote{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:13px;
+    line-height:1.7;text-align:center}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;
+    font-size:13px;transition:transform .28s;z-index:99}
+  .toast.on{transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<nav><a href="/dashboard.html"><img src="/sklz-logo.png" alt="SKLZ"/></a>
+  <span style="font-weight:700">CopyTrader</span>
+  <div class="sp"><a class="pill" href="/marketplace.html">🏆 Traders</a><a class="pill" href="/dashboard.html">← Dashboard</a></div></nav>
+<div class="wrap">
+  <h1>Crypto CopyTrader</h1>
+  <div class="sub">Connect your own exchange account, choose a trader to follow, and set two things: how much to allocate and how much risk to take. Trades are placed on your account, by you, under your control.</div>
+  <div class="safety"><b>How your keys are handled.</b> SKLZ only accepts API keys with <b>read and spot-trade</b> permissions — keys that can withdraw are rejected outright and never stored. Your credentials are encrypted before they touch our database and are never displayed again. You can revoke a connection here at any time, and you should also delete the key on the exchange itself.</div>
+  <section><div class="shead"><h2>Your exchange accounts</h2><button class="btn" onclick="showConnect()">+ Connect exchange</button></div><div id="conns"></div></section>
+  <section><div class="shead"><h2>Who you are copying</h2></div><div id="subs"></div></section>
+  <section><div class="shead"><h2>Traders accepting followers</h2></div><div id="leaders"></div></section>
+  <div class="risknote">Copy trading involves risk of loss. Past performance does not guarantee future results. SKLZ provides software and never takes custody of your funds.</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const API = "https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function money(n){return '$'+(+n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function pct(n){return Math.round((+n||0)*100)+'%'}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
+    clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),3000)}
+
+  let EXCHANGES=[], CONNECTIONS=[], SUBS=[], LEADERS=[];
+
+  async function loadAll(){
+    await Promise.all([loadExchanges(), loadConnections(), loadSubs(), loadLeaders()]);
+  }
+
+  async function loadExchanges(){
+    try{ EXCHANGES=(await (await fetch(API+'/api/copy/exchanges')).json()).exchanges||[]; }
+    catch(e){ EXCHANGES=[]; }
+  }
+
+  async function loadConnections(){
+    try{
+      const d=await (await fetch(API+'/api/copy/connections',{headers:H()})).json();
+      CONNECTIONS=d.connections||[];
+    }catch(e){ CONNECTIONS=[]; }
+    renderConnections();
+  }
+
+  function renderConnections(){
+    const el=document.getElementById('conns');
+    if(!CONNECTIONS.length){
+      el.innerHTML='<div class="empty">No exchange connected yet.<br>'+
+        '<span class="dim">Connect one with read + spot-trade permissions. '+
+        'Keys with withdrawal access are rejected.</span></div>';
+      return;
+    }
+    el.innerHTML=CONNECTIONS.map(c=>{
+      const p=c.permissions||{};
+      const verified=p.verified_by_exchange;
+      const badge = verified
+        ? '<span class="ok">\u2713 verified by exchange</span>'
+        : '<span class="warn">\u26a0 permissions self-declared</span>';
+      const stat = c.status==='active'
+        ? '<span class="ok">active</span>'
+        : '<span class="bad">'+esc(c.status)+'</span>';
+      return '<div class="row">'+
+        '<div><div class="rt">'+esc(c.exchange_name||c.exchange_id)+
+          ' <span class="dim">'+esc(c.key_masked||'')+'</span></div>'+
+          '<div class="rs">'+badge+' \u00b7 '+stat+'</div></div>'+
+        '<div class="ractions">'+
+          '<button class="mini" onclick="viewBalances(\''+c.id+'\')">Balances</button>'+
+          '<button class="mini" onclick="recheck(\''+c.id+'\')">Re-check</button>'+
+          '<button class="mini danger" onclick="revoke(\''+c.id+'\')">Revoke</button>'+
+        '</div></div>';
+    }).join('');
+  }
+
+  async function viewBalances(id){
+    toast('Loading balances\u2026');
+    try{
+      const d=await (await fetch(API+'/api/copy/connections/'+id+'/balances',{headers:H()})).json();
+      const b=d.balances||[];
+      if(d.detail){toast(d.detail);return;}
+      alert(b.length
+        ? b.slice(0,20).map(x=>x.asset+': '+x.total).join('\\n')
+        : 'No balances found on this account.');
+    }catch(e){ toast('Could not load balances'); }
+  }
+
+  async function recheck(id){
+    toast('Re-checking permissions\u2026');
+    try{
+      const d=await (await fetch(API+'/api/copy/connections/'+id+'/recheck',{method:'POST',headers:H()})).json();
+      toast(d.message||'Checked');
+      loadConnections();
+    }catch(e){ toast('Re-check failed'); }
+  }
+
+  async function revoke(id){
+    if(!confirm('Remove this exchange connection from SKLZ?\\n\\nAlso delete the key on the exchange itself for complete removal.'))return;
+    try{
+      await fetch(API+'/api/copy/connections/'+id,{method:'DELETE',headers:H()});
+      toast('Connection removed');
+      loadConnections();
+    }catch(e){ toast('Could not revoke'); }
+  }
+
+  function showConnect(){
+    const opts=EXCHANGES.map(e=>'<option value="'+e.id+'" data-pass="'+e.needs_passphrase+'">'+esc(e.name)+'</option>').join('');
+    openModal('Connect an exchange',
+      '<div class="note">Create an API key with <b>read</b> and <b>spot trading</b> permissions only. '+
+      'SKLZ rejects keys that can withdraw. Your key is encrypted before storage and never shown again.</div>'+
+      '<label class="l">Exchange</label><select id="cx-ex" class="in" onchange="passToggle()">'+opts+'</select>'+
+      '<label class="l">API key</label><input id="cx-key" class="in" autocomplete="off"/>'+
+      '<label class="l">Secret</label><input id="cx-sec" class="in" type="password" autocomplete="off"/>'+
+      '<div id="cx-passwrap" style="display:none"><label class="l">Passphrase</label>'+
+      '<input id="cx-pass" class="in" type="password" autocomplete="off"/></div>'+
+      '<label class="l">Label (optional)</label><input id="cx-label" class="in" placeholder="e.g. Bybit main"/>'+
+      '<label class="check"><input type="checkbox" id="cx-confirm"/> '+
+      'I confirm withdrawals are disabled on this key</label>'+
+      '<button class="btn" onclick="doConnect()">Verify &amp; connect</button>'+
+      '<div id="cx-msg" class="msg"></div>');
+    passToggle();
+  }
+
+  function passToggle(){
+    const s=document.getElementById('cx-ex');
+    if(!s)return;
+    const needs=s.options[s.selectedIndex]?.dataset.pass==='true';
+    const w=document.getElementById('cx-passwrap');
+    if(w) w.style.display=needs?'block':'none';
+  }
+
+  async function doConnect(){
+    const msg=document.getElementById('cx-msg');
+    const body={exchange_id:document.getElementById('cx-ex').value,
+      api_key:document.getElementById('cx-key').value.trim(),
+      secret:document.getElementById('cx-sec').value.trim(),
+      passphrase:(document.getElementById('cx-pass')||{}).value||'',
+      label:document.getElementById('cx-label').value.trim(),
+      confirm_no_withdrawal:document.getElementById('cx-confirm').checked};
+    if(!body.api_key||!body.secret){msg.textContent='Key and secret are required.';return;}
+    msg.textContent='Verifying with the exchange\u2026';
+    try{
+      const r=await fetch(API+'/api/copy/connect',{method:'POST',headers:H(),body:JSON.stringify(body)});
+      const d=await r.json();
+      if(r.ok&&d.ok){
+        msg.innerHTML='<span class="ok">\u2713 '+esc(d.message)+'</span>';
+        setTimeout(()=>{closeModal();loadConnections();},1200);
+      } else {
+        const det=d.detail;
+        msg.innerHTML='<span class="bad">'+esc(typeof det==='string'?det:(det&&det.message)||'Could not connect')+'</span>';
+      }
+    }catch(e){ msg.textContent='Network error.'; }
+  }
+
+  async function loadSubs(){
+    try{
+      const d=await (await fetch(API+'/api/copy/subscriptions',{headers:H()})).json();
+      SUBS=d.subscriptions||[];
+    }catch(e){ SUBS=[]; }
+    renderSubs();
+  }
+
+  function renderSubs(){
+    const el=document.getElementById('subs');
+    if(!SUBS.length){
+      el.innerHTML='<div class="empty">Not copying anyone yet.<br>'+
+        '<span class="dim">Pick a trader below, choose a risk level and how much to allocate.</span></div>';
+      return;
+    }
+    el.innerHTML=SUBS.map(s=>{
+      const h=s.health||{};
+      const dep=Math.round((h.deployed_pct||0)*100);
+      const loss=Math.round((h.daily_loss_used_pct||0)*100);
+      const flags=(h.flags||[]).map(f=>'<span class="flag">'+esc(f)+'</span>').join('');
+      const stopped=s.emergency_stopped;
+      return '<div class="scard'+(stopped?' stopped':'')+'">'+
+        '<div class="shead"><div>'+
+          '<div class="rt">'+esc((s.leader||{}).display_name||'—')+'</div>'+
+          '<div class="rs">'+esc((s.leader||{}).strategy||'')+' \u00b7 '+
+          esc(s.risk_level)+' risk \u00b7 '+money(s.allocation)+' allocated</div>'+
+        '</div>'+
+        '<div class="ractions">'+
+          '<button class="mini" onclick="editSub(\''+s.id+'\')">Settings</button>'+
+          '<button class="mini '+(stopped?'':'danger')+'" onclick="stopSub(\''+s.id+'\','+(stopped?'false':'true')+')">'+
+            (stopped?'Resume':'Emergency stop')+'</button>'+
+        '</div></div>'+
+        '<div class="bars">'+
+          '<div class="bar"><div class="bl">Allocation used<span>'+dep+'%</span></div>'+
+            '<div class="tr"><i style="width:'+dep+'%"></i></div></div>'+
+          '<div class="bar"><div class="bl">Daily loss limit<span>'+loss+'%</span></div>'+
+            '<div class="tr"><i class="red" style="width:'+loss+'%"></i></div></div>'+
+        '</div>'+
+        '<div class="mini-stats">'+
+          '<span>Deployed <b>'+money(h.deployed)+'</b></span>'+
+          '<span>Free <b>'+money(h.free)+'</b></span>'+
+          '<span>Open <b>'+(h.open_positions||0)+'</b></span>'+
+          '<span>Per trade <b>'+pct(h.risk_per_trade_pct)+'</b></span>'+
+        '</div>'+
+        (flags?'<div class="flags">'+flags+'</div>':'')+
+        (stopped?'<div class="stopnote">Emergency stop active \u2014 no new trades will be copied. '+
+          'Open positions remain yours to manage.</div>':'')+
+      '</div>';
+    }).join('');
+  }
+
+  async function loadLeaders(){
+    try{
+      const d=await (await fetch(API+'/api/copy/leaders')).json();
+      LEADERS=d.leaders||[];
+    }catch(e){ LEADERS=[]; }
+    renderLeaders();
+  }
+
+  function renderLeaders(){
+    const el=document.getElementById('leaders');
+    if(!LEADERS.length){
+      el.innerHTML='<div class="empty">No traders are accepting followers yet.</div>';
+      return;
+    }
+    el.innerHTML=LEADERS.map(l=>
+      '<div class="lcard"><div class="rt">'+esc(l.display_name)+'</div>'+
+      '<div class="rs">'+esc(l.strategy||'')+(l.country?' \u00b7 '+esc(l.country):'')+
+      ' \u00b7 '+(l.follower_count||0)+' follower'+((l.follower_count||0)===1?'':'s')+'</div>'+
+      (l.headline?'<div class="lhead">'+esc(l.headline)+'</div>':'')+
+      '<button class="btn small" onclick="showFollow(\''+l.id+'\',\''+esc(l.display_name).replace(/\\\\/g,'')+'\')">Copy this trader</button>'+
+      '</div>').join('');
+  }
+
+  function showFollow(leaderId, name){
+    if(!CONNECTIONS.length){
+      toast('Connect an exchange first');
+      return;
+    }
+    const opts=CONNECTIONS.map(c=>'<option value="'+c.id+'">'+esc(c.exchange_name||c.exchange_id)+' '+esc(c.key_masked||'')+'</option>').join('');
+    openModal('Copy '+name,
+      '<div class="note">Two decisions: how much of your capital may be used, and how '+
+      'aggressively. Everything else \u2014 position sizing, exposure limits, minimum order '+
+      'handling \u2014 is worked out for you.</div>'+
+      '<label class="l">Exchange account</label><select id="fw-conn" class="in">'+opts+'</select>'+
+      '<label class="l">Allocation (USDT)</label><input id="fw-alloc" class="in" type="number" min="50" step="10" value="100"/>'+
+      '<div class="dim" style="font-size:11px;margin-top:4px">Minimum 50. Only this amount is ever used \u2014 the rest of your account is untouched.</div>'+
+      '<label class="l">Risk level</label>'+
+      '<div class="risks">'+
+        '<label class="risk"><input type="radio" name="rl" value="low"/><b>Low</b><span>~5% per trade</span></label>'+
+        '<label class="risk"><input type="radio" name="rl" value="medium" checked/><b>Medium</b><span>~10% per trade</span></label>'+
+        '<label class="risk"><input type="radio" name="rl" value="high"/><b>High</b><span>~20% per trade</span></label>'+
+      '</div>'+
+      '<button class="btn" onclick="doFollow(\''+leaderId+'\')">Start copying</button>'+
+      '<div id="fw-msg" class="msg"></div>'+
+      '<div class="risknote">Copying involves risk of loss. Copied trades are placed on '+
+      'your own exchange account and remain your responsibility.</div>');
+  }
+
+  async function doFollow(leaderId){
+    const msg=document.getElementById('fw-msg');
+    const rl=document.querySelector('input[name="rl"]:checked');
+    const body={leader_id:leaderId,
+      connection_id:document.getElementById('fw-conn').value,
+      allocation:parseFloat(document.getElementById('fw-alloc').value||'0'),
+      risk_level:rl?rl.value:'medium'};
+    msg.textContent='Setting up\u2026';
+    try{
+      const r=await fetch(API+'/api/copy/subscribe',{method:'POST',headers:H(),body:JSON.stringify(body)});
+      const d=await r.json();
+      if(r.ok&&d.ok){
+        let t='<span class="ok">\u2713 Copying started.</span>';
+        (d.warnings||[]).forEach(w=>{t+='<div class="warn">\u26a0 '+esc(w)+'</div>';});
+        msg.innerHTML=t;
+        setTimeout(()=>{closeModal();loadSubs();},1800);
+      } else {
+        msg.innerHTML='<span class="bad">'+esc(typeof d.detail==='string'?d.detail:'Could not subscribe')+'</span>';
+      }
+    }catch(e){ msg.textContent='Network error.'; }
+  }
+
+  async function stopSub(id, enable){
+    if(enable && !confirm('Emergency stop?\\n\\nNo new trades will be copied. Open positions stay open.'))return;
+    try{
+      const d=await (await fetch(API+'/api/copy/subscriptions/'+id+'/emergency-stop?enable='+enable,
+        {method:'POST',headers:H()})).json();
+      toast(enable?'Emergency stop active':'Copying resumed');
+      loadSubs();
+    }catch(e){ toast('Failed'); }
+  }
+
+  function editSub(id){
+    const s=SUBS.find(x=>x.id===id); if(!s)return;
+    openModal('Copy settings',
+      '<label class="l">Allocation (USDT)</label><input id="es-alloc" class="in" type="number" min="50" value="'+s.allocation+'"/>'+
+      '<label class="l">Risk level</label><select id="es-risk" class="in">'+
+        ['low','medium','high'].map(r=>'<option value="'+r+'"'+(s.risk_level===r?' selected':'')+'>'+r+'</option>').join('')+
+      '</select>'+
+      '<label class="l">Max daily loss (% of allocation)</label><input id="es-loss" class="in" type="number" min="1" max="50" value="10"/>'+
+      '<label class="l">Max per asset (% of allocation)</label><input id="es-conc" class="in" type="number" min="5" max="100" value="30"/>'+
+      '<button class="btn" onclick="saveSub(\''+id+'\')">Save</button>'+
+      '<button class="btn ghost" onclick="unsub(\''+id+'\')">Stop copying entirely</button>'+
+      '<div id="es-msg" class="msg"></div>');
+  }
+
+  async function saveSub(id){
+    const body={allocation:parseFloat(document.getElementById('es-alloc').value||'0'),
+      risk_level:document.getElementById('es-risk').value,
+      max_daily_loss:parseFloat(document.getElementById('es-loss').value||'10')/100,
+      max_exposure_per_asset:parseFloat(document.getElementById('es-conc').value||'30')/100};
+    const msg=document.getElementById('es-msg');
+    try{
+      const r=await fetch(API+'/api/copy/subscriptions/'+id,{method:'PATCH',headers:H(),body:JSON.stringify(body)});
+      const d=await r.json();
+      if(d.ok){msg.innerHTML='<span class="ok">\u2713 Saved</span>';setTimeout(()=>{closeModal();loadSubs();},900);}
+      else msg.innerHTML='<span class="bad">'+esc(d.detail||'Could not save')+'</span>';
+    }catch(e){ msg.textContent='Network error.'; }
+  }
+
+  async function unsub(id){
+    if(!confirm('Stop copying this trader?\\n\\nOpen positions remain yours to manage.'))return;
+    try{
+      await fetch(API+'/api/copy/subscriptions/'+id,{method:'DELETE',headers:H()});
+      closeModal(); toast('Stopped copying'); loadSubs();
+    }catch(e){ toast('Failed'); }
+  }
+
+  function openModal(title, html){
+    let m=document.getElementById('modal');
+    if(!m){m=document.createElement('div');m.id='modal';m.className='modal';document.body.appendChild(m);}
+    m.innerHTML='<div class="mbox"><span class="x" onclick="closeModal()">\u2715</span>'+
+      '<h2>'+esc(title)+'</h2>'+html+'</div>';
+    m.classList.add('on');
+  }
+  function closeModal(){const m=document.getElementById('modal');if(m)m.classList.remove('on');}
+
+  async function logout(){try{await fetch(API+'/api/auth/logout',{method:'POST',headers:H()})}catch(e){}
+    localStorage.removeItem('sklz_access');location.href='/';}
+
+  loadAll();
+
+</script>
+</body></html>
