@@ -75,6 +75,14 @@
     background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;
     font-size:13px;transition:transform .28s;z-index:99}
   .toast.on{transform:translateX(-50%) translateY(0)}
+
+  .sklz-lock{position:fixed;inset:0;background:rgba(8,10,15,.92);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+  .sklz-lock.on{display:flex}
+  .sklz-lock .box{background:#0F131C;border:1px solid rgba(245,166,35,.35);border-radius:16px;max-width:440px;width:100%;padding:30px;text-align:center}
+  .sklz-lock h2{font-size:21px;margin-bottom:10px}
+  .sklz-lock p{color:#8B94A8;font-size:13.5px;line-height:1.6;margin-bottom:20px}
+  .sklz-lock .btn{display:inline-block;background:linear-gradient(135deg,#F5A623,#FFC24B);color:#08101A;border-radius:10px;padding:13px 26px;font-weight:700;font-size:14.5px;text-decoration:none}
+  .sklz-lock .back{display:block;margin-top:14px;color:#5B6377;font-size:12px;text-decoration:none}
 </style></head>
 <body>
 <div class="shell">
@@ -406,6 +414,22 @@
   document.getElementById('ikGo').onclick=send;
   document.getElementById('ikI').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
 })();
+
+  (async function sklzGate(){
+    try{
+      const r=await fetch("https://api.sklzlabs.com/api/billing/status",
+        {headers:{"Authorization":"Bearer "+localStorage.getItem("sklz_access")}});
+      const d=await r.json();
+      if(d.owner||d.active) return;
+      const el=document.createElement("div");
+      el.className="sklz-lock on";
+      el.innerHTML='<div class="box"><h2>&#128274; The Trading Journal is a paid feature</h2>'+
+        '<p>Log every trade with your reasoning and find out which of your setups have real edge \u2014 and which are coin-flips. Includes AI reviews, multi-account tracking and shareable performance.</p>'+
+        '<a class="btn" href="/pricing.html">See plans &rarr;</a>'+
+        '<a class="back" href="/dashboard.html">Back to dashboard</a></div>';
+      document.body.appendChild(el);
+    }catch(e){}
+  })();
 </script>
 <!-- /ISKRA widget -->
 <div id="addacct-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);align-items:center;justify-content:center;z-index:80;padding:20px">
