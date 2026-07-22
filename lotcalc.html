@@ -70,6 +70,7 @@
 <body>
 <nav><div class="nav-in">
   <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
+  <a class="btn" href="/marketplace.html">🏆 Traders</a>
   <a class="btn" href="/dashboard.html">← Dashboard</a>
 </div></nav>
 <div class="wrap">
@@ -276,6 +277,7 @@ calc();
 
   (function sklzMobileNav(){
     if(document.querySelector('.mnav-btn')) return;
+    if(!document.querySelector('.side')) return;   // no sidebar on this page
     var btn=document.createElement('div');
     btn.className='mnav-btn'; btn.setAttribute('aria-label','Menu');
     btn.innerHTML='&#9776;';

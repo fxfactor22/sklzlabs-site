@@ -129,6 +129,7 @@
   </div>
   <div style="display:flex;gap:8px">
     <button class="btn" onclick="reviewPerformance()">Review my trades</button>
+    <a class="btn" href="/marketplace.html">🏆 Traders</a>
     <a class="btn" href="/dashboard.html">← Dashboard</a>
   </div>
 </div></nav>
@@ -417,6 +418,7 @@
 
   (function sklzMobileNav(){
     if(document.querySelector('.mnav-btn')) return;
+    if(!document.querySelector('.side')) return;   // no sidebar on this page
     var btn=document.createElement('div');
     btn.className='mnav-btn'; btn.setAttribute('aria-label','Menu');
     btn.innerHTML='&#9776;';

@@ -115,6 +115,7 @@
     <div class="nav-item" onclick="location.href='/lotcalc.html'"><span class="i">🧮</span>Lot Calculator</div>
     <div class="nav-item" onclick="location.href='/indicators.html'"><span class="i">📊</span>Indicators</div>
     <div class="nav-item on"><span class="i">📓</span>Journal</div>
+    <div class="nav-item" onclick="location.href='/marketplace.html'"><span class="i">🏆</span>Marketplace</div>
     <div class="nav-sec">Account</div>
     <div class="nav-item" onclick="location.href='/pricing.html'"><span class="i">💳</span>Billing</div>
     <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
@@ -126,6 +127,7 @@
       <span style="font-family:monospace;font-size:10px;color:#5B6377;text-transform:uppercase">Account</span>
       <select id="acctsel" onchange="switchAccount()" style="background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:8px 11px;color:#EAEEF6;font-family:monospace;font-size:12.5px;min-width:220px"><option value="">All accounts</option></select>
       <span id="acctmeta" style="font-family:monospace;font-size:11px;color:#8B94A8"></span>
+      <button id="mktbtn" onclick="showListModal()" style="background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:#34D399;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;display:none">🏆 List on marketplace</button>
       <button id="sharebtn" onclick="shareAccount()" style="background:rgba(29,169,224,.12);border:1px solid rgba(29,169,224,.4);color:#1DA9E0;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;display:none">🔗 Share performance</button>
       <button onclick="showAddAccount()" style="margin-left:auto;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.4);color:#F5A623;border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer">+ Add account</button>
     </div>
@@ -214,6 +216,7 @@
   }
   function updateAcctMeta(){
     const sb=document.getElementById('sharebtn');if(sb)sb.style.display=CURRENT_ACCT?'inline-block':'none';
+    const mk=document.getElementById('mktbtn');if(mk)mk.style.display=CURRENT_ACCT?'inline-block':'none';
     const a=ACCOUNTS.find(x=>x.id===CURRENT_ACCT);
     const m=document.getElementById('acctmeta');
     if(!a){m.textContent=ACCOUNTS.length?(ACCOUNTS.length+' accounts'):'no accounts yet';return;}
@@ -451,6 +454,7 @@
 
   (function sklzMobileNav(){
     if(document.querySelector('.mnav-btn')) return;
+    if(!document.querySelector('.side')) return;   // no sidebar on this page
     var btn=document.createElement('div');
     btn.className='mnav-btn'; btn.setAttribute('aria-label','Menu');
     btn.innerHTML='&#9776;';
@@ -475,6 +479,60 @@
       if(item) close();
     });
   })();
+
+  function showListModal(){
+    if(!CURRENT_ACCT){alert('Select an account first');return;}
+    const a=ACCOUNTS.find(x=>x.id===CURRENT_ACCT)||{};
+    let m=document.getElementById('mkt-modal');
+    if(!m){m=document.createElement('div');m.id='mkt-modal';document.body.appendChild(m);}
+    m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;'+
+      'align-items:center;justify-content:center;z-index:90;padding:20px';
+    m.innerHTML='<div style="background:#0F131C;border:1px solid #1E2735;border-radius:14px;'+
+      'max-width:470px;width:100%;padding:22px;position:relative;max-height:90vh;overflow-y:auto">'+
+      '<span onclick="document.getElementById(\'mkt-modal\').remove()" style="position:absolute;'+
+      'top:14px;right:16px;cursor:pointer;color:#8B94A8;font-size:20px">\u2715</span>'+
+      '<h2 style="font-size:18px;margin-bottom:6px">List on the marketplace</h2>'+
+      '<p style="color:#8B94A8;font-size:12.5px;line-height:1.6;margin-bottom:14px">'+
+      'Your real stats become publicly viewable and honestly rated. Ratings are discounted '+
+      'for small samples \u2014 at least 10 closed trades are needed to appear.</p>'+
+      '<div style="display:grid;gap:10px">'+
+      '<div><label class="jl">Display name</label><input id="mk-name" class="jin" value="'+esc(a.label||'')+'"/></div>'+
+      '<div><label class="jl">Headline</label><input id="mk-head" class="jin" placeholder="What is your approach in one line?"/></div>'+
+      '<div><label class="jl">About</label><textarea id="mk-bio" class="jin" rows="3" placeholder="How you trade, what you focus on"></textarea></div>'+
+      '<div style="display:flex;gap:10px">'+
+      '<div style="flex:1"><label class="jl">Category</label><select id="mk-cat" class="jin"></select></div>'+
+      '<div style="flex:1"><label class="jl">Country</label><input id="mk-country" class="jin" placeholder="UAE"/></div>'+
+      '</div>'+
+      '<button onclick="submitListing()" style="background:linear-gradient(135deg,#F5A623,#FFC24B);'+
+      'color:#08101A;border:none;border-radius:9px;padding:12px;font-weight:700;cursor:pointer;'+
+      'margin-top:6px">Publish to marketplace</button>'+
+      '<div id="mk-msg" style="font-size:12px;color:#8B94A8;text-align:center"></div>'+
+      '</div></div>';
+    fetch(API+'/api/marketplace/categories').then(r=>r.json()).then(d=>{
+      const s=document.getElementById('mk-cat');
+      if(s) s.innerHTML=(d.categories||[]).map(c=>'<option>'+esc(c)+'</option>').join('');
+    }).catch(()=>{});
+  }
+
+  async function submitListing(){
+    const body={account_id:CURRENT_ACCT,
+      display_name:(document.getElementById('mk-name')||{}).value||'Trader',
+      headline:(document.getElementById('mk-head')||{}).value||'',
+      bio:(document.getElementById('mk-bio')||{}).value||'',
+      category:(document.getElementById('mk-cat')||{}).value||'Balanced',
+      country:(document.getElementById('mk-country')||{}).value||''};
+    const msg=document.getElementById('mk-msg');
+    if(msg) msg.textContent='Publishing\u2026';
+    try{
+      const r=await fetch(API+'/api/marketplace/list',{method:'POST',headers:H(),body:JSON.stringify(body)});
+      const d=await r.json();
+      if(d.ok){
+        if(msg) msg.innerHTML='\u2713 Live at <a href="'+d.public_url+'" style="color:#F5A623" target="_blank">your profile</a>';
+      } else {
+        if(msg) msg.textContent=d.detail||'Could not publish';
+      }
+    }catch(e){ if(msg) msg.textContent='Network error'; }
+  }
 </script>
 <!-- /ISKRA widget -->
 <div id="addacct-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);align-items:center;justify-content:center;z-index:80;padding:20px">

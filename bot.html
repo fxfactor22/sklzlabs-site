@@ -87,6 +87,7 @@
   <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ Labs"/></a>
   <div class="nav-right">
     <span class="pill" id="refresh-pill" onclick="loadAll()">↻ refresh</span>
+    <a class="pill" href="/marketplace.html">🏆 traders</a>
     <a class="pill" href="/dashboard.html">← dashboard</a>
   </div>
 </div></nav>
@@ -346,6 +347,7 @@
 
   (function sklzMobileNav(){
     if(document.querySelector('.mnav-btn')) return;
+    if(!document.querySelector('.side')) return;   // no sidebar on this page
     var btn=document.createElement('div');
     btn.className='mnav-btn'; btn.setAttribute('aria-label','Menu');
     btn.innerHTML='&#9776;';
