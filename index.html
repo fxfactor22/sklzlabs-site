@@ -262,13 +262,13 @@
 
     <!-- SIGNATURE: live-ish terminal -->
     <div class="term reveal">
-      <div class="term-bar"><i></i><i></i><i></i><span>sklz-bot-runner — session (demo data)</span></div>
+      <div class="term-bar"><i></i><i></i><i></i><span id="term-title">sklz-bot-runner — today</span></div>
       <div class="term-body">
         <div class="term-left">
           <div class="cards">
-            <div class="stat"><div class="k">Equity</div><div class="v neu tnum">$10,000</div></div>
-            <div class="stat"><div class="k">Open P/L</div><div class="v pos tnum" id="pl">+$0.00</div></div>
-            <div class="stat"><div class="k">Mode</div><div class="v neu">PAPER</div></div>
+            <div class="stat"><div class="k">Today's P/L</div><div class="v neu tnum" id="pl">—</div></div>
+            <div class="stat"><div class="k">Trades today</div><div class="v neu tnum" id="ntrades">—</div></div>
+            <div class="stat"><div class="k">Mode</div><div class="v neu" id="mode">—</div></div>
           </div>
           <div class="chart"><svg id="spark" viewBox="0 0 400 150" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
         </div>
@@ -712,6 +712,64 @@
     var a = e.target.closest ? e.target.closest('#navLinks a') : null;
     if(a){ var n=document.getElementById('navLinks'); if(n) n.classList.remove('open'); }
   });
+
+  // ── live: today's real bot performance (public endpoint, no auth) ──
+  (function liveStats(){
+    var API='https://api.sklzlabs.com';
+    function money(n){var v=+n||0;return (v>=0?'+$':'-$')+Math.abs(v).toFixed(2);}
+    function set(id,txt,cls){var e=document.getElementById(id);if(!e)return;
+      e.textContent=txt; if(cls){e.className='v tnum '+cls;}}
+    function drawCurve(pts){
+      var svg=document.getElementById('spark'); if(!svg) return;
+      if(!pts || pts.length<2){svg.innerHTML='';return;}
+      var w=400,h=150,min=Math.min.apply(null,pts.concat([0])),
+          max=Math.max.apply(null,pts.concat([0])),rng=(max-min)||1;
+      var d=pts.map(function(v,i){
+        var x=(i/(pts.length-1))*w, y=h-((v-min)/rng)*(h*0.82)-12;
+        return (i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);}).join(' ');
+      var up=pts[pts.length-1]>=0, col=up?'#34D399':'#F87171';
+      var zeroY=h-((0-min)/rng)*(h*0.82)-12;
+      svg.innerHTML=
+        '<line x1="0" y1="'+zeroY.toFixed(1)+'" x2="'+w+'" y2="'+zeroY.toFixed(1)+
+        '" stroke="#1E2735" stroke-width="1" stroke-dasharray="3 3"/>'+
+        '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2"/>';
+    }
+    function log(lines){
+      var el=document.getElementById('log'); if(!el) return;
+      el.innerHTML=lines.map(function(l){return '<div class="ln">'+l+'</div>';}).join('');
+    }
+    fetch(API+'/api/public/live-stats').then(function(r){return r.json();}).then(function(d){
+      var t=document.getElementById('term-title');
+      if(!d.published){
+        if(t)t.textContent='sklz-bot-runner — not published';
+        log(['<span class="dim">No account published yet.</span>']); return;
+      }
+      var acc=d.account||{};
+      if(t)t.textContent='sklz-bot-runner — '+(acc.label||'live')+' · '+d.date;
+      set('mode', acc.mode||'DEMO', 'neu');
+      if(!d.has_trades_today){
+        set('pl','—','neu'); set('ntrades','0','neu');
+        log(['<span class="dim">'+(d.message||'No trades closed yet today.')+'</span>',
+             '<span class="dim">'+(acc.platform||'')+' '+(acc.broker||'')+'</span>']);
+        drawCurve([]); return;
+      }
+      set('pl', money(d.net_pnl), d.net_pnl>=0?'pos':'neg');
+      set('ntrades', String(d.trades), 'neu');
+      drawCurve(d.curve||[]);
+      var lt=d.last_trade||{};
+      log([
+        '<span class="dim">'+d.date+' · '+(acc.mode||'DEMO')+' account</span>',
+        (d.wins||0)+' win / '+(d.losses||0)+' loss  ·  '+
+          Math.round((d.win_rate||0)*100)+'% today',
+        'best '+money(d.best)+'   worst '+money(d.worst),
+        'max drawdown today  -$'+(d.max_drawdown||0).toFixed(2),
+        lt.symbol?('last: '+String(lt.side||'').toUpperCase()+' '+lt.symbol+'  '+money(lt.pnl)):'',
+        '<span class="dim">'+(d.disclaimer||'')+'</span>'
+      ].filter(Boolean));
+    }).catch(function(){
+      log(['<span class="dim">Live stats unavailable right now.</span>']);
+    });
+  })();
 </script>
 <!-- /ISKRA widget -->
 </body>
