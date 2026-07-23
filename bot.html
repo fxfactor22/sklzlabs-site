@@ -159,7 +159,7 @@
           sl:+document.getElementById('o-sl').value||0,
           tp:+document.getElementById('o-tp').value||0})});
       const d=await r.json();
-      alert(d.ok?'✓ Order queued — executes within ~30s':(d.reason||d.detail||'failed'));
+      alert(d.ok?'✓ Order queued — executes within a few seconds':(d.reason||d.detail||'failed'));
       if(d.ok)document.getElementById('o-note').value='';
     }catch(e){alert('Network error');}
   }
