@@ -253,7 +253,7 @@
   <div class="wrap">
     <div class="eyebrow reveal">Trading systems, engineered</div>
     <h1 class="reveal">Algorithmic trading tools that <span class="g">show their work.</span></h1>
-    <p class="sub reveal">AI-assisted trading software that tells you the truth — TradingView indicators, TradeGPT chart analysis, signals with real levels, an honest journal, and a crypto scanner that flags traps instead of pumping them. On your own account, always.</p>
+    <p class="sub reveal">AI-assisted trading software that tells you the truth — indicators, chart analysis, signals with real levels, an honest journal that flags your coin-flip setups, a scanner that calls out traps, and copy trading on your own exchange account. We never hold your funds.</p>
     <div class="hero-cta reveal">
       <a href="/login.html" class="btn btn-primary">Create free account →</a>
       <a href="#products" class="btn btn-ghost">Explore the tools</a>
@@ -353,6 +353,28 @@
         </ul>
         <span class="tag live">● Live</span>
       </div>
+      <div class="card reveal">
+        <div class="num">/ 07</div>
+        <h3>Crypto CopyTrader</h3>
+        <p>Connect your own exchange account and copy a trader automatically. You choose two things: how much to allocate and how much risk. Everything else is worked out for you.</p>
+        <ul>
+          <li>12 exchanges — spot only, no leverage</li>
+          <li>Keys with withdrawal access are rejected</li>
+          <li>Allocation is a hard ceiling — the rest is untouched</li>
+        </ul>
+        <span class="tag live">● Live</span>
+      </div>
+      <div class="card reveal">
+        <div class="num">/ 08</div>
+        <h3>Trader Marketplace</h3>
+        <p>Real track records, honestly rated. Scores are discounted for small samples, and setups that behave like coin-flips are flagged as exactly that.</p>
+        <ul>
+          <li>Sharpe, drawdown, consistency, recovery factor</li>
+          <li>A lucky 15-trade run cannot outrank a steady 200</li>
+          <li>Data source labelled — no fake "verified" badges</li>
+        </ul>
+        <span class="tag live">● Live</span>
+      </div>
     </div>
   </div>
 </section>
@@ -395,27 +417,30 @@
   <div class="wrap">
     <div class="split">
       <div class="panel-lg feature reveal">
-        <div class="sec-eyebrow">03 — Copy the strategy</div>
-        <h2 style="font-size:30px">Follow SKLZ, on your own account.</h2>
-        <p class="sec-sub" style="font-size:15.5px">Soon you'll be able to copy our live strategy directly through the broker's own copy-trading system — no logins shared with us, funds stay in your account, unfollow anytime.</p>
+        <div class="sec-eyebrow">03 — Copy trading</div>
+        <h2 style="font-size:30px">Copy a trader, on your own account.</h2>
+        <p class="sec-sub" style="font-size:15.5px">Connect your own exchange with a read and spot-trade API key. Choose who to follow, how much to allocate, and how much risk to take. Trades are placed on your account — we never hold your funds and never accept a key that can withdraw.</p>
         <div class="flow">
-          <div class="flow-step"><span class="n">1</span><p>Open an account with the supported broker and complete their verification.</p></div>
-          <div class="flow-step"><span class="n">2</span><p>Click our <b>copy link</b> and set your own copy amount and risk.</p></div>
-          <div class="flow-step"><span class="n">3</span><p>The broker mirrors our trades into <b>your</b> account, automatically.</p></div>
-          <div class="flow-step"><span class="n">4</span><p>You stay in control — pause, adjust, or unfollow whenever you want.</p></div>
+          <div class="flow-step"><span class="n">1</span><p>Connect your exchange with a <b>read + spot-trade</b> key. Withdrawal keys are rejected outright.</p></div>
+          <div class="flow-step"><span class="n">2</span><p>Pick a master trader and set two things: <b>allocation</b> and <b>risk level</b>.</p></div>
+          <div class="flow-step"><span class="n">3</span><p>Their trades are mirrored into your account, sized to your allocation — never beyond it.</p></div>
+          <div class="flow-step"><span class="n">4</span><p>Daily loss limits, per-asset caps and an emergency stop are on by default.</p></div>
         </div>
-        <div class="disclaimer-chip" style="margin-top:26px"><span class="dot"></span> Launching after our public track record is live</div>
+        <div class="hero-cta" style="margin-top:26px">
+          <a href="/copytrade.html" class="btn btn-primary">Open CopyTrader →</a>
+        </div>
       </div>
       <div class="panel-lg reveal">
-        <div class="sec-eyebrow">Get notified</div>
-        <h2 style="font-size:30px">Be first when copy trading opens.</h2>
-        <p class="sec-sub" style="font-size:15.5px">We're building a verified, public track record now. Leave your email and we'll tell you the moment the copy link goes live — no spam, just the launch.</p>
-        <div class="wait-form">
-          <input type="email" id="wait-email" placeholder="you@email.com" aria-label="Email address" />
-          <button class="btn btn-primary" onclick="joinWait()">Notify me →</button>
+        <div class="sec-eyebrow">What we will not do</div>
+        <h2 style="font-size:30px">Your funds stay yours.</h2>
+        <p class="sec-sub" style="font-size:15.5px">Most of this industry asks for trust it has not earned. Here is exactly where our limits are:</p>
+        <div class="flow">
+          <div class="flow-step"><span class="n">✕</span><p>We never take custody of your funds. Ever.</p></div>
+          <div class="flow-step"><span class="n">✕</span><p>We reject any API key that can withdraw — verified with the exchange, not assumed.</p></div>
+          <div class="flow-step"><span class="n">✕</span><p>No leverage, no futures, no margin. Spot only.</p></div>
+          <div class="flow-step"><span class="n">✓</span><p>Your credentials are encrypted before storage and never shown again. Revoke anytime.</p></div>
         </div>
-        <div id="wait-ok">✓ You're on the list. We'll be in touch.</div>
-        <div class="wait-note">Performance shown anywhere on this site is illustrative until a verified live record is published. Trading carries risk of loss.</div>
+        <div class="disclaimer-chip" style="margin-top:26px"><span class="dot"></span> Copy trading involves risk of loss</div>
       </div>
     </div>
   </div>
