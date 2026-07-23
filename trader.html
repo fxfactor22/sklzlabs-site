@@ -113,7 +113,7 @@
     const flags=(r.flags||[]).map(f=>'<span class="flag">'+esc(f)+'</span>').join('');
 
     document.getElementById('wrap').innerHTML =
-      '<a class="back" href="/marketplace.html">&larr; All traders</a>' +
+      '<a href="/"><img src="/sklz-logo.png" alt="SKLZ Labs" style="height:46px;display:block;margin-bottom:14px"/></a>\n      <a class="back" href="/marketplace.html">&larr; All traders</a>' +
       '<div class="hero">' +
         '<div class="hleft">' +
           '<h1>'+esc(t.display_name)+'</h1>' +
