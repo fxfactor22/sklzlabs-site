@@ -66,6 +66,13 @@
   .locked-card p{color:var(--muted);font-size:13.5px;margin-bottom:16px}
   .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;border-radius:9px;
     padding:11px 22px;font-weight:700;font-size:14px;cursor:pointer;display:inline-block}
+  .sig-actions{display:flex;gap:7px;margin-top:13px;padding-top:12px;
+    border-top:1px solid var(--line);flex-wrap:wrap}
+  .sbtn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);
+    border-radius:7px;padding:7px 13px;font-family:var(--mono);font-size:11px;cursor:pointer}
+  .sbtn:hover{color:var(--ink);border-color:var(--gold)}
+  .sbtn.tg{border-color:rgba(29,169,224,.4);color:#1DA9E0}
+  .sbtn.wa{border-color:rgba(52,211,153,.4);color:#34D399}
   .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:30px}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);
     border:1px solid var(--gold);border-radius:9px;padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
@@ -209,7 +216,8 @@
         feed.innerHTML='<div class="empty">No signals yet. When SKLZ Radar detects alignment, they appear here and on Telegram.</div>';
         return;
       }
-      feed.innerHTML=d.signals.map(s=>{
+      SIGNALS=d.signals;
+      feed.innerHTML=d.signals.map((s,i)=>{
         const ez=(s.entry_low!=null&&s.entry_low!==s.entry_high)?`${s.entry_low} – ${s.entry_high}`:(s.entry??'—');
         return `<div class="sig">
           <div class="sig-head">
@@ -226,6 +234,12 @@
             <div class="lv"><div class="k">R : R</div><div class="v">${s.rr??'—'}</div></div>
           </div>
           ${s.note?`<div style="margin-top:10px;font-size:12.5px;color:var(--muted)">${esc(s.note)}</div>`:''}
+          <div class="sig-actions">
+            <button class="sbtn" onclick="copySignal(${i})">Copy</button>
+            <button class="sbtn" onclick="shareSignal(${i})">Share</button>
+            <button class="sbtn tg" onclick="tgShare(${i})">Telegram</button>
+            <button class="sbtn wa" onclick="waShare(${i})">WhatsApp</button>
+          </div>
         </div>`;}).join('');
     }catch(e){document.getElementById('feed').innerHTML='<div class="empty">Could not load feed.</div>';}
   }
@@ -236,6 +250,69 @@
   }
   init();
   setInterval(()=>{if(ent&&ent.allowed&&ent.allowed.length)loadFeed();},30000);
+
+  var SIGNALS=[];
+
+  function signalText(i){
+    var s=SIGNALS[i]; if(!s) return '';
+    var ez=(s.entry_low!=null&&s.entry_low!==s.entry_high)
+      ? s.entry_low+' - '+s.entry_high : (s.entry!=null?s.entry:'-');
+    var dir=s.side==='buy'?'BUY':'SELL';
+    var lines=[
+      (s.side==='buy'?'\uD83D\uDFE2':'\uD83D\uDD34')+' '+dir+' '+s.symbol,
+      (s.timeframe? s.timeframe+' \u00b7 ':'')+(s.category||''),
+      '',
+      'Entry zone:  '+ez,
+      'Stop loss:   '+(s.sl!=null?s.sl:'-'),
+      'Take profit: '+(s.tp!=null?s.tp:'-'),
+      'R:R:         '+(s.rr!=null?s.rr:'-')
+    ];
+    if(s.note) lines.push('', s.note);
+    lines.push('', 'via SKLZ Labs \u2014 sklzlabs.com',
+               'A plan, not a promise. Manage your own risk.');
+    return lines.join('\n');
+  }
+
+  function sigToast(m){
+    var t=document.getElementById('sigtoast');
+    if(!t){t=document.createElement('div');t.id='sigtoast';
+      t.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);'+
+      'background:#141A26;border:1px solid #F5A623;border-radius:9px;padding:11px 18px;'+
+      'font-size:13px;transition:transform .28s;z-index:99;color:#EAEEF6';
+      document.body.appendChild(t);}
+    t.textContent=m; t.style.transform='translateX(-50%) translateY(0)';
+    clearTimeout(t._x); t._x=setTimeout(function(){
+      t.style.transform='translateX(-50%) translateY(80px)';},2400);
+  }
+
+  function fallbackCopy(txt){
+    var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.left='-9999px';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');sigToast('Signal copied');}
+    catch(e){sigToast('Could not copy');}
+    document.body.removeChild(ta);
+  }
+  function copySignal(i){
+    var txt=signalText(i);
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){sigToast('Signal copied');})
+        .catch(function(){fallbackCopy(txt);});
+    } else fallbackCopy(txt);
+  }
+  function shareSignal(i){
+    var txt=signalText(i), s=SIGNALS[i]||{};
+    if(navigator.share){
+      navigator.share({title:'SKLZ signal: '+(s.symbol||''),text:txt}).catch(function(){});
+    } else { copySignal(i); }
+  }
+  function tgShare(i){
+    window.open('https://t.me/share/url?url=https%3A%2F%2Fwww.sklzlabs.com&text='+
+      encodeURIComponent(signalText(i)),'_blank','noopener');
+  }
+  function waShare(i){
+    window.open('https://wa.me/?text='+encodeURIComponent(signalText(i)),'_blank','noopener');
+  }
 </script>
 <!-- ISKRA AI webchat widget -->
 <script>
