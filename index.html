@@ -738,6 +738,7 @@
       var el=document.getElementById('log'); if(!el) return;
       el.innerHTML=lines.map(function(l){return '<div class="ln">'+l+'</div>';}).join('');
     }
+    function pull(){
     fetch(API+'/api/public/live-stats').then(function(r){return r.json();}).then(function(d){
       var t=document.getElementById('term-title');
       if(!d.published){
@@ -768,6 +769,15 @@
       ].filter(Boolean));
     }).catch(function(){
       log(['<span class="dim">Live stats unavailable right now.</span>']);
+    });
+    }
+    pull();
+    // refresh while the tab is visible; pause when it is not
+    var timer = setInterval(function(){
+      if (!document.hidden) pull();
+    }, 30000);
+    document.addEventListener('visibilitychange', function(){
+      if (!document.hidden) pull();
     });
   })();
 </script>
