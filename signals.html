@@ -79,6 +79,20 @@
   .sig-status.closed{background:rgba(139,148,168,.14);color:var(--muted)}
   .sig-status.invalid{background:rgba(248,113,113,.14);color:var(--red)}
   .sig-status.active{background:rgba(29,169,224,.12);color:var(--blue)}
+  .compose{background:radial-gradient(120% 140% at 0% 0%,rgba(245,166,35,.08),transparent 55%),var(--panel);
+    border:1px solid rgba(245,166,35,.3);border-radius:13px;padding:15px 17px;margin-bottom:14px}
+  .compose h3{font-family:var(--mono);font-size:10px;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--gold);margin-bottom:11px}
+  .compose input,.compose textarea{width:100%;background:var(--bg);border:1px solid var(--line);
+    border-radius:8px;padding:10px 12px;color:var(--ink);font-size:13px;margin-bottom:8px;
+    font-family:var(--sans)}
+  .compose input:focus,.compose textarea:focus{outline:none;border-color:var(--gold)}
+  .compose .crow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+  .compose .sym{max-width:150px;font-family:var(--mono);font-size:12px}
+  .compose .send{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;
+    border:none;border-radius:8px;padding:10px 20px;font-weight:700;font-size:13px;cursor:pointer}
+  .compose .chk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .compose .msg{font-size:12px;margin-top:8px;min-height:16px}
   .board{background:var(--panel);border:1px solid var(--line);border-radius:13px;
     padding:15px 17px;margin-bottom:16px}
   .board h3{font-family:var(--mono);font-size:10px;text-transform:uppercase;
@@ -137,6 +151,7 @@
   <main class="main">
     <h1>Signals</h1>
     <div class="sub">SKLZ Radar maps multiple markets and posts entry zone, stop and target — live to your dashboard and Telegram.</div>
+    <div id="compose" style="display:none"></div>
     <div id="updates"></div>
     <div id="content"><div class="empty">Loading…</div></div>
   </main>
@@ -379,6 +394,50 @@
   }
   loadUpdates();
   setInterval(function(){ if(!document.hidden) loadUpdates(); }, 45000);
+
+  async function initCompose(){
+    var el=document.getElementById('compose');
+    if(!el) return;
+    try{
+      var d=await (await fetch(API+'/api/billing/status',{headers:H()})).json();
+      if(!d.owner) return;
+    }catch(e){ return; }
+    el.style.display='block';
+    el.innerHTML='<div class="compose"><h3>\uD83D\uDCE3 Post an update to your audience</h3>'+
+      '<input id="an-head" maxlength="160" placeholder="Headline \u2014 e.g. Closing gold early ahead of NFP"/>'+
+      '<textarea id="an-detail" rows="2" maxlength="900" placeholder="Optional detail \u2014 the reasoning behind it"></textarea>'+
+      '<div class="crow">'+
+        '<input id="an-sym" class="sym" placeholder="Symbol (optional)"/>'+
+        '<label class="chk"><input type="checkbox" id="an-tg" checked/> Also send to Telegram</label>'+
+        '<button class="send" onclick="postAnnouncement()">Post update</button>'+
+      '</div><div class="msg" id="an-msg"></div></div>';
+  }
+
+  async function postAnnouncement(){
+    var head=(document.getElementById('an-head')||{}).value||'';
+    var msg=document.getElementById('an-msg');
+    if(!head.trim()){ msg.innerHTML='<span style="color:var(--red)">A headline is required.</span>'; return; }
+    var body={headline:head.trim(),
+      detail:((document.getElementById('an-detail')||{}).value||'').trim(),
+      symbol:((document.getElementById('an-sym')||{}).value||'').trim().toUpperCase(),
+      broadcast:(document.getElementById('an-tg')||{}).checked!==false};
+    msg.textContent='Posting\u2026';
+    try{
+      var r=await fetch(API+'/api/updates/announce',{method:'POST',headers:H(),body:JSON.stringify(body)});
+      var d=await r.json();
+      if(r.ok&&d.ok){
+        var tg=(d.telegram&&d.telegram.sent)?' and sent to Telegram':'';
+        msg.innerHTML='<span style="color:var(--green)">\u2713 Posted'+tg+'.</span>';
+        document.getElementById('an-head').value='';
+        document.getElementById('an-detail').value='';
+        document.getElementById('an-sym').value='';
+        loadUpdates();
+      } else {
+        msg.innerHTML='<span style="color:var(--red)">'+esc(d.detail||'Could not post')+'</span>';
+      }
+    }catch(e){ msg.innerHTML='<span style="color:var(--red)">Network error.</span>'; }
+  }
+  initCompose();
 </script>
 <!-- ISKRA AI webchat widget -->
 <script>
