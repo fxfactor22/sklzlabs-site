@@ -92,6 +92,11 @@
   .compose .send{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;
     border:none;border-radius:8px;padding:10px 20px;font-weight:700;font-size:13px;cursor:pointer}
   .compose .chk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .compose .asl{font-family:var(--mono);font-size:10px;color:var(--dim);
+    text-transform:uppercase;letter-spacing:.05em}
+  .compose .abtn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);
+    border-radius:7px;padding:6px 11px;font-size:11.5px;cursor:pointer}
+  .compose .abtn:hover{color:var(--ink);border-color:var(--gold)}
   .compose .msg{font-size:12px;margin-top:8px;min-height:16px}
   .board{background:var(--panel);border:1px solid var(--line);border-radius:13px;
     padding:15px 17px;margin-bottom:16px}
@@ -406,11 +411,54 @@
     el.innerHTML='<div class="compose"><h3>\uD83D\uDCE3 Post an update to your audience</h3>'+
       '<input id="an-head" maxlength="160" placeholder="Headline \u2014 e.g. Closing gold early ahead of NFP"/>'+
       '<textarea id="an-detail" rows="2" maxlength="900" placeholder="Optional detail \u2014 the reasoning behind it"></textarea>'+
+      '<div class="crow" style="margin-bottom:9px">'+
+        '<span class="asl">Draft with assistant:</span>'+
+        '<button class="abtn" onclick="draft(\'morning\')">Morning note</button>'+
+        '<button class="abtn" onclick="draft(\'session\')">Session</button>'+
+        '<button class="abtn" onclick="draft(\'news\')">High-impact news</button>'+
+        '<button class="abtn" onclick="draft(\'holiday\')">Holiday</button>'+
+      '</div>'+
+      '<div class="crow" style="margin-bottom:9px"><span class="asl">Send to:</span>'+
+        '<span id="an-channels"></span></div>'+
       '<div class="crow">'+
         '<input id="an-sym" class="sym" placeholder="Symbol (optional)"/>'+
-        '<label class="chk"><input type="checkbox" id="an-tg" checked/> Also send to Telegram</label>'+
+        '<label class="chk"><input type="checkbox" id="an-tg" checked/> Send to Telegram</label>'+
         '<button class="send" onclick="postAnnouncement()">Post update</button>'+
       '</div><div class="msg" id="an-msg"></div></div>';
+    loadChannels();
+  }
+
+  async function loadChannels(){
+    var el=document.getElementById('an-channels');
+    if(!el) return;
+    try{
+      var d=await (await fetch(API+'/api/updates/channels',{headers:H()})).json();
+      var ch=d.channels||[];
+      el.innerHTML=ch.map(function(c){
+        return '<label class="chk" style="margin-right:10px">'+
+          '<input type="checkbox" class="anch" value="'+c.id+'"'+
+          (c.configured?' checked':' disabled')+'/> '+esc(c.label)+
+          (c.configured?'':' <span style="color:var(--dim)">(not set)</span>')+'</label>';
+      }).join('');
+    }catch(e){ el.innerHTML='<span style="color:var(--dim)">could not load channels</span>'; }
+  }
+
+  async function draft(kind){
+    var msg=document.getElementById('an-msg');
+    msg.textContent='Drafting\u2026';
+    try{
+      var r=await fetch(API+'/api/updates/generate',{method:'POST',headers:H(),
+        body:JSON.stringify({kind:kind})});
+      var d=await r.json();
+      if(d.message){
+        document.getElementById('an-head').value=d.message.headline||'';
+        document.getElementById('an-detail').value=d.message.detail||'';
+        msg.innerHTML='<span style="color:var(--muted)">Drafted from '+
+          esc(d.message.source||'')+'. Edit it before posting.</span>';
+      } else {
+        msg.innerHTML='<span style="color:var(--muted)">'+esc(d.note||'Nothing to report.')+'</span>';
+      }
+    }catch(e){ msg.innerHTML='<span style="color:var(--red)">Could not draft.</span>'; }
   }
 
   async function postAnnouncement(){
@@ -420,7 +468,11 @@
     var body={headline:head.trim(),
       detail:((document.getElementById('an-detail')||{}).value||'').trim(),
       symbol:((document.getElementById('an-sym')||{}).value||'').trim().toUpperCase(),
-      broadcast:(document.getElementById('an-tg')||{}).checked!==false};
+      broadcast:(document.getElementById('an-tg')||{}).checked!==false,
+      channels:Array.prototype.slice.call(document.querySelectorAll('.anch:checked'))
+        .map(function(x){return x.value;})};
+    if(body.broadcast && !body.channels.length){
+      msg.innerHTML='<span style="color:var(--red)">Pick at least one channel.</span>'; return; }
     msg.textContent='Posting\u2026';
     try{
       var r=await fetch(API+'/api/updates/announce',{method:'POST',headers:H(),body:JSON.stringify(body)});
