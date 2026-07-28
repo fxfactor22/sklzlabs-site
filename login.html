@@ -169,6 +169,8 @@
     else { document.addEventListener('DOMContentLoaded', bindForgot); }
   })();
 
+  var SKLZ_API = "https://api.sklzlabs.com";
+
   function showReset(){
     var m=document.getElementById('reset-modal');
     if(!m){m=document.createElement('div');m.id='reset-modal';document.body.appendChild(m);}
@@ -197,7 +199,7 @@
     if(!em.trim()){msg.textContent='Enter your email address.';return;}
     msg.textContent='Sending\u2026';
     try{
-      var r=await fetch(API+'/api/auth/reset-password',{method:'POST',
+      var r=await fetch(SKLZ_API+'/api/auth/reset-password',{method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({email:em.trim()})});
       var d=await r.json();
