@@ -55,6 +55,7 @@
   <a href="/"><img src="./sklz-logo.png" alt="SKLZ Labs" class="logo"/></a>
   <div class="tabs">
     <button class="tab active" id="tab-login" onclick="mode('login')">Log in</button>
+      <div style="text-align:center;margin-top:12px"><a href="#" onclick="showReset();return false" style="font-size:12.5px;color:#8B94A8;text-decoration:none">Forgot your password?</a></div>
     <button class="tab" id="tab-signup" onclick="mode('signup')">Sign up</button>
   </div>
 
@@ -185,6 +186,42 @@
 })();
 </script>
 <!-- /ISKRA widget -->
-<script src="/sklz-i18n.js" defer></script>
+<script src="/sklz-i18n.js" defer>
+  function showReset(){
+    var m=document.getElementById('reset-modal');
+    if(!m){m=document.createElement('div');m.id='reset-modal';document.body.appendChild(m);}
+    m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;'+
+      'align-items:center;justify-content:center;z-index:90;padding:20px';
+    m.innerHTML='<div style="background:#0F131C;border:1px solid #1E2735;border-radius:14px;'+
+      'max-width:400px;width:100%;padding:24px;position:relative;color:#EAEEF6">'+
+      '<span onclick="document.getElementById(\'reset-modal\').remove()" '+
+      'style="position:absolute;top:14px;right:16px;cursor:pointer;color:#8B94A8;font-size:20px">\u2715</span>'+
+      '<h2 style="font-size:18px;margin-bottom:8px">Reset your password</h2>'+
+      '<p style="color:#8B94A8;font-size:13px;line-height:1.6;margin-bottom:14px">'+
+      'Enter your email and we will send you a link to set a new password.</p>'+
+      '<input id="rs-email" type="email" placeholder="you@example.com" '+
+      'style="width:100%;background:#080A0F;border:1px solid #1E2735;border-radius:8px;'+
+      'padding:11px 13px;color:#EAEEF6;font-size:14px;margin-bottom:10px"/>'+
+      '<button onclick="doReset()" style="width:100%;background:linear-gradient(135deg,#F5A623,#FFC24B);'+
+      'color:#08101A;border:none;border-radius:9px;padding:12px;font-weight:700;cursor:pointer">'+
+      'Send reset link</button>'+
+      '<div id="rs-msg" style="font-size:12.5px;margin-top:11px;text-align:center;color:#8B94A8"></div>'+
+      '</div>';
+  }
+
+  async function doReset(){
+    var em=(document.getElementById('rs-email')||{}).value||'';
+    var msg=document.getElementById('rs-msg');
+    if(!em.trim()){msg.textContent='Enter your email address.';return;}
+    msg.textContent='Sending\u2026';
+    try{
+      var r=await fetch(API+'/api/auth/reset-password',{method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email:em.trim()})});
+      var d=await r.json();
+      msg.innerHTML='<span style="color:#34D399">'+(d.message||'Check your inbox.')+'</span>';
+    }catch(e){ msg.textContent='Could not send right now. Try again shortly.'; }
+  }
+</script>
 </body>
 </html>
