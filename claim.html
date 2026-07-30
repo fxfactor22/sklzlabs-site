@@ -61,10 +61,15 @@
     if(pw.length<8){show('err','Password needs at least 8 characters.');return}
     const b=document.getElementById('go');b.disabled=true;b.textContent='Creating…';
     try{
-      const r=await fetch(API+'/api/billing/claim',{method:'POST',
+      // mobile connections are slow and this does several round trips;
+      // give it a generous window before calling it a failure
+      const ctrl = new AbortController();
+      const killer = setTimeout(function(){ctrl.abort();}, 45000);
+      const r=await fetch(API+'/api/billing/claim',{method:'POST',signal:ctrl.signal,
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({session_id:sid,password:pw,
           display_name:document.getElementById('name').value.trim()})});
+      clearTimeout(killer);
       const d=await r.json();
       if(!r.ok){b.disabled=false;b.textContent='Create account & activate →';
         show('err',d.detail||'Could not create the account.');return}
@@ -79,8 +84,19 @@
         show('ok',`Account ready — <b>${d.plan}</b> active. <a href="/login.html">Log in →</a>`);
       }
       b.style.display='none';
-    }catch(e){b.disabled=false;b.textContent='Create account & activate →';
-      show('err','Network error — your payment is safe; try again in a moment.')}
+    }catch(e){
+      b.disabled=false;b.textContent='Try again →';
+      // The request never completed. It may still have SUCCEEDED on the
+      // server, so tell the truth rather than implying nothing happened.
+      show('err',
+        'The connection dropped before we heard back.<br><br>'+
+        '<b>Your payment is safe.</b> The account may already have been '+
+        'created — try logging in first with the email you paid with.<br><br>'+
+        '<a href="/login.html" style="color:#F5A623">Go to login →</a><br><br>'+
+        '<span style="font-size:12px;color:#8B94A8">If that does not work, '+
+        'press the button again, or email fxfactor24@gmail.com and we will '+
+        'activate it by hand within the hour.</span>');
+    }
   }
 </script>
 <!-- ISKRA AI webchat widget -->
