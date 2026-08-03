@@ -127,7 +127,7 @@
 <div class="tradebox">
   <div class="trow">
     <select id="tp-conn" class="in"></select>
-    <select id="tp-sym" class="in"><option value="BTC/USDT">BTC/USDT</option></select><div id="tp-min" style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:4px"></div>
+    <select id="tp-quote" class="in" style="max-width:110px;margin-right:8px"><option value="USDT">USDT</option></select><select id="tp-sym" class="in"><option value="BTC/USDT">BTC/USDT</option></select><div id="tp-min" style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:4px"></div>
     <input id="tp-notional" class="in" type="number" placeholder="USDT amount" value="20"/>
   </div>
   <input id="tp-note" class="in" placeholder="Why this trade? (kept with the record)" style="margin-top:9px"/>
@@ -642,7 +642,19 @@
     if(!sel || !connId) return;
     sel.innerHTML = '<option>loading pairs…</option>';
     try{
-      var d = await (await fetch(API+'/api/copy/symbols/'+connId,{headers:H()})).json();
+      var q = (document.getElementById('tp-quote')||{}).value || 'USDT';
+      var d = await (await fetch(API+'/api/copy/symbols/'+connId+'?quote='+q,{headers:H()})).json();
+
+      // let the user pick a quote their followers can actually trade —
+      // matching quotes means no translation and closer fills
+      var qs = d.quotes_available || [];
+      var qsel = document.getElementById('tp-quote');
+      if (qsel && qs.length && qsel.options.length <= 1) {
+        qsel.innerHTML = qs.map(function(x){
+          return '<option value="'+x.quote+'"'+(x.quote===q?' selected':'')+'>'+
+                 x.quote+' ('+x.pairs+')</option>';}).join('');
+        qsel.onchange = function(){ loadSymbols(connId); };
+      }
       var rows = d.symbols || [];
       if(!rows.length){
         sel.innerHTML = '<option value="BTC/USDT">BTC/USDT</option>';
