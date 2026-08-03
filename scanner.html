@@ -232,8 +232,56 @@
         '<div class="lv-row"><span>Invalidation</span><span>'+esc(act.invalidation||'\u2014')+'</span></div>'+
         '<div class="lv-row"><span>Target</span><span>'+esc(act.target||'\u2014')+'</span></div></div>'+
         (v.honest_flag?'<div class="flag">\u26a0 '+esc(v.honest_flag)+'</div>':'')+
+        '<div id="ofsec"><div class="lbl" style="margin-top:18px">Order flow</div>'+
+        '<div class="ai-load" style="padding:12px 0">reading the book\u2026</div></div>'+
         '<div class="disc2">This is analysis for education, not financial advice. Bias is a lean based on current conditions and historical base rates \u2014 not a prediction. SKLZ research shows momentum setups are frequently coin-flips out-of-sample. Trade your own plan; risk only what you can lose.</div>';
+      loadOrderFlow(sym);
     }catch(e){dr.innerHTML='<span class="x" onclick="closeRead()">\u2715</span><div class="ai-load" style="margin-top:40px">Read unavailable.</div>';}
+  }
+
+  // Real order book depth and measured delta. Unlike the forex side — where
+  // there is no central exchange and delta must be inferred — this is what
+  // the venue actually reports.
+  async function loadOrderFlow(sym){
+    const el=document.getElementById('ofsec');
+    if(!el) return;
+    try{
+      const r=await fetch(API+'/api/scanner/orderflow/'+encodeURIComponent(sym),{headers:H()});
+      const d=await r.json();
+      if(!d || !d.book || !d.book.available){
+        el.innerHTML='<div class="lbl" style="margin-top:18px">Order flow</div>'+
+          '<div class="disc2" style="margin-top:6px">No order book available for '+
+          esc(sym)+' on this exchange.</div>';
+        return;
+      }
+      const imb=d.book.imbalance||0;
+      const dl=(d.delta&&d.delta.imbalance)||0;
+      const bidPct=Math.round((imb+1)/2*100);
+      const flags=(d.flags||[]).map(function(f){
+        const hard=f.indexOf('ABSORPTION')===0||f.indexOf('WALL')===0;
+        return '<div class="flag" style="margin-top:8px'+
+          (hard?';border-color:rgba(248,113,113,.4);color:#F87171':'')+'">'+
+          esc(f)+'</div>';}).join('');
+
+      el.innerHTML=
+        '<div class="lbl" style="margin-top:18px">Order flow \u00b7 '+
+          esc(d.exchange||'')+' \u00b7 <span style="color:#34D399">measured</span></div>'+
+        '<div class="lv-row"><span>Book</span><span>'+
+          (imb>=0?'+':'')+(imb*100).toFixed(0)+'% '+(imb>=0?'bid':'ask')+'</span></div>'+
+        '<div style="height:7px;border-radius:4px;overflow:hidden;display:flex;margin:6px 0 12px">'+
+          '<i style="width:'+bidPct+'%;background:#34D399"></i>'+
+          '<i style="flex:1;background:#F87171"></i></div>'+
+        '<div class="lv-row"><span>Aggression</span><span>'+
+          (dl>=0?'+':'')+(dl*100).toFixed(0)+'% '+(dl>=0?'buying':'selling')+'</span></div>'+
+        '<div class="lv-row"><span>Trades seen</span><span>'+
+          ((d.delta&&d.delta.trades_seen)||0)+'</span></div>'+
+        '<div class="lv-row"><span>Spread</span><span>'+(d.book.spread||0)+'</span></div>'+
+        flags+
+        '<div class="disc2" style="margin-top:10px">'+esc(d.caveat||'')+'</div>';
+    }catch(e){
+      el.innerHTML='<div class="lbl" style="margin-top:18px">Order flow</div>'+
+        '<div class="disc2" style="margin-top:6px">Could not read the book right now.</div>';
+    }
   }
   function closeRead(){const d=document.getElementById('drawer');if(d)d.classList.remove('open');}
   load(); loadTop(); setInterval(load,60000); setInterval(loadTop,120000);
