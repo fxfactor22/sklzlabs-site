@@ -232,6 +232,8 @@
         '<div class="lv-row"><span>Invalidation</span><span>'+esc(act.invalidation||'\u2014')+'</span></div>'+
         '<div class="lv-row"><span>Target</span><span>'+esc(act.target||'\u2014')+'</span></div></div>'+
         (v.honest_flag?'<div class="flag">\u26a0 '+esc(v.honest_flag)+'</div>':'')+
+        (v.flow_note?'<div class="sec"><div class="lbl">What the book says</div>'+
+          esc(v.flow_note)+'</div>':'')+
         '<div id="ofsec"><div class="lbl" style="margin-top:18px">Order flow</div>'+
         '<div class="ai-load" style="padding:12px 0">reading the book\u2026</div></div>'+
         '<div class="disc2">This is analysis for education, not financial advice. Bias is a lean based on current conditions and historical base rates \u2014 not a prediction. SKLZ research shows momentum setups are frequently coin-flips out-of-sample. Trade your own plan; risk only what you can lose.</div>';
