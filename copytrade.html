@@ -475,9 +475,37 @@
     }catch(e){}
   }
 
+  let CAN_TRADE = null;   // null = not yet known
+
+  async function checkCanTrade(){
+    try{
+      const d=await (await fetch(API+'/api/copy/can-trade',{headers:H()})).json();
+      CAN_TRADE = d;
+    }catch(e){ CAN_TRADE = {allowed:false, reason:''}; }
+    renderTradePanel();
+  }
+
   function renderTradePanel(){
     const sec=document.getElementById('tradesec');
     if(!CONNECTIONS.length){ if(sec) sec.style.display='none'; return; }
+
+    // manual trading is a leader tool. Showing the panel to a subscriber and
+    // then rejecting the order is worse than not showing it — explain instead.
+    if(CAN_TRADE && !CAN_TRADE.allowed){
+      if(sec){
+        sec.style.display='block';
+        sec.innerHTML='<div class="sec"><div class="lbl">Manual trading</div>'+
+          '<div style="color:var(--muted);font-size:13.5px;line-height:1.7;'+
+          'padding:14px 0">'+esc(CAN_TRADE.reason||
+            'Manual trading is available to approved master traders only.')+'</div>'+
+          (CAN_TRADE.role==='subscriber'
+            ? '<a href="#apply" style="color:var(--gold);font-size:13px">'+
+              'Apply as a master trader \u2192</a>' : '')+
+          '</div>';
+      }
+      return;
+    }
+    if(!CAN_TRADE) { if(sec) sec.style.display='none'; return; }
     sec.style.display='block';
     const sel=document.getElementById('tp-conn');
     if(sel) sel.innerHTML=CONNECTIONS.map(c=>'<option value="'+c.id+'">'+
@@ -596,7 +624,7 @@
   const _origLoadConns = loadConnections;
   loadConnections = async function(){
     await _origLoadConns();
-    renderTradePanel();
+    checkCanTrade();
     loadApplication();
   };
 
