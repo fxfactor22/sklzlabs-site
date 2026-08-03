@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Become a SKLZ Master Trader</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
+    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--green:#34D399;
+    --red:#F87171;--blue:#1DA9E0;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  nav{border-bottom:1px solid var(--line);background:var(--panel);padding:13px 20px;
+    display:flex;align-items:center;gap:12px}
+  nav img{height:46px}
+  nav .sp{margin-left:auto;display:flex;gap:8px}
+  .pill{border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-size:12.5px;color:var(--muted)}
+  .wrap{max-width:900px;margin:0 auto;padding:34px 20px 80px}
+  h1{font-size:32px;letter-spacing:-.025em;margin-bottom:10px}
+  .lead{color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:8px;max-width:70ch}
+  .status{display:inline-flex;align-items:center;gap:7px;background:rgba(245,166,35,.1);
+    border:1px solid rgba(245,166,35,.35);border-radius:999px;padding:7px 15px;
+    font-family:var(--mono);font-size:11px;color:var(--gold);margin:18px 0 26px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:15px;
+    padding:24px;margin-bottom:16px}
+  .card h2{font-size:19px;margin-bottom:12px}
+  .card p{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:10px}
+  .std{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+  @media(max-width:620px){.std{grid-template-columns:1fr}}
+  .std div{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:14px}
+  .std .n{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--gold)}
+  .std .k{font-family:var(--mono);font-size:9.5px;color:var(--dim);text-transform:uppercase;
+    letter-spacing:.05em;margin-top:5px}
+  .rules{list-style:none;margin-top:6px}
+  .rules li{color:var(--muted);font-size:13.5px;line-height:1.75;padding-left:22px;
+    position:relative;margin-bottom:7px}
+  .rules li:before{content:"\2713";position:absolute;left:0;color:var(--green);
+    font-family:var(--mono)}
+  .rules li.no:before{content:"\2715";color:var(--red)}
+  .honest{background:rgba(29,169,224,.06);border:1px solid rgba(29,169,224,.28);
+    border-radius:13px;padding:17px 20px;font-size:13.5px;color:var(--muted);line-height:1.75}
+  .honest b{color:var(--ink)}
+  .cta{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));
+    color:#08101A;border-radius:11px;padding:14px 26px;font-weight:700;font-size:15px;margin-top:8px}
+  .ghost{display:inline-block;border:1px solid var(--line);color:var(--muted);
+    border-radius:11px;padding:14px 22px;font-size:14px;margin:8px 0 0 8px}
+  .foot{font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;
+    margin-top:34px;line-height:1.9}
+</style></head>
+<body>
+<nav><a href="/"><img src="/sklz-logo.png" alt="SKLZ Labs"/></a><div class="sp"><a class="pill" href="/marketplace.html">Marketplace</a><a class="pill" href="/login.html">Log in</a></div></nav>
+<div class="wrap">
+  <h1>Become a SKLZ Master Trader</h1>
+  <div class="lead">Traders with a verified record can be followed by SKLZ subscribers, and earn a share of the subscription revenue from every follower they bring — for as long as that follower stays.</div>
+  <div class="status">● Early access — taking applications, not yet live</div>
+  <div class="card">
+    <h2>What "verified" means here</h2>
+    <p>Anyone can post a screenshot. We compute your record ourselves from a read-only key on your own account — nothing is self-reported.</p>
+    <div class="std">
+      <div><div class="n">100</div><div class="k">minimum trades</div></div>
+      <div><div class="n">3</div><div class="k">months minimum</div></div>
+      <div><div class="n">30%</div><div class="k">max drawdown</div></div>
+    </div>
+    <p>Below 100 trades, luck and skill are genuinely hard to tell apart — so we do not pretend otherwise. Records that look like coin-flips are labelled as such on your profile, even after you are listed.</p>
+  </div>
+  <div class="card">
+    <h2>What you earn</h2>
+    <p><b>10% of the subscription revenue</b> from each follower you bring, paid monthly for as long as they stay subscribed.</p>
+    <ul class="rules">
+      <li>Paid on retained followers, not signups</li>
+      <li>Nothing is earned from a follower who leaves</li>
+      <li>No cut of your followers’ trading profits — those are theirs</li>
+    </ul>
+    <p style="margin-top:14px;font-size:13px">We pay on retention deliberately. Paying per signup would reward attracting followers, which rewards looking aggressive. Paying on retention rewards not losing them.</p>
+  </div>
+  <div class="card">
+    <h2>What we will not do</h2>
+    <ul class="rules">
+      <li class="no">We never hold your funds, or your followers’ funds</li>
+      <li class="no">We never accept an API key that can withdraw</li>
+      <li class="no">We do not hide a leader’s losing periods</li>
+      <li class="no">We do not list anyone who has not met the standard</li>
+      <li>Followers set their own allocation and risk — you never see their balance</li>
+      <li>A leader breaching the drawdown limit is suspended automatically</li>
+    </ul>
+  </div>
+  <div class="honest">
+    <b>Where this actually stands.</b> The copy engine is built and tested, and has placed real orders on a live exchange. It has not yet run at scale with multiple followers. We are onboarding a small number of traders first, deliberately, so that problems are found with a handful of people rather than a few hundred.<br><br>If you apply now you are early, and you should expect the rough edges that come with that. We would rather say so than discover it together later.
+  </div>
+  <div style="margin-top:26px">
+    <a class="cta" href="/copytrade.html">Apply as a master trader →</a>
+    <a class="ghost" href="/marketplace.html">See current traders</a>
+  </div>
+  <div class="foot">Trading involves risk of loss · Past performance does not predict future results<br>SKLZ Labs provides software · We are not a broker and do not manage money</div>
+</div>
+</body></html>
