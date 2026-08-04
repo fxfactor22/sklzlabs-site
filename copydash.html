@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Copy trading dashboard — SKLZ Labs</title>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;
+    --ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;
+    --green:#34D399;--red:#F87171;--blue:#1DA9E0;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  a{color:inherit;text-decoration:none}
+  .wrap{display:flex;min-height:100vh}
+  .side{width:226px;background:var(--panel);border-right:1px solid var(--line);
+    padding:18px 0;flex-shrink:0}
+  .side img{height:44px;margin:0 18px 22px}
+  .nav-sec{font-family:var(--mono);font-size:9px;color:var(--dim);
+    text-transform:uppercase;letter-spacing:.08em;padding:14px 18px 6px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;
+    font-size:13.5px;color:var(--muted);cursor:pointer}
+  .nav-item:hover{color:var(--ink);background:rgba(255,255,255,.03)}
+  .nav-item.on{color:var(--gold);background:rgba(245,166,35,.07);
+    box-shadow:inset 2px 0 0 var(--gold)}
+  .main{flex:1;padding:26px 28px 60px;min-width:0}
+  .head{display:flex;align-items:flex-start;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+  h1{font-size:25px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:13.5px;margin-top:4px}
+  .ctrl{margin-left:auto;display:flex;gap:8px}
+  select.ctrl-i{background:var(--panel);border:1px solid var(--line);border-radius:9px;
+    padding:9px 13px;color:var(--muted);font-size:12.5px;font-family:var(--sans)}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+  @media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px}
+  .kpi .k{font-size:12px;color:var(--muted);margin-bottom:7px}
+  .kpi .v{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.02em}
+  .kpi .s{font-size:11.5px;color:var(--dim);margin-top:5px}
+  .grid{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:16px}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:19px}
+  .card h2{font-size:15.5px;margin-bottom:14px;display:flex;align-items:center}
+  table{width:100%;border-collapse:collapse}
+  th{font-family:var(--mono);font-size:9.5px;color:var(--dim);text-transform:uppercase;
+    letter-spacing:.05em;text-align:left;padding:0 10px 9px 0;font-weight:400}
+  td{padding:11px 10px 11px 0;border-top:1px solid var(--line);font-size:13px}
+  td.n{font-family:var(--mono);font-size:12.5px}
+  .pill{font-family:var(--mono);font-size:9.5px;padding:3px 9px;border-radius:5px}
+  .pill.win{color:var(--green);background:rgba(52,211,153,.12)}
+  .pill.loss{color:var(--red);background:rgba(248,113,113,.12)}
+  .pill.open{color:var(--blue);background:rgba(29,169,224,.12)}
+  .pill.skip{color:var(--muted);background:rgba(139,148,168,.1)}
+  .up{color:var(--green)} .down{color:var(--red)}
+  .honest{background:rgba(29,169,224,.06);border:1px solid rgba(29,169,224,.28);
+    border-radius:11px;padding:13px 15px;font-size:12.5px;color:var(--muted);
+    line-height:1.65;margin-top:12px}
+  .empty{color:var(--dim);font-family:var(--mono);font-size:11.5px;padding:22px 0;
+    text-align:center}
+  .arow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+  .arow:first-child{border-top:none}
+  .arow .as{font-family:var(--mono);font-weight:700;font-size:12.5px;min-width:52px}
+  .arow .am{margin-left:auto;font-family:var(--mono);font-size:12.5px}
+  .grid3{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:14px;margin-bottom:16px}
+  @media(max-width:1100px){.grid3{grid-template-columns:1fr}}
+  .card h2 span{margin-left:auto}
+  .prof{margin:auto 18px 0;padding-top:16px;border-top:1px solid var(--line)}
+  .prof .nm{font-size:13.5px;font-weight:600}
+  .prof .rl{font-family:var(--mono);font-size:9px;color:var(--gold);
+    background:rgba(245,166,35,.1);padding:3px 8px;border-radius:5px;
+    display:inline-block;margin-top:5px}
+  .prof .bal{font-family:var(--mono);font-size:19px;font-weight:700;margin-top:12px}
+  .prof .bk{font-size:10.5px;color:var(--dim);margin-top:2px}
+  .lg{fill:none;stroke-width:2}
+</style></head>
+<body>
+<div class="wrap">
+<aside class="side"><a href="/"><img src="/sklz-logo.png" alt="SKLZ Labs"/></a>
+<div class="nav-sec">Workspace</div><div class="nav-item on"><span>◈</span>Dashboard</div><div class="nav-item" onclick="location.href='/copytrade.html'"><span>⇄</span>Copy trading</div><div class="nav-item" onclick="location.href='/marketplace.html'"><span>🏆</span>Traders</div><div class="nav-sec">Tools</div><div class="nav-item" onclick="location.href='/scanner.html'"><span>🔍</span>Scanner</div><div class="nav-item" onclick="location.href='/journal.html'"><span>📒</span>Journal</div><div class="nav-item" onclick="location.href='/signals.html'"><span>📡</span>Signals</div><div class="nav-sec">Account</div><div class="nav-item" onclick="location.href='/account.html'"><span>🔑</span>Login &amp; security</div><div class="nav-item" onclick="location.href='/dashboard.html'"><span>←</span>Main dashboard</div><div class="prof">
+  <div class="nm" id="pf-name">—</div>
+  <div class="rl" id="pf-role">CLIENT</div>
+  <div class="bal" id="pf-bal">—</div>
+  <div class="bk">total balance</div>
+</div></aside>
+<main class="main">
+  <div class="head"><div><h1>Copy trading</h1><div class="sub">Your positions and every copy decision, read live from your exchange.</div></div><div class="ctrl"><select class="ctrl-i" id="range"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></div></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid3">
+    <div class="card"><h2>Performance <span id="curve-sum" style="margin-left:auto;
+      font-family:var(--mono);font-size:12.5px"></span></h2>
+      <div id="curve"></div></div>
+    <div class="card"><h2>Outcome split</h2><div id="donut"></div></div>
+    <div class="card"><h2>By asset</h2><div id="assets"></div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h2>Recent activity</h2><div id="recent"></div>      <div class="honest" id="verdict"></div></div>
+    <div><div class="card" style="margin-bottom:14px"><h2>Holdings</h2><div id="holdings"></div></div></div>
+  </div>
+</main>
+</div>
+<script>
+  const API="https://api.sklzlabs.com";
+  function tok(){return localStorage.getItem('sklz_access')}
+  if(!tok()) location.href='/login.html';
+  function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
+  function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+  function money(v){if(v===null||v===undefined)return '—';
+    return (v<0?'-$':'$')+Math.abs(Number(v)).toFixed(2)}
+  function sign(v){return (v>=0?'+':'')+money(v).replace('-','')}
+
+  let DAYS = 30;
+
+  async function load(){
+    try{
+      const d = await (await fetch(API+'/api/copy/portfolio/dashboard?days='+DAYS,
+        {headers:H()})).json();
+      render(d);
+    }catch(e){
+      document.getElementById('kpis').innerHTML =
+        '<div class="empty">Could not load your dashboard.</div>';
+    }
+  }
+
+  function render(d){
+    const pnl = d.realised_pnl || 0;
+
+    // Win rate is shown only when the sample can carry it. Below 30 closed
+    // positions the number is decoration — the confidence interval is wider
+    // than any difference anyone would act on.
+    const wr = d.enough_data && d.win_rate !== null
+      ? (d.win_rate*100).toFixed(1)+'%' : '—';
+    const wrSub = d.enough_data
+      ? (d.wins||0)+' wins / '+(d.losses||0)+' losses'
+      : 'too few closed trades';
+
+    document.getElementById('kpis').innerHTML =
+      kpi('Total balance', money(d.balance),
+          money(d.invested)+' in positions · '+money(d.cash)+' cash') +
+      kpi('Realised P&L', sign(pnl),
+          d.realised_pct!==null ? (d.realised_pct>=0?'+':'')+d.realised_pct+'%' : '—',
+          pnl>=0?'up':'down') +
+      kpi('Win rate', wr, wrSub) +
+      kpi('Open positions', String(d.open_positions||0),
+          (d.closed_positions||0)+' closed') +
+      kpi('Copied trades', String(d.trades_placed||0),
+          (d.trades_total||0)+' decisions total');
+
+    // top assets
+    const t = d.top_assets||[];
+    document.getElementById('assets').innerHTML = t.length
+      ? t.map(a=>'<div class="arow"><span class="as">'+esc(a.asset)+'</span>'+
+          '<span style="color:var(--muted);font-size:11.5px">'+a.trades+' trades</span>'+
+          '<span class="am '+(a.pnl>=0?'up':'down')+'">'+sign(a.pnl)+'</span></div>').join('')
+      : '<div class="empty">No assets traded yet.</div>';
+
+    // holdings
+    const h = d.holdings||[];
+    document.getElementById('holdings').innerHTML = h.length
+      ? h.map(x=>'<div class="arow"><span class="as">'+esc(x.asset)+'</span>'+
+          '<span style="color:var(--muted);font-size:11.5px">'+
+          Number(x.amount).toFixed(6)+'</span>'+
+          '<span class="am">'+money(x.value)+'</span></div>').join('')
+      : '<div class="empty">Nothing held right now.</div>';
+
+    // recent decisions — including the ones that did not copy, and why
+    const r = d.recent||[];
+    document.getElementById('recent').innerHTML = r.length
+      ? '<table><thead><tr><th>Pair</th><th>Side</th><th>Amount</th>'+
+        '<th>Entry</th><th>Now</th><th>P&amp;L</th><th>Status</th><th>When</th>'+
+        '</tr></thead><tbody>'+
+        r.map(o=>{
+          const cls = o.status==='placed' ? 'win' : o.status==='failed' ? 'loss' : 'skip';
+          const pct = o.pnl_pct;
+          const pl = (pct===undefined||pct===null) ? '—'
+            : '<span class="'+(pct>=0?'up':'down')+'">'+sign(o.pnl_usd||0)+
+              '<br><span style="font-size:10.5px">'+(pct>=0?'+':'')+pct+'%</span></span>';
+          return '<tr><td class="n">'+esc(o.symbol||'')+'</td>'+
+            '<td class="'+(o.side==='buy'?'up':'down')+'" style="font-size:12px">'+
+              esc((o.side||'').toUpperCase())+'</td>'+
+            '<td class="n">'+money(o.notional)+'</td>'+
+            '<td class="n" style="color:var(--muted)">'+
+              (o.filled_price? Number(o.filled_price).toFixed(2):'—')+'</td>'+
+            '<td class="n" style="color:var(--muted)">'+
+              (o.current_price? Number(o.current_price).toFixed(2):'—')+'</td>'+
+            '<td class="n">'+pl+'</td>'+
+            '<td><span class="pill '+cls+'">'+esc(o.status||'')+'</span>'+
+              (o.skip_reason? '<br><span style="color:var(--dim);font-size:10px">'+
+                esc(o.skip_reason.slice(0,34))+'</span>':'')+'</td>'+
+            '<td class="n" style="color:var(--dim);font-size:11px">'+
+              esc((o.created_at||'').slice(5,16).replace('T',' '))+'</td></tr>';
+        }).join('')+'</tbody></table>'
+      : '<div class="empty">No copy activity yet.</div>';
+
+    drawCurve(d.curve||[]);
+    drawDonut(d.distribution||{});
+    document.getElementById('pf-bal').textContent = money(d.balance);
+    document.getElementById('verdict').textContent = d.sample_verdict || '';
+  }
+
+  function kpi(k, v, s, cls){
+    return '<div class="kpi"><div class="k">'+k+'</div>'+
+      '<div class="v '+(cls||'')+'">'+v+'</div>'+
+      '<div class="s">'+s+'</div></div>';
+  }
+
+  document.getElementById('range').addEventListener('change', function(e){
+    DAYS = parseInt(e.target.value,10)||30; load();
+  });
+  load();
+  setInterval(load, 60000);
+
+  // Equity curve drawn as inline SVG rather than a charting library: one
+  // series, no interaction needed, and it keeps the page dependency-free.
+  function drawCurve(points){
+    var el=document.getElementById('curve');
+    var sum=document.getElementById('curve-sum');
+    if(!points || points.length<2){
+      el.innerHTML='<div class="empty">Not enough closed trades to plot yet.</div>';
+      sum.textContent='';
+      return;
+    }
+    var vs=points.map(function(p){return p.v;});
+    var lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs);
+    if(hi===lo){ hi=lo+1; lo=lo-1; }
+    var W=100, H=42, pad=2;
+    var d=points.map(function(p,i){
+      var x=pad+(i/(points.length-1))*(W-pad*2);
+      var y=H-pad-((p.v-lo)/(hi-lo))*(H-pad*2);
+      return (i?'L':'M')+x.toFixed(2)+' '+y.toFixed(2);
+    }).join(' ');
+    var last=vs[vs.length-1];
+    var col = last>=0 ? 'var(--green)' : 'var(--red)';
+    var area = d+' L'+(W-pad)+' '+(H-pad)+' L'+pad+' '+(H-pad)+' Z';
+
+    el.innerHTML=
+      '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" '+
+        'style="width:100%;height:180px;display:block">'+
+      '<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">'+
+        '<stop offset="0%" stop-color="'+(last>=0?'#34D399':'#F87171')+'" stop-opacity=".22"/>'+
+        '<stop offset="100%" stop-color="'+(last>=0?'#34D399':'#F87171')+'" stop-opacity="0"/>'+
+      '</linearGradient></defs>'+
+      '<path d="'+area+'" fill="url(#g1)"/>'+
+      '<path d="'+d+'" class="lg" stroke="'+col+'" vector-effect="non-scaling-stroke"/>'+
+      '</svg>'+
+      '<div style="display:flex;justify-content:space-between;'+
+        'font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-top:6px">'+
+        '<span>'+esc((points[0].t||'').slice(5,10))+'</span>'+
+        '<span>'+esc((points[points.length-1].t||'').slice(5,10))+'</span></div>';
+    sum.innerHTML='<span class="'+(last>=0?'up':'down')+'">'+sign(last)+'</span>';
+  }
+
+  // Donut: wins, losses, still open. Drawn from real counts — an empty state
+  // says so rather than showing a full ring of nothing.
+  function drawDonut(dist){
+    var el=document.getElementById('donut');
+    var w=dist.wins||0, l=dist.losses||0, o=dist.open||0;
+    var total=w+l+o;
+    if(!total){
+      el.innerHTML='<div class="empty">No positions yet.</div>';
+      return;
+    }
+    var R=15.9155, C=2*Math.PI*R;
+    var segs=[{v:w,c:'#34D399',k:'Won'},{v:l,c:'#F87171',k:'Lost'},
+              {v:o,c:'#1DA9E0',k:'Open'}];
+    var off=0, ring='';
+    segs.forEach(function(s){
+      if(!s.v) return;
+      var len=(s.v/total)*C;
+      ring+='<circle cx="21" cy="21" r="'+R+'" fill="none" stroke="'+s.c+'" '+
+        'stroke-width="4" stroke-dasharray="'+len.toFixed(3)+' '+(C-len).toFixed(3)+'" '+
+        'stroke-dashoffset="'+(-off).toFixed(3)+'" transform="rotate(-90 21 21)"/>';
+      off+=len;
+    });
+    el.innerHTML=
+      '<div style="display:flex;align-items:center;gap:16px">'+
+      '<svg viewBox="0 0 42 42" style="width:110px;height:110px;flex-shrink:0">'+
+        '<circle cx="21" cy="21" r="'+R+'" fill="none" stroke="#1E2735" stroke-width="4"/>'+
+        ring+
+        '<text x="21" y="20.5" text-anchor="middle" fill="#EAEEF6" '+
+          'font-size="7" font-family="monospace" font-weight="700">'+total+'</text>'+
+        '<text x="21" y="25.5" text-anchor="middle" fill="#5B6377" font-size="3">total</text>'+
+      '</svg>'+
+      '<div style="flex:1">'+segs.map(function(s){
+        return '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;'+
+          'font-size:12.5px"><i style="width:8px;height:8px;border-radius:50%;'+
+          'background:'+s.c+';display:inline-block"></i>'+
+          '<span style="color:var(--muted)">'+s.k+'</span>'+
+          '<span style="margin-left:auto;font-family:var(--mono)">'+s.v+'</span></div>';
+      }).join('')+'</div></div>';
+  }
+</script>
+</body></html>
