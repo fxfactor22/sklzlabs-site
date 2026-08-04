@@ -153,7 +153,7 @@
       </div>
       <span class="updated" id="updated"></span>
     </div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><span onclick="openAlerts()" style="font-family:var(--mono);font-size:11px;color:var(--gold);border:1px solid rgba(245,166,35,.4);border-radius:8px;padding:7px 13px;cursor:pointer">🔔 Alert me on clean setups</span></div><div id="grid"><div class="empty">Loading live market data…</div></div>
+    <div id="grid"><div class="empty">Loading live market data…</div></div>
     <div class="disc">Live data via CoinGecko · Momentum reflects current conditions, not a prediction ·
       Software only, not financial advice · Trading involves risk of loss</div>
   </main>
@@ -290,119 +290,9 @@
   load(); loadTop(); setInterval(load,60000); setInterval(loadTop,120000);
 
 
-  // ── scanner alerts ────────────────────────────────────────────────
-  async function openAlerts(){
-    var m=document.getElementById('alert-modal');
-    if(!m){ m=document.createElement('div'); m.id='alert-modal'; document.body.appendChild(m); }
-    m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;'+
-      'align-items:center;justify-content:center;z-index:95;padding:20px;overflow:auto';
-    m.innerHTML='<div style="color:#8B94A8;font-family:monospace;font-size:12px">loading…</div>';
 
-    var p={};
-    try{ p=await (await fetch(API+'/api/alerts/prefs',{headers:H()})).json(); }
-    catch(e){ p={}; }
 
-    m.innerHTML='<div style="background:#0F131C;border:1px solid #1E2735;'+
-      'border-radius:15px;max-width:440px;width:100%;padding:26px;color:#EAEEF6">'+
-      '<h2 style="font-size:18px;margin-bottom:6px">Alert me on clean setups</h2>'+
-      '<p style="color:#8B94A8;font-size:12.5px;line-height:1.65;margin-bottom:18px">'+
-      'We will message you on Telegram when the scanner finds a setup matching '+
-      'your filters. '+esc(p.note||'')+'</p>'+
 
-      '<label style="font-family:monospace;font-size:9.5px;color:#8B94A8">'+
-        'TELEGRAM CHAT ID</label>'+
-      '<input id="al-chat" value="'+esc(p.telegram_chat_id||'')+'" '+
-        'placeholder="e.g. 123456789" style="width:100%;background:#080A0F;'+
-        'border:1px solid #1E2735;border-radius:8px;padding:10px;color:#EAEEF6;'+
-        'margin:5px 0 4px;font-family:monospace"/>'+
-      '<div style="font-size:11px;color:#5B6377;line-height:1.6;margin-bottom:14px">'+
-        'Send /start to <b>@sklzlabsnew_bot</b> first \u2014 Telegram blocks bots '+
-        'from messaging anyone who has not contacted them. Then message '+
-        '<b>@userinfobot</b> to get your id.</div>'+
-
-      '<label style="font-family:monospace;font-size:9.5px;color:#8B94A8">'+
-        'MINIMUM MOMENTUM SCORE</label>'+
-      '<input id="al-score" type="number" step="0.05" min="0" max="1" '+
-        'value="'+(p.min_score!==undefined?p.min_score:0.35)+'" '+
-        'style="width:100%;background:#080A0F;border:1px solid #1E2735;'+
-        'border-radius:8px;padding:10px;color:#EAEEF6;margin:5px 0 14px;'+
-        'font-family:monospace"/>'+
-
-      '<label style="font-family:monospace;font-size:9.5px;color:#8B94A8">'+
-        'COINS (blank = all)</label>'+
-      '<input id="al-assets" value="'+esc((p.assets||[]).join(', '))+'" '+
-        'placeholder="BTC, ETH, SOL" style="width:100%;background:#080A0F;'+
-        'border:1px solid #1E2735;border-radius:8px;padding:10px;color:#EAEEF6;'+
-        'margin:5px 0 14px;font-family:monospace"/>'+
-
-      '<label style="display:flex;align-items:center;gap:9px;font-size:13px;'+
-        'margin-bottom:9px;cursor:pointer">'+
-        '<input type="checkbox" id="al-clean" '+(p.only_clean!==false?'checked':'')+'/>'+
-        'Only clean setups (skip traps and extended moves)</label>'+
-      '<label style="display:flex;align-items:center;gap:9px;font-size:13px;'+
-        'margin-bottom:9px;cursor:pointer">'+
-        '<input type="checkbox" id="al-quiet" '+(p.quiet_hours!==false?'checked':'')+'/>'+
-        'Quiet hours (nothing between 22:00 and 07:00 UTC)</label>'+
-      '<label style="display:flex;align-items:center;gap:9px;font-size:13px;'+
-        'margin-bottom:18px;cursor:pointer">'+
-        '<input type="checkbox" id="al-on" '+(p.enabled?'checked':'')+'/>'+
-        '<b>Alerts on</b></label>'+
-
-      '<div style="display:flex;gap:8px">'+
-        '<button onclick="saveAlerts()" style="flex:1;background:linear-gradient'+
-          '(135deg,#F5A623,#FFC24B);color:#08101A;border:none;border-radius:10px;'+
-          'padding:12px;font-weight:700;cursor:pointer">Save</button>'+
-        '<button onclick="testAlert()" style="background:transparent;'+
-          'border:1px solid #1E2735;color:#8B94A8;border-radius:10px;'+
-          'padding:12px 16px;cursor:pointer">Send test</button>'+
-        '<button onclick="document.getElementById(\'alert-modal\').remove()" '+
-          'style="background:transparent;border:1px solid #1E2735;color:#8B94A8;'+
-          'border-radius:10px;padding:12px 16px;cursor:pointer">Close</button>'+
-      '</div>'+
-      '<div id="al-msg" style="font-size:12.5px;margin-top:12px;line-height:1.6"></div>'+
-      '</div>';
-  }
-
-  function alertBody(){
-    var a=(document.getElementById('al-assets').value||'')
-      .split(',').map(function(x){return x.trim().toUpperCase();})
-      .filter(Boolean);
-    return {
-      enabled: document.getElementById('al-on').checked,
-      telegram_chat_id: (document.getElementById('al-chat').value||'').trim(),
-      min_score: parseFloat(document.getElementById('al-score').value||'0.35'),
-      only_clean: document.getElementById('al-clean').checked,
-      quiet_hours: document.getElementById('al-quiet').checked,
-      assets: a
-    };
-  }
-
-  async function saveAlerts(){
-    var msg=document.getElementById('al-msg');
-    msg.textContent='Saving…';
-    try{
-      var r=await fetch(API+'/api/alerts/prefs',{method:'PUT',headers:H(),
-        body:JSON.stringify(alertBody())});
-      var d=await r.json();
-      msg.innerHTML = r.ok
-        ? '<span style="color:#34D399">'+esc(d.message||'Saved.')+'</span>'
-        : '<span style="color:#F87171">'+esc(d.detail||'Could not save.')+'</span>';
-    }catch(e){ msg.innerHTML='<span style="color:#F87171">Network error.</span>'; }
-  }
-
-  async function testAlert(){
-    var msg=document.getElementById('al-msg');
-    msg.textContent='Saving then sending…';
-    try{
-      await fetch(API+'/api/alerts/prefs',{method:'PUT',headers:H(),
-        body:JSON.stringify(alertBody())});
-      var r=await fetch(API+'/api/alerts/test',{method:'POST',headers:H()});
-      var d=await r.json();
-      msg.innerHTML = r.ok
-        ? '<span style="color:#34D399">Sent. Check Telegram.</span>'
-        : '<span style="color:#F87171">'+esc(d.detail||'Could not send.')+'</span>';
-    }catch(e){ msg.innerHTML='<span style="color:#F87171">Network error.</span>'; }
-  }
 </script>
 <!-- ISKRA AI webchat widget -->
 <script>
