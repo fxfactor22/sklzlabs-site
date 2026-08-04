@@ -130,6 +130,13 @@
     border-radius:10px;padding:13px 15px;margin-top:12px;font-size:12.5px;
     color:var(--muted);line-height:1.7}
   .up{color:var(--green)} .down{color:var(--red)}
+  .mini{font-family:var(--mono);font-size:10px;color:var(--muted);
+    border:1px solid var(--line);border-radius:6px;padding:4px 9px;cursor:pointer}
+  .mini:hover{color:var(--ink);border-color:var(--muted)}
+  .mini.gold{color:var(--gold);border-color:rgba(245,166,35,.4)}
+  .prot{font-family:var(--mono);font-size:9.5px;padding:3px 8px;border-radius:5px}
+  .prot.safe{color:var(--green);background:rgba(52,211,153,.1)}
+  .prot.warn{color:#F5A623;background:rgba(245,166,35,.1)}
 </style></head>
 <body>
 <nav><a href="/dashboard.html"><img src="/sklz-logo.png" alt="SKLZ"/></a>
@@ -742,11 +749,14 @@
         (un>=0?'+':'')+money(un).replace('$','')+'</div><div class="k">unrealised</div></div>'+
       '</div>';
 
+    var cash=(d.positions||[]).filter(function(p){return p.is_cash;});
+    if(cash.length) PF_QUOTE = cash[0].asset;
     var rows=(d.positions||[]).filter(function(p){return !p.is_cash;});
     document.getElementById('pfbody').innerHTML =
-      (rows.length ? rows.map(function(p){
+      (rows.length ? rows.map(function(p,i){
         var pct=p.unrealised_pct;
-        return '<div class="prow">'+
+        var prot=(PROTECTION[p.asset]||{});
+        return '<div class="prow" style="flex-wrap:wrap">'+
           '<span class="a">'+esc(p.asset)+'</span>'+
           '<span style="color:var(--muted);font-size:12px">'+
             Number(p.amount).toFixed(6)+'</span>'+
@@ -754,7 +764,19 @@
             (pct!==undefined&&pct!==null
               ? '<br><span class="'+(pct>=0?'up':'down')+'" style="font-size:11px">'+
                 (pct>=0?'+':'')+pct.toFixed(2)+'%</span>' : '')+
-          '</span></div>';
+          '</span>'+
+          '<div style="flex-basis:100%;display:flex;gap:6px;align-items:center;'+
+            'margin-top:9px;flex-wrap:wrap">'+
+            '<span class="mini" onclick="sellPart(\''+esc(p.asset)+'\',25)">Sell 25%</span>'+
+            '<span class="mini" onclick="sellPart(\''+esc(p.asset)+'\',50)">Sell 50%</span>'+
+            '<span class="mini" onclick="sellPart(\''+esc(p.asset)+'\',100)">Close</span>'+
+            '<span class="mini gold" onclick="openProtect(\''+esc(p.asset)+'\','+
+              (p.amount||0)+','+(p.price||0)+')">Stop / target</span>'+
+            (prot.protection
+              ? '<span class="prot '+(prot.protection==='exchange'?'safe':'warn')+'">'+
+                (prot.protection==='exchange'?'\u2713 held by exchange':
+                 '\u26a0 watched by SKLZ only')+'</span>' : '')+
+          '</div></div>';
         }).join('')
         : '<div style="color:var(--dim);font-family:var(--mono);font-size:11.5px;'+
           'padding:16px 0">No open positions.</div>')
@@ -797,6 +819,89 @@
       body.innerHTML='<div style="color:var(--red);padding:14px 0">'+
         'Could not load your history.</div>';
     }
+  }
+
+  var PROTECTION = {};
+  // which stablecoin this account quotes in — read from the cash holding
+  // rather than assumed, since Coinbase is USDC and Bybit is usually USDT
+  var PF_QUOTE = 'USDT';
+
+  async function sellPart(asset, pct){
+    var conn = (CONNECTIONS[0]||{}).id;
+    var quote = PF_QUOTE || 'USDT';
+    if(!conn){ toast('No exchange connected'); return; }
+    var label = pct===100 ? 'Close the whole '+asset+' position?'
+                          : 'Sell '+pct+'% of your '+asset+'?';
+    if(!confirm(label)) return;
+    try{
+      var r = await fetch(API+'/api/copy/portfolio/sell-partial',{method:'POST',
+        headers:H(), body:JSON.stringify({connection_id:conn,
+          symbol:asset+'/'+quote, percent:pct})});
+      var d = await r.json();
+      if(r.ok && d.ok){
+        toast('Sold '+Number(d.sold).toFixed(6)+' '+asset);
+        loadPortfolio();
+      } else {
+        alert(d.detail || 'Could not sell.');
+      }
+    }catch(e){ alert('Network error.'); }
+  }
+
+  function openProtect(asset, amount, price){
+    var m=document.getElementById('protect-modal');
+    if(!m){ m=document.createElement('div'); m.id='protect-modal'; document.body.appendChild(m); }
+    m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;'+
+      'align-items:center;justify-content:center;z-index:90;padding:20px';
+    var sl = price ? (price*0.9).toFixed(2) : '';
+    var tp = price ? (price*1.2).toFixed(2) : '';
+    m.innerHTML='<div style="background:#0F131C;border:1px solid #1E2735;'+
+      'border-radius:14px;max-width:400px;width:100%;padding:24px;color:#EAEEF6">'+
+      '<h2 style="font-size:17px;margin-bottom:6px">Protect your '+esc(asset)+'</h2>'+
+      '<p style="color:#8B94A8;font-size:12.5px;line-height:1.6;margin-bottom:14px">'+
+      'Current price '+(price? '$'+Number(price).toFixed(2) : 'unknown')+'. '+
+      'We will place these with the exchange where possible.</p>'+
+      '<label style="font-family:monospace;font-size:9.5px;color:#8B94A8">STOP LOSS</label>'+
+      '<input id="pr-sl" value="'+sl+'" style="width:100%;background:#080A0F;'+
+        'border:1px solid #1E2735;border-radius:8px;padding:10px;color:#EAEEF6;margin:5px 0 12px"/>'+
+      '<label style="font-family:monospace;font-size:9.5px;color:#8B94A8">TAKE PROFIT</label>'+
+      '<input id="pr-tp" value="'+tp+'" style="width:100%;background:#080A0F;'+
+        'border:1px solid #1E2735;border-radius:8px;padding:10px;color:#EAEEF6;margin:5px 0 14px"/>'+
+      '<button onclick="saveProtect(\''+esc(asset)+'\','+amount+')" '+
+        'style="width:100%;background:linear-gradient(135deg,#F5A623,#FFC24B);'+
+        'color:#08101A;border:none;border-radius:9px;padding:12px;font-weight:700;'+
+        'cursor:pointer">Set protection</button>'+
+      '<div style="text-align:center;margin-top:10px"><span onclick="document.getElementById(\'protect-modal\').remove()" '+
+        'style="color:#8B94A8;font-size:12px;cursor:pointer">Cancel</span></div>'+
+      '<div id="pr-msg" style="font-size:12px;margin-top:11px;line-height:1.6"></div>'+
+      '</div>';
+  }
+
+  async function saveProtect(asset, amount){
+    var conn = (CONNECTIONS[0]||{}).id;
+    var quote = PF_QUOTE || 'USDT';
+    var sl=parseFloat((document.getElementById('pr-sl')||{}).value||'')||null;
+    var tp=parseFloat((document.getElementById('pr-tp')||{}).value||'')||null;
+    var msg=document.getElementById('pr-msg');
+    msg.textContent='Placing…';
+    try{
+      var r=await fetch(API+'/api/copy/portfolio/protect',{method:'POST',headers:H(),
+        body:JSON.stringify({connection_id:conn,
+          symbol:asset+'/'+quote,
+          amount:amount, stop_price:sl, take_profit:tp})});
+      var d=await r.json();
+      if(!r.ok){ msg.innerHTML='<span style="color:#F87171">'+esc(d.detail||'Failed.')+'</span>'; return; }
+      PROTECTION[asset]=d;
+      // the important part: say plainly which kind of protection this is
+      var safe = d.protection==='exchange';
+      msg.innerHTML='<span style="color:'+(safe?'#34D399':'#F5A623')+'">'+
+        esc(d.explanation||'')+'</span>'+
+        ((d.warnings||[]).length ? '<br><span style="color:#8B94A8;font-size:11.5px">'+
+          esc(d.warnings[0])+'</span>' : '');
+      setTimeout(function(){
+        var m=document.getElementById('protect-modal'); if(m) m.remove();
+        loadPortfolio();
+      }, safe ? 1800 : 5000);
+    }catch(e){ msg.innerHTML='<span style="color:#F87171">Network error.</span>'; }
   }
 </script>
 <script src="/sklz-i18n.js" defer></script>
