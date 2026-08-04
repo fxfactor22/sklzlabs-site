@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#080A0F"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Copy trading dashboard — SKLZ Labs</title>
 <style>
   :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;
@@ -123,7 +125,8 @@
   .prof .bal{font-family:var(--mono);font-size:19px;font-weight:700;margin-top:12px}
   .prof .bk{font-size:10.5px;color:var(--dim);margin-top:2px}
   .lg{fill:none;stroke-width:2}
-</style></head>
+</style><link rel="stylesheet" href="/sklz-mobile.css"/>
+</head>
 <body>
 <div class="wrap">
 <aside class="side"><a href="/"><img src="/sklz-logo.png" alt="SKLZ Labs"/></a>
@@ -816,4 +819,5 @@
       : 'showing '+r.length+' of '+total;
   }
 </script>
+<script src="/sklz-mobile.js" defer></script>
 </body></html>

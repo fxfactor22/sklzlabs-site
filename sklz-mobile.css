@@ -1,0 +1,209 @@
+/* SKLZ — shared mobile layer.
+ *
+ * Turns the desktop backoffice into something usable on a phone without
+ * rewriting nineteen pages: the sidebar becomes a bottom tab bar, tables
+ * become cards, and touch targets grow to a size a thumb can actually hit.
+ *
+ * WHY A BOTTOM BAR
+ * A left sidebar on a phone either eats a third of the screen or hides behind
+ * a hamburger nobody taps. A bottom bar sits where the thumb already rests and
+ * is the pattern every native app uses, so it needs no explanation.
+ *
+ * Loaded on every page alongside sklz-mobile.js. Desktop is untouched: every
+ * rule here sits inside a max-width query.
+ */
+
+@media (max-width: 820px) {
+
+  /* ── layout ─────────────────────────────────────────────── */
+  body {
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior-y: contain;          /* no rubber-band on scroll */
+  }
+
+  .wrap { display: block !important; }
+
+  /* the sidebar is replaced by the bottom bar */
+  .side {
+    display: none !important;
+  }
+
+  .main, main.main, .content {
+    padding: 16px 14px calc(78px + env(safe-area-inset-bottom)) !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  /* ── typography and spacing ─────────────────────────────── */
+  h1 { font-size: 21px !important; }
+  h2 { font-size: 15px !important; }
+  .lead, .sub { font-size: 13px !important; }
+
+  .card, section {
+    padding: 15px !important;
+    border-radius: 13px !important;
+  }
+
+  /* ── grids collapse ─────────────────────────────────────── */
+  .kpis, .grid, .grid3, .term, .std, .row {
+    grid-template-columns: 1fr !important;
+    display: grid !important;
+    gap: 10px !important;
+  }
+  /* KPIs stay two-up: four stacked cards is a lot of scrolling */
+  .kpis { grid-template-columns: 1fr 1fr !important; }
+  .kpi { padding: 13px !important; }
+  .kpi .v { font-size: 18px !important; }
+
+  .rail { width: 100% !important; }
+  .chartwrap { min-height: 380px !important; }
+  #tvchart { min-height: 320px !important; }
+
+  /* ── tables become cards ────────────────────────────────── */
+  .scroll { max-height: none !important; overflow-x: auto !important; }
+
+  table.mobile-cards thead { display: none; }
+  table.mobile-cards, table.mobile-cards tbody,
+  table.mobile-cards tr, table.mobile-cards td { display: block; width: 100%; }
+  table.mobile-cards tr {
+    border: 1px solid var(--line, #1E2735);
+    border-radius: 11px;
+    padding: 11px 13px;
+    margin-bottom: 8px;
+    background: var(--panel2, #141A26);
+  }
+  table.mobile-cards td {
+    border: none !important;
+    padding: 3px 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  table.mobile-cards td:before {
+    content: attr(data-label);
+    font-family: var(--mono, monospace);
+    font-size: 9.5px;
+    color: var(--dim, #5B6377);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    flex-shrink: 0;
+  }
+  table.mobile-cards td:empty { display: none; }
+
+  /* tables not converted at least scroll rather than squash */
+  table:not(.mobile-cards) { min-width: 560px; }
+  .tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* ── touch targets ──────────────────────────────────────── */
+  button, .btn, .mini, .tf, .fl, .pill, select, input[type="submit"] {
+    min-height: 40px;
+  }
+  .mini, .tf, .fl { padding: 9px 12px !important; font-size: 11px !important; }
+  input, select, textarea {
+    font-size: 16px !important;      /* under 16px iOS zooms on focus */
+    padding: 11px 13px !important;
+  }
+  .quick span { padding: 11px 0 !important; font-size: 12px !important; }
+
+  /* ── modals become sheets ───────────────────────────────── */
+  #protect-modal > div, #share-modal > div, #reset-modal > div,
+  #alert-modal > div {
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+    position: fixed !important;
+    left: 0; right: 0; bottom: 0;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+  }
+  #protect-modal, #share-modal, #reset-modal, #alert-modal {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+
+  /* ── bottom navigation ──────────────────────────────────── */
+  .mnav {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 80;
+    display: flex;
+    background: rgba(15, 19, 28, .96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line, #1E2735);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mnav a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 9px 2px 8px;
+    color: var(--muted, #8B94A8);
+    font-size: 9.5px;
+    font-family: var(--mono, monospace);
+    text-decoration: none;
+    letter-spacing: .02em;
+  }
+  .mnav a .ic { font-size: 17px; line-height: 1 }
+  .mnav a.on { color: var(--gold, #F5A623) }
+  .mnav a:active { background: rgba(255, 255, 255, .04) }
+
+  /* ── mobile header ──────────────────────────────────────── */
+  .mhead {
+    position: sticky; top: 0; z-index: 70;
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px;
+    background: rgba(8, 10, 15, .95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line, #1E2735);
+  }
+  .mhead img { height: 30px }
+  .mhead .more {
+    margin-left: auto; color: var(--muted, #8B94A8);
+    font-size: 20px; padding: 4px 8px; cursor: pointer;
+  }
+
+  /* the overflow drawer for everything not in the bar */
+  .mdrawer {
+    position: fixed; inset: 0; z-index: 85;
+    background: rgba(0, 0, 0, .8);
+    display: none;
+  }
+  .mdrawer.open { display: block }
+  .mdrawer .panel {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: var(--panel, #0F131C);
+    border-radius: 16px 16px 0 0;
+    padding: 18px 16px calc(22px + env(safe-area-inset-bottom));
+    max-height: 78vh; overflow-y: auto;
+  }
+  .mdrawer .panel a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 6px; color: var(--ink, #EAEEF6);
+    font-size: 15px; text-decoration: none;
+    border-bottom: 1px solid var(--line, #1E2735);
+  }
+  .mdrawer .panel a:last-child { border-bottom: none }
+  .mdrawer .grab {
+    width: 38px; height: 4px; border-radius: 2px;
+    background: var(--line, #1E2735); margin: 0 auto 14px;
+  }
+
+  /* ── odds and ends ──────────────────────────────────────── */
+  nav { padding: 11px 14px !important }
+  nav img { height: 34px !important }
+  .ctrl { width: 100%; margin-left: 0 !important; margin-top: 10px }
+  .head { flex-direction: column; align-items: stretch }
+  .prof { display: none }
+  pre, code { font-size: 11px !important; white-space: pre-wrap; word-break: break-word }
+}
+
+/* very small phones */
+@media (max-width: 380px) {
+  .kpis { grid-template-columns: 1fr !important }
+  .mnav a { font-size: 8.5px }
+}

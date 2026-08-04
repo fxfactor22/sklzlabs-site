@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#080A0F"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Login &amp; security — SKLZ Labs</title>
 <style>
   :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
@@ -47,7 +49,8 @@
     background:var(--panel2);padding:4px 8px;border-radius:5px;display:inline-block;margin-top:4px}
   .note{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.8;
     margin-top:20px;text-align:center}
-</style></head>
+</style><link rel="stylesheet" href="/sklz-mobile.css"/>
+</head>
 <body>
 <nav><a href="/dashboard.html"><img src="/sklz-logo.png" alt="SKLZ"/></a><span style="font-weight:700">Login &amp; security</span><div class="sp"><a class="pill" href="/dashboard.html">← Dashboard</a><span class="pill" style="cursor:pointer" onclick="logout()">Log out</span></div></nav>
 <div class="wrap">
@@ -229,4 +232,5 @@
   loadProfile();
 
 </script>
+<script src="/sklz-mobile.js" defer></script>
 </body></html>
