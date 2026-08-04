@@ -555,16 +555,46 @@
     document.head.appendChild(s);
   }
 
+  // A coin can arrive from an alert link: /copydash.html?symbol=SOL
+  // Preselect it so the chart, trade panel and risk controls all land on the
+  // thing the alert was about, rather than defaulting to whatever is first.
+  function requestedSymbol(){
+    try{
+      var q=new URLSearchParams(location.search).get('symbol');
+      return q ? q.trim().toUpperCase().split('/')[0] : '';
+    }catch(e){ return ''; }
+  }
+
   function fillChartPicker(holdings){
     var sel=document.getElementById('chart-sym');
     if(!sel) return;
     var assets=(holdings||[]).filter(function(h){return !h.is_cash;}).map(function(h){return h.asset;});
     ['BTC','ETH','SOL'].forEach(function(a){ if(assets.indexOf(a)<0) assets.push(a); });
+
+    // a coin named in the URL goes to the front of the list
+    var want = requestedSymbol();
+    if(want){
+      assets = [want].concat(assets.filter(function(a){ return a !== want; }));
+    }
     if(sel.options.length !== assets.length){
       sel.innerHTML=assets.map(function(a){
         return '<option value="'+esc(a)+'">'+esc(a)+'/USDT</option>';}).join('');
       sel.onchange=function(){ mountChart(sel.value); renderTrade(); };
-      mountChart(assets[0]);
+      var first = want && assets.indexOf(want)>-1 ? want : assets[0];
+      sel.value = first;
+      mountChart(first);
+      if(want){
+        // make it obvious why this coin is showing
+        var head=document.querySelector('.chead');
+        if(head && !document.getElementById('from-alert')){
+          var tag=document.createElement('span');
+          tag.id='from-alert';
+          tag.style.cssText='font-family:var(--mono);font-size:9.5px;color:var(--gold);'+
+            'background:rgba(245,166,35,.1);padding:3px 8px;border-radius:5px';
+          tag.textContent='from alert';
+          head.insertBefore(tag, head.children[1] || null);
+        }
+      }
     }
     // timeframe buttons
     document.querySelectorAll('.tf').forEach(function(b){
