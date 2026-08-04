@@ -300,10 +300,15 @@
   function drawCurve(points){
     var el=document.getElementById('curve');
     var sum=document.getElementById('curve-sum');
-    if(!points || points.length<2){
-      el.innerHTML='<div class="empty">Not enough closed trades to plot yet.</div>';
+    if(!points || !points.length){
+      el.innerHTML='<div class="empty">No closed trades yet.</div>';
       sum.textContent='';
       return;
+    }
+    // one closed trade is still a result worth showing: plot it from zero so
+    // the line has somewhere to start rather than refusing to draw
+    if(points.length===1){
+      points = [{t:points[0].t, v:0}, points[0]];
     }
     var vs=points.map(function(p){return p.v;});
     var lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs);
