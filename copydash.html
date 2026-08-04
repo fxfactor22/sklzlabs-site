@@ -58,7 +58,44 @@
   .arow:first-child{border-top:none}
   .arow .as{font-family:var(--mono);font-weight:700;font-size:12.5px;min-width:52px}
   .arow .am{margin-left:auto;font-family:var(--mono);font-size:12.5px}
-  .grid3{display:grid;grid-template-columns:1.3fr 1.1fr .9fr .9fr;gap:14px;margin-bottom:16px}
+  .term{display:grid;grid-template-columns:1fr 330px;gap:14px;margin-bottom:16px}
+  @media(max-width:1180px){.term{grid-template-columns:1fr}}
+  .chartwrap{display:flex;flex-direction:column;min-height:520px}
+  #tvchart{flex:1;min-height:460px}
+  .chead{display:flex;align-items:center;gap:12px;padding:13px 16px;
+    border-bottom:1px solid var(--line)}
+  .chead .px{font-family:var(--mono);font-size:17px;font-weight:700}
+  .chead .chg{font-family:var(--mono);font-size:12px}
+  .tf{font-family:var(--mono);font-size:10.5px;color:var(--muted);cursor:pointer;
+    padding:4px 9px;border-radius:6px;border:1px solid transparent}
+  .tf:hover{color:var(--ink)}
+  .tf.on{color:var(--gold);border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.07)}
+  .rail{display:flex;flex-direction:column;gap:14px}
+  .rail .card{padding:16px}
+  .rail h2{font-size:13px;margin-bottom:12px}
+  .fld{margin-bottom:11px}
+  .fld label{display:block;font-family:var(--mono);font-size:9px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+  .fld input,.fld select{width:100%;background:var(--bg);border:1px solid var(--line);
+    border-radius:8px;padding:9px 11px;color:var(--ink);font-size:13px;
+    font-family:var(--mono)}
+  .fld input:focus{outline:none;border-color:var(--gold)}
+  .bs{display:flex;gap:8px;margin-top:4px}
+  .bs button{flex:1;border:none;border-radius:9px;padding:11px;font-weight:700;
+    font-size:13.5px;cursor:pointer;font-family:var(--sans)}
+  .bs .b{background:rgba(52,211,153,.15);color:var(--green);
+    border:1px solid rgba(52,211,153,.4)}
+  .bs .s{background:rgba(248,113,113,.15);color:var(--red);
+    border:1px solid rgba(248,113,113,.4)}
+  .bs .b:hover{background:rgba(52,211,153,.25)}
+  .bs .s:hover{background:rgba(248,113,113,.25)}
+  .quick{display:flex;gap:5px;margin-top:7px}
+  .quick span{flex:1;text-align:center;font-family:var(--mono);font-size:10px;
+    color:var(--muted);border:1px solid var(--line);border-radius:6px;
+    padding:5px 0;cursor:pointer}
+  .quick span:hover{color:var(--gold);border-color:rgba(245,166,35,.4)}
+  .rmsg{font-size:11.5px;line-height:1.6;margin-top:9px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
   @media(max-width:1400px){.grid3{grid-template-columns:1fr 1fr}}
   @media(max-width:820px){.grid3{grid-template-columns:1fr}}
   .card h2 span{margin-left:auto}
@@ -85,22 +122,51 @@
   <div class="kpis" id="kpis"></div>
   <div id="leadersec" style="display:none"></div>
 
-  <div class="grid3">
-    <div class="card"><h2>Performance <span id="curve-sum" style="margin-left:auto;
-      font-family:var(--mono);font-size:12.5px"></span></h2>
-      <div id="curve"></div></div>
-    <div class="card" style="padding:0;overflow:hidden">
-      <h2 style="padding:19px 19px 0">Live price
-        <select id="chart-sym" class="ctrl-i" style="margin-left:auto;padding:5px 9px;
-          font-size:11px"></select></h2>
-      <div id="tvchart" style="height:206px;margin-top:12px"></div></div>
-    <div class="card"><h2>Outcome split</h2><div id="donut"></div></div>
-    <div class="card"><h2>By asset</h2><div id="assets"></div></div>
+  <div class="term">
+    <div class="chartwrap card" style="padding:0;overflow:hidden">
+      <div class="chead">
+        <select id="chart-sym" class="ctrl-i" style="padding:6px 10px;font-size:12px"></select>
+        <span id="chart-px" class="px"></span>
+        <span id="chart-chg" class="chg"></span>
+        <span style="margin-left:auto;display:flex;gap:4px" id="tf-btns">
+          <span class="tf" data-tf="15">15m</span>
+          <span class="tf on" data-tf="60">1H</span>
+          <span class="tf" data-tf="240">4H</span>
+          <span class="tf" data-tf="D">1D</span>
+        </span>
+      </div>
+      <div id="tvchart"></div>
+    </div>
+
+    <aside class="rail">
+      <div class="card" id="tradepanel">
+        <h2>Trade</h2>
+        <div id="tradebody"></div>
+      </div>
+
+      <div class="card">
+        <h2>Risk</h2>
+        <div id="riskbody"></div>
+      </div>
+
+      <div class="card">
+        <h2>Holdings</h2>
+        <div id="holdings"></div>
+      </div>
+    </aside>
   </div>
 
   <div class="grid">
-    <div class="card"><h2>Recent activity</h2><div id="recent"></div>      <div class="honest" id="verdict"></div></div>
-    <div><div class="card" style="margin-bottom:14px"><h2>Holdings</h2><div id="holdings"></div></div></div>
+    <div class="card"><h2>Recent activity</h2><div id="recent"></div>
+      <div class="honest" id="verdict"></div></div>
+    <div>
+      <div class="card" style="margin-bottom:14px"><h2>Outcome split</h2>
+        <div id="donut"></div></div>
+      <div class="card"><h2>Performance <span id="curve-sum" style="margin-left:auto;
+        font-family:var(--mono);font-size:12.5px"></span></h2><div id="curve"></div></div>
+      <div class="card" style="margin-top:14px"><h2>By asset</h2>
+        <div id="assets"></div></div>
+    </div>
   </div>
 </main>
 </div>
@@ -115,6 +181,7 @@
   function sign(v){return (v>=0?'+':'')+money(v).replace('-','')}
 
   let DAYS = 30;
+  var PF_QUOTE = 'USDT';
 
   async function load(){
     try{
@@ -199,6 +266,8 @@
 
     drawCurve(d.curve||[]);
     fillChartPicker(d.holdings||[]);
+    renderTrade();
+    renderRisk(d.holdings||[]);
     drawDonut(d.distribution||{});
     document.getElementById('pf-bal').textContent = money(d.balance);
     document.getElementById('verdict').textContent = d.sample_verdict || '';
@@ -213,7 +282,7 @@
   document.getElementById('range').addEventListener('change', function(e){
     DAYS = parseInt(e.target.value,10)||30; load();
   });
-  load();
+  loadConnections().then(load);
   loadLeader();
   setInterval(load, 60000);
 
@@ -452,6 +521,189 @@
     }catch(e){
       document.getElementById('share-msg').textContent='Select and copy manually.';
     }
+  }
+
+  // ── trading terminal ──────────────────────────────────────────────
+  var TF = '60';
+  var CUR_ASSET = null;
+  var CAN_TRADE = null;
+
+  function mountChart(asset, tf){
+    var el=document.getElementById('tvchart');
+    if(!el || !asset) return;
+    CUR_ASSET = asset;
+    el.innerHTML='<div id="tv-inner" style="height:100%"></div>';
+    function build(){
+      try{
+        new TradingView.widget({
+          container_id:'tv-inner', symbol:'BINANCE:'+asset+'USDT',
+          interval: tf || TF, theme:'dark', style:'1', locale:'en',
+          autosize:true, hide_top_toolbar:false, hide_side_toolbar:false,
+          withdateranges:true, allow_symbol_change:false, save_image:false,
+          backgroundColor:'rgba(15,19,28,1)', gridColor:'rgba(30,39,53,0.4)',
+          studies:['Volume@tv-basicstudies']
+        });
+      }catch(e){ el.innerHTML='<div class="empty">Chart unavailable.</div>'; }
+    }
+    if(window.TradingView){ build(); return; }
+    var s=document.createElement('script');
+    s.src='https://s3.tradingview.com/tv.js';
+    s.onload=build;
+    s.onerror=function(){ el.innerHTML='<div class="empty">Chart unavailable.</div>'; };
+    document.head.appendChild(s);
+  }
+
+  function fillChartPicker(holdings){
+    var sel=document.getElementById('chart-sym');
+    if(!sel) return;
+    var assets=(holdings||[]).map(function(h){return h.asset;});
+    ['BTC','ETH','SOL'].forEach(function(a){ if(assets.indexOf(a)<0) assets.push(a); });
+    if(sel.options.length !== assets.length){
+      sel.innerHTML=assets.map(function(a){
+        return '<option value="'+esc(a)+'">'+esc(a)+'/USDT</option>';}).join('');
+      sel.onchange=function(){ mountChart(sel.value); renderTrade(); };
+      mountChart(assets[0]);
+    }
+    // timeframe buttons
+    document.querySelectorAll('.tf').forEach(function(b){
+      b.onclick=function(){
+        document.querySelectorAll('.tf').forEach(function(x){x.className='tf';});
+        b.className='tf on';
+        TF=b.getAttribute('data-tf');
+        mountChart(CUR_ASSET||assets[0], TF);
+      };
+    });
+  }
+
+  // The trade panel is only rendered for people whose trades others copy.
+  // A subscriber sees their risk controls instead — showing buy/sell to
+  // someone who will get a 403 is worse than not showing it.
+  async function renderTrade(){
+    var body=document.getElementById('tradebody');
+    if(!body) return;
+    if(CAN_TRADE===null){
+      try{
+        CAN_TRADE=await (await fetch(API+'/api/copy/can-trade',{headers:H()})).json();
+      }catch(e){ CAN_TRADE={allowed:false,reason:''}; }
+    }
+    var asset=(document.getElementById('chart-sym')||{}).value||'BTC';
+
+    if(!CAN_TRADE.allowed){
+      body.innerHTML='<div style="color:var(--muted);font-size:12.5px;line-height:1.7">'+
+        esc(CAN_TRADE.reason||'Manual trading is for approved master traders.')+
+        '</div>';
+      return;
+    }
+
+    body.innerHTML=
+      '<div class="fld"><label>Amount ('+esc(PF_QUOTE)+')</label>'+
+        '<input id="t-amt" value="25" inputmode="decimal"/></div>'+
+      '<div class="quick">'+
+        [10,25,50,100].map(function(v){
+          return '<span onclick="document.getElementById(\'t-amt\').value='+v+'">'+
+                 v+'</span>';}).join('')+
+      '</div>'+
+      '<div class="bs">'+
+        '<button class="b" onclick="termTrade(\'buy\')">Buy '+esc(asset)+'</button>'+
+        '<button class="s" onclick="termTrade(\'sell\')">Sell</button>'+
+      '</div>'+
+      '<div class="rmsg" id="t-msg"></div>';
+  }
+
+  async function termTrade(side){
+    var asset=(document.getElementById('chart-sym')||{}).value;
+    var amt=parseFloat((document.getElementById('t-amt')||{}).value||'0');
+    var msg=document.getElementById('t-msg');
+    var conn=(CONNECTIONS[0]||{}).id;
+    if(!conn){ msg.innerHTML='<span class="down">No exchange connected.</span>'; return; }
+    if(!amt || amt<=0){ msg.innerHTML='<span class="down">Enter an amount.</span>'; return; }
+    if(!confirm(side.toUpperCase()+' '+amt+' '+PF_QUOTE+' of '+asset+'?\n\n'+
+       'Followers copying you will receive this trade.')) return;
+    msg.textContent='Sending…';
+    try{
+      var r=await fetch(API+'/api/copy/trade',{method:'POST',headers:H(),
+        body:JSON.stringify({connection_id:conn, symbol:asset+'/'+PF_QUOTE,
+          side:side, notional:amt})});
+      var d=await r.json();
+      msg.innerHTML = (r.ok && d.ok)
+        ? '<span class="up">'+esc(d.message||'Order placed.')+'</span>'
+        : '<span class="down">'+esc(d.detail||d.message||'Rejected.')+'</span>';
+      if(r.ok) setTimeout(load, 1500);
+    }catch(e){ msg.innerHTML='<span class="down">Network error.</span>'; }
+  }
+
+  // Risk controls: stop and target for whatever is being charted.
+  function renderRisk(holdings){
+    var body=document.getElementById('riskbody');
+    if(!body) return;
+    var asset=(document.getElementById('chart-sym')||{}).value||'BTC';
+    var held=(holdings||[]).filter(function(h){return h.asset===asset;})[0];
+
+    if(!held){
+      body.innerHTML='<div style="color:var(--dim);font-size:12px;line-height:1.7">'+
+        'You hold no '+esc(asset)+'. Risk controls apply to open positions.</div>';
+      return;
+    }
+    var px = held.value && held.amount ? held.value/held.amount : 0;
+    body.innerHTML=
+      '<div class="fld"><label>Stop loss</label>'+
+        '<input id="r-sl" value="'+(px?(px*0.9).toFixed(2):'')+'"/></div>'+
+      '<div class="fld"><label>Take profit</label>'+
+        '<input id="r-tp" value="'+(px?(px*1.2).toFixed(2):'')+'"/></div>'+
+      '<button onclick="setRisk(\''+esc(asset)+'\','+(held.amount||0)+')" '+
+        'style="width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));'+
+        'color:#08101A;border:none;border-radius:9px;padding:10px;font-weight:700;'+
+        'cursor:pointer;font-size:13px">Set protection</button>'+
+      '<div class="quick" style="margin-top:9px">'+
+        [25,50,100].map(function(p){
+          return '<span onclick="quickSell(\''+esc(asset)+'\','+p+')">'+
+                 (p===100?'Close':'Sell '+p+'%')+'</span>';}).join('')+
+      '</div>'+
+      '<div class="rmsg" id="r-msg"></div>';
+  }
+
+  async function setRisk(asset, amount){
+    var conn=(CONNECTIONS[0]||{}).id;
+    var sl=parseFloat((document.getElementById('r-sl')||{}).value||'')||null;
+    var tp=parseFloat((document.getElementById('r-tp')||{}).value||'')||null;
+    var msg=document.getElementById('r-msg');
+    msg.textContent='Placing…';
+    try{
+      var r=await fetch(API+'/api/copy/portfolio/protect',{method:'POST',headers:H(),
+        body:JSON.stringify({connection_id:conn, symbol:asset+'/'+PF_QUOTE,
+          amount:amount, stop_price:sl, take_profit:tp})});
+      var d=await r.json();
+      if(!r.ok){ msg.innerHTML='<span class="down">'+esc(d.detail||'Failed.')+'</span>'; return; }
+      // say plainly which kind of protection this actually is
+      var safe = d.protection==='exchange';
+      msg.innerHTML='<span style="color:'+(safe?'var(--green)':'#F5A623')+'">'+
+        esc(d.explanation||'')+'</span>';
+    }catch(e){ msg.innerHTML='<span class="down">Network error.</span>'; }
+  }
+
+  async function quickSell(asset, pct){
+    var conn=(CONNECTIONS[0]||{}).id;
+    var msg=document.getElementById('r-msg');
+    if(!confirm(pct===100?('Close your whole '+asset+' position?')
+                        :('Sell '+pct+'% of your '+asset+'?'))) return;
+    msg.textContent='Selling…';
+    try{
+      var r=await fetch(API+'/api/copy/portfolio/sell-partial',{method:'POST',headers:H(),
+        body:JSON.stringify({connection_id:conn, symbol:asset+'/'+PF_QUOTE, percent:pct})});
+      var d=await r.json();
+      msg.innerHTML = (r.ok && d.ok)
+        ? '<span class="up">Sold '+Number(d.sold).toFixed(6)+' '+esc(asset)+'</span>'
+        : '<span class="down">'+esc(d.detail||'Could not sell.')+'</span>';
+      if(r.ok) setTimeout(load, 1500);
+    }catch(e){ msg.innerHTML='<span class="down">Network error.</span>'; }
+  }
+
+  var CONNECTIONS = [];
+  async function loadConnections(){
+    try{
+      var d=await (await fetch(API+'/api/copy/connections',{headers:H()})).json();
+      CONNECTIONS = d.connections||[];
+    }catch(e){ CONNECTIONS=[]; }
   }
 </script>
 </body></html>
