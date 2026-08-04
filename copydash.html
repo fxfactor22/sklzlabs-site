@@ -81,8 +81,10 @@
   <div class="bk">total balance</div>
 </div></aside>
 <main class="main">
-  <div class="head"><div><h1>Copy trading</h1><div class="sub">Your positions and every copy decision, read live from your exchange.</div></div><div class="ctrl"><select class="ctrl-i" id="range"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></div></div>
+  <div class="head"><div><h1>Copy trading</h1><div class="sub">Your positions and every copy decision, read live from your exchange.</div></div><div class="ctrl"><span class="ctrl-i" onclick="shareResults()" style="cursor:pointer;color:var(--gold)">Share results</span><select class="ctrl-i" id="range"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></div></div>
   <div class="kpis" id="kpis"></div>
+  <div id="leadersec" style="display:none"></div>
+
   <div class="grid3">
     <div class="card"><h2>Performance <span id="curve-sum" style="margin-left:auto;
       font-family:var(--mono);font-size:12.5px"></span></h2>
@@ -212,6 +214,7 @@
     DAYS = parseInt(e.target.value,10)||30; load();
   });
   load();
+  loadLeader();
   setInterval(load, 60000);
 
   // Equity curve drawn as inline SVG rather than a charting library: one
@@ -347,6 +350,107 @@
         return '<option value="'+esc(a)+'">'+esc(a)+'</option>';}).join('');
       sel.onchange=function(){ mountChart(sel.value); };
       mountChart(assets[0]);
+    }
+  }
+
+  // ── master trader view ────────────────────────────────────────────
+  // Only rendered for approved leaders. The delivery rate is the headline
+  // figure on purpose: a leader whose trades silently fail to reach followers
+  // has people paying for nothing, and their own account looks fine.
+  async function loadLeader(){
+    var el=document.getElementById('leadersec');
+    if(!el) return;
+    try{
+      var d=await (await fetch(API+'/api/copy/portfolio/leader',{headers:H()})).json();
+      if(!d.is_leader){ el.style.display='none'; return; }
+      el.style.display='block';
+      var f=d.followers||{}, dl=d.delivery||{}, e=d.earnings||{}, p=d.profile||{};
+      var rate=dl.rate_pct;
+      var rateCls = rate===null||rate===undefined ? '' : (rate>=90?'up':rate>=70?'':'down');
+
+      el.innerHTML=
+        '<div class="card" style="margin-bottom:16px">'+
+        '<h2>Master trader \u00b7 '+esc(p.display_name||'')+
+          '<span style="margin-left:auto;font-family:var(--mono);font-size:10px;'+
+          'color:'+(p.suspended?'var(--red)':'var(--green)')+'">'+
+          (p.suspended?'SUSPENDED':esc((p.status||'').toUpperCase()))+'</span></h2>'+
+        '<div class="kpis" style="margin-bottom:0">'+
+          kpi('Followers', String(f.active||0),
+              (f.paused||0)+' paused \u00b7 '+(f.total||0)+' total')+
+          kpi('Capital tracking you', money(f.capital_tracking),
+              'across all followers')+
+          kpi('Delivery rate',
+              (rate===null||rate===undefined?'\u2014':rate+'%'),
+              (dl.copied||0)+' copied \u00b7 '+(dl.not_copied||0)+' missed', rateCls)+
+          kpi('Earned', money(e.total),
+              money(e.unpaid)+' unpaid \u00b7 '+(e.share_pct||0)+'% share')+
+        '</div>'+
+        ((dl.reasons||[]).length
+          ? '<div class="honest"><b>Why some trades did not reach followers</b><br>'+
+            dl.reasons.map(function(r){
+              return '\u2022 '+esc(r.reason)+' ('+r.count+')';}).join('<br>')+
+            '<br><br>'+esc(dl.note||'')+'</div>'
+          : '')+
+        '</div>';
+    }catch(err){ el.style.display='none'; }
+  }
+
+  // ── shareable result card ─────────────────────────────────────────
+  async function shareResults(){
+    try{
+      var d=await (await fetch(API+'/api/copy/portfolio/share',{headers:H()})).json();
+      var m=document.getElementById('share-modal');
+      if(!m){ m=document.createElement('div'); m.id='share-modal'; document.body.appendChild(m); }
+      m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;'+
+        'align-items:center;justify-content:center;z-index:90;padding:20px';
+
+      // the card itself — sample size and period included on purpose. A big
+      // number with no context is what every trading grifter posts.
+      var card=
+        '<div id="sharecard" style="background:linear-gradient(160deg,#0F131C,#141A26);'+
+          'border:1px solid #1E2735;border-radius:16px;padding:28px;text-align:center;'+
+          'max-width:360px;width:100%">'+
+        '<div style="font-family:monospace;font-size:10px;color:#5B6377;'+
+          'letter-spacing:.1em">SKLZ LABS \u00b7 COPY TRADING</div>'+
+        '<div style="font-family:monospace;font-size:38px;font-weight:700;margin:16px 0 4px;'+
+          'color:'+((d.headline||'').indexOf('-')===0?'#F87171':'#34D399')+'">'+
+          esc(d.headline||'')+'</div>'+
+        '<div style="color:#8B94A8;font-size:13px">'+esc(d.detail||'')+'</div>'+
+        '<div style="font-family:monospace;font-size:10px;color:#5B6377;margin-top:6px">'+
+          esc(d.period||'')+'</div>'+
+        (d.honest_note
+          ? '<div style="background:rgba(29,169,224,.08);border:1px solid rgba(29,169,224,.3);'+
+            'border-radius:9px;padding:11px;margin-top:16px;font-size:11.5px;'+
+            'color:#8B94A8;line-height:1.6">'+esc(d.honest_note)+'</div>' : '')+
+        '<div style="font-family:monospace;font-size:9px;color:#5B6377;margin-top:16px;'+
+          'line-height:1.7">'+esc(d.disclaimer||'')+'<br>sklzlabs.com</div>'+
+        '</div>';
+
+      m.innerHTML='<div style="max-width:380px;width:100%">'+card+
+        '<div style="display:flex;gap:8px;margin-top:14px">'+
+        '<button onclick="copyShare()" style="flex:1;background:linear-gradient(135deg,'+
+          '#F5A623,#FFC24B);color:#08101A;border:none;border-radius:10px;padding:12px;'+
+          'font-weight:700;cursor:pointer">Copy text</button>'+
+        '<button onclick="document.getElementById(\'share-modal\').remove()" '+
+          'style="background:transparent;border:1px solid #1E2735;color:#8B94A8;'+
+          'border-radius:10px;padding:12px 18px;cursor:pointer">Close</button>'+
+        '</div><div id="share-msg" style="text-align:center;color:#34D399;'+
+        'font-size:12px;margin-top:9px"></div></div>';
+      window.__SHARE = d;
+    }catch(e){ alert('Could not build your share card.'); }
+  }
+
+  function copyShare(){
+    var d=window.__SHARE||{};
+    var txt = 'My SKLZ copy trading results: '+(d.headline||'')+' '+(d.detail||'')+
+      ' ('+(d.period||'')+').'+
+      (d.honest_note ? ' ' + d.honest_note : '')+
+      ' Past results do not predict future returns. sklzlabs.com';
+    try{
+      navigator.clipboard.writeText(txt);
+      document.getElementById('share-msg').textContent='Copied.';
+    }catch(e){
+      document.getElementById('share-msg').textContent='Select and copy manually.';
     }
   }
 </script>
