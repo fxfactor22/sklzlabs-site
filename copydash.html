@@ -259,9 +259,17 @@
           '<span class="am">'+money(x.value)+'</span></div>').join('')
       : '<div class="empty">Nothing held right now.</div>';
 
+
     ACT_ALL = d.recent || [];
     bindActivityControls();
     applyActivityFilter();
+
+    drawCurve(d.curve||[]);
+    drawDonut(d.distribution||{});
+    fillChartPicker(d.holdings||[]);
+    renderTrade();
+    renderRisk(d.holdings||[]);
+    document.getElementById('pf-bal').textContent = money(d.balance);
 
     document.getElementById('verdict').textContent = d.sample_verdict || '';
   }
@@ -402,18 +410,6 @@
     document.head.appendChild(s);
   }
 
-  function fillChartPicker(holdings){
-    var sel=document.getElementById('chart-sym');
-    if(!sel) return;
-    var assets=(holdings||[]).map(function(h){return h.asset;});
-    if(!assets.length) assets=['BTC','ETH'];
-    if(sel.options.length !== assets.length){
-      sel.innerHTML=assets.map(function(a){
-        return '<option value="'+esc(a)+'">'+esc(a)+'</option>';}).join('');
-      sel.onchange=function(){ mountChart(sel.value); };
-      mountChart(assets[0]);
-    }
-  }
 
   // ── master trader view ────────────────────────────────────────────
   // Only rendered for approved leaders. The delivery rate is the headline
