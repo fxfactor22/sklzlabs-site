@@ -58,8 +58,9 @@
   .arow:first-child{border-top:none}
   .arow .as{font-family:var(--mono);font-weight:700;font-size:12.5px;min-width:52px}
   .arow .am{margin-left:auto;font-family:var(--mono);font-size:12.5px}
-  .grid3{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:14px;margin-bottom:16px}
-  @media(max-width:1100px){.grid3{grid-template-columns:1fr}}
+  .grid3{display:grid;grid-template-columns:1.3fr 1.1fr .9fr .9fr;gap:14px;margin-bottom:16px}
+  @media(max-width:1400px){.grid3{grid-template-columns:1fr 1fr}}
+  @media(max-width:820px){.grid3{grid-template-columns:1fr}}
   .card h2 span{margin-left:auto}
   .prof{margin:auto 18px 0;padding-top:16px;border-top:1px solid var(--line)}
   .prof .nm{font-size:13.5px;font-weight:600}
@@ -86,6 +87,11 @@
     <div class="card"><h2>Performance <span id="curve-sum" style="margin-left:auto;
       font-family:var(--mono);font-size:12.5px"></span></h2>
       <div id="curve"></div></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <h2 style="padding:19px 19px 0">Live price
+        <select id="chart-sym" class="ctrl-i" style="margin-left:auto;padding:5px 9px;
+          font-size:11px"></select></h2>
+      <div id="tvchart" style="height:206px;margin-top:12px"></div></div>
     <div class="card"><h2>Outcome split</h2><div id="donut"></div></div>
     <div class="card"><h2>By asset</h2><div id="assets"></div></div>
   </div>
@@ -190,6 +196,7 @@
       : '<div class="empty">No copy activity yet.</div>';
 
     drawCurve(d.curve||[]);
+    fillChartPicker(d.holdings||[]);
     drawDonut(d.distribution||{});
     document.getElementById('pf-bal').textContent = money(d.balance);
     document.getElementById('verdict').textContent = d.sample_verdict || '';
@@ -285,6 +292,62 @@
           '<span style="color:var(--muted)">'+s.k+'</span>'+
           '<span style="margin-left:auto;font-family:var(--mono)">'+s.v+'</span></div>';
       }).join('')+'</div></div>';
+  }
+
+  // A live price chart for whatever the client actually holds. TradingView is
+  // embedded rather than rebuilt: it is the chart traders already know, and
+  // drawing candles from scratch would be worse in every way that matters.
+  var TV_LOADED = false;
+
+  function chartSymbol(asset){
+    // most crypto is on Binance with the deepest history; fall back to Coinbase
+    return 'BINANCE:' + asset + 'USDT';
+  }
+
+  function mountChart(asset){
+    var el = document.getElementById('tvchart');
+    if(!el || !asset){ return; }
+    el.innerHTML = '<div id="tv-inner" style="height:100%"></div>';
+    function build(){
+      try{
+        new TradingView.widget({
+          container_id: 'tv-inner',
+          symbol: chartSymbol(asset),
+          interval: '60',
+          theme: 'dark',
+          style: '3',                 // area, to sit quietly beside the KPIs
+          locale: 'en',
+          autosize: true,
+          hide_top_toolbar: true,
+          hide_legend: false,
+          save_image: false,
+          backgroundColor: 'rgba(15,19,28,1)',
+          gridColor: 'rgba(30,39,53,0.5)',
+          allow_symbol_change: false
+        });
+      }catch(e){
+        el.innerHTML='<div class="empty">Chart unavailable.</div>';
+      }
+    }
+    if(TV_LOADED && window.TradingView){ build(); return; }
+    var s=document.createElement('script');
+    s.src='https://s3.tradingview.com/tv.js';
+    s.onload=function(){ TV_LOADED=true; build(); };
+    s.onerror=function(){ el.innerHTML='<div class="empty">Chart unavailable.</div>'; };
+    document.head.appendChild(s);
+  }
+
+  function fillChartPicker(holdings){
+    var sel=document.getElementById('chart-sym');
+    if(!sel) return;
+    var assets=(holdings||[]).map(function(h){return h.asset;});
+    if(!assets.length) assets=['BTC','ETH'];
+    if(sel.options.length !== assets.length){
+      sel.innerHTML=assets.map(function(a){
+        return '<option value="'+esc(a)+'">'+esc(a)+'</option>';}).join('');
+      sel.onchange=function(){ mountChart(sel.value); };
+      mountChart(assets[0]);
+    }
   }
 </script>
 </body></html>
