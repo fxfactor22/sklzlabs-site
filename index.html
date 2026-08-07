@@ -80,7 +80,36 @@
 
 
   /* ---- hero ---- */
-  .hero{padding:96px 0 72px;position:relative}
+  .hero{padding:96px 0 72px;position:relative;overflow:hidden}
+  #hero-fx{position:absolute;inset:0;width:100%;height:100%;
+    pointer-events:none;opacity:.5;z-index:0}
+  .hero .wrap{position:relative;z-index:1}
+
+  /* the gold rule under the headline draws itself once, then rests */
+  h1 .g{position:relative}
+  h1 .g:after{content:"";position:absolute;left:0;bottom:-6px;height:2px;
+    width:0;background:linear-gradient(90deg,var(--gold),transparent);
+    animation:draw 1.5s cubic-bezier(.2,.7,.3,1) .6s forwards}
+  @keyframes draw{to{width:100%}}
+
+  /* the disclaimer dot breathes rather than blinks — a blinking dot on a
+     risk warning reads as an alarm, which is not the tone */
+  .disclaimer-chip .dot{animation:breathe 3.4s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.45;transform:scale(1)}
+    50%{opacity:1;transform:scale(1.25)}}
+
+  /* cards lift on hover — restrained, 2px */
+  .card,.pcard{transition:transform .35s cubic-bezier(.2,.7,.3,1),
+    border-color .35s ease}
+  .card:hover,.pcard:hover{transform:translateY(-2px);
+    border-color:rgba(245,166,35,.3)}
+
+  @media(prefers-reduced-motion:reduce){
+    #hero-fx{display:none}
+    h1 .g:after{animation:none;width:100%}
+    .disclaimer-chip .dot{animation:none}
+    .card:hover,.pcard:hover{transform:none}
+  }
   .eyebrow{
     font-family:var(--mono);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
     color:var(--acc);margin-bottom:22px;display:flex;align-items:center;gap:10px
@@ -250,6 +279,7 @@
 
 <!-- HERO -->
 <header class="hero">
+  <canvas id="hero-fx" aria-hidden="true"></canvas>
   <div class="wrap">
     <div class="eyebrow reveal">Trading systems, engineered</div>
     <h1 class="reveal">Algorithmic trading tools that <span class="g">show their work.</span></h1>
@@ -783,5 +813,100 @@
 </script>
 <!-- /ISKRA widget -->
 <script src="/sklz-i18n.js" defer></script>
+
+<script>
+/* Hero background: a slow market-depth lattice.
+ *
+ * Drawn rather than filmed, for three reasons — it weighs about 2KB against
+ * several megabytes for video, it never shows a chart going up (which would
+ * imply a promise the rest of the page refuses to make), and it cannot look
+ * like the stock footage every other trading site uses.
+ *
+ * It also stops entirely when the tab is hidden or the visitor has asked for
+ * reduced motion. A background animation should never be the reason a laptop
+ * fan spins up.
+ */
+(function () {
+  var cv = document.getElementById('hero-fx');
+  if (!cv) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var ctx = cv.getContext('2d');
+  var pts = [], W = 0, H = 0, raf = null, running = true;
+
+  function size() {
+    var r = cv.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    build();
+  }
+
+  function build() {
+    // density scales with area, capped — a phone should not draw 200 nodes
+    var n = Math.min(46, Math.max(14, Math.round(W * H / 26000)));
+    pts = [];
+    for (var i = 0; i < n; i++) {
+      pts.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: (Math.random() - 0.5) * 0.22,
+        r: Math.random() * 1.4 + 0.5
+      });
+    }
+  }
+
+  function frame() {
+    if (!running) return;
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = 0; i < pts.length; i++) {
+      var p = pts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+
+      // links between near neighbours, fading with distance
+      for (var j = i + 1; j < pts.length; j++) {
+        var q = pts[j];
+        var dx = p.x - q.x, dy = p.y - q.y;
+        var d2 = dx * dx + dy * dy;
+        if (d2 > 20000) continue;
+        var a = (1 - d2 / 20000) * 0.22;
+        ctx.strokeStyle = 'rgba(245,166,35,' + a.toFixed(3) + ')';
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = 'rgba(245,166,35,.5)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() { if (!raf) { running = true; frame(); } }
+  function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
+
+  // pause when the tab is not visible — no point burning cycles unseen
+  document.addEventListener('visibilitychange', function () {
+    document.hidden ? stop() : start();
+  });
+
+  var t = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(t); t = setTimeout(size, 200);
+  });
+
+  size();
+  start();
+})();
+</script>
 </body>
 </html>
