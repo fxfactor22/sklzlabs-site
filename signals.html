@@ -47,6 +47,24 @@
     padding:3px 8px;border-radius:5px;background:var(--panel2);color:var(--muted)}
   .sig-tf{font-family:var(--mono);font-size:10px;color:var(--dim)}
   .sig-time{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto}
+  .sig-status{font-family:var(--mono);font-size:10px;font-weight:700;
+    padding:3px 9px;border-radius:6px;letter-spacing:.04em}
+  .sig-status.active{color:var(--gold);border:1px solid rgba(245,166,35,.4);
+    animation:sigbreathe 3s ease-in-out infinite}
+  .sig-status.secured{background:rgba(52,211,153,.12);color:var(--green);
+    border:1px solid rgba(52,211,153,.35)}
+  .sig-status.won{background:rgba(52,211,153,.16);color:var(--green)}
+  .sig-status.lost{background:rgba(248,113,113,.14);color:var(--red)}
+  @keyframes sigbreathe{0%,100%{opacity:.55}50%{opacity:1}}
+  .sum-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+    margin:0 0 18px}
+  .sum-cell{background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:12px;text-align:center}
+  .sum-cell .n{font-size:20px;font-weight:800;font-family:var(--mono)}
+  .sum-cell .k{font-size:10px;color:var(--dim);text-transform:uppercase;
+    letter-spacing:.06em;margin-top:3px}
+  .sum-note{font-size:10.5px;color:var(--dim);text-align:center;margin:-8px 0 16px}
+  @media(max-width:520px){.sum-strip{grid-template-columns:repeat(2,1fr)}}
   .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   @media(max-width:600px){.levels{grid-template-columns:repeat(2,1fr)}}
   .lv{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
@@ -246,7 +264,9 @@
       </div></div>`;
 
     document.getElementById('content').innerHTML=
-      `<div class="filters">${allChip}${chips}</div>${tel}<div id="feed"><div class="empty">Loading signals…</div></div>`;
+      `<div class="filters">${allChip}${chips}</div>${tel}<div class="sum-strip" id="sum-strip"></div>
+      <div class="sum-note" id="sum-note"></div>
+      <div id="feed"><div class="empty">Loading signals…</div></div>`;
     loadFeed();
   }
 
@@ -254,6 +274,7 @@
 
   async function loadFeed(){
     try{
+      loadSummary();
       const url=API+'/api/signals/feed'+(activeFilter?('?category='+activeFilter):'');
       const r=await fetch(url,{headers:H()});
       const d=await r.json();
@@ -360,13 +381,49 @@
     window.open('https://wa.me/?text='+encodeURIComponent(signalText(i)),'_blank','noopener');
   }
 
+
+  async function loadSummary(){
+    var el = document.getElementById('sum-strip');
+    if (!el) return;
+    try{
+      var r = await fetch(API+'/api/signals/summary?days=7');
+      var d = await r.json();
+      var closed = (d.wins||0)+(d.losses||0);
+      el.innerHTML =
+        cell(((d.net_pips>0?'+':'')+(d.net_pips??0)), 'net pips · 7d',
+             d.net_pips>0?'var(--green)':(d.net_pips<0?'var(--red)':'var(--ink)')) +
+        cell(d.wins??0, 'wins', 'var(--green)') +
+        cell(d.losses??0, 'losses', 'var(--red)') +
+        cell(d.still_running??0, 'running now', 'var(--gold)');
+      var note = document.getElementById('sum-note');
+      if (note) note.textContent = closed < 30
+        ? 'small sample ('+closed+' closed in 7 days) — percentages mean little yet'
+        : closed+' signals closed in 7 days · win rate '+(d.win_rate??'—')+'%';
+    }catch(e){ el.innerHTML=''; }
+  }
+  function cell(n,k,color){
+    return '<div class="sum-cell"><div class="n" style="color:'+color+'">'+n+
+           '</div><div class="k">'+k+'</div></div>';
+  }
+
   function statusBadge(s){
     var st = s.status || 'active';
-    if (st === 'active') return '';
-    var label = st === 'secured'
-      ? ('SECURED' + (s.locked_pips ? ' +' + Math.round(s.locked_pips) + 'p' : ''))
-      : st.toUpperCase();
-    return '<span class="sig-status ' + st + '">' + label + '</span>';
+    if (st === 'active')
+      return '<span class="sig-status active">RUNNING</span>';
+    if (st === 'secured')
+      return '<span class="sig-status secured">SECURED' +
+             (s.locked_pips ? ' +' + Math.round(s.locked_pips) + 'p' : '') +
+             '</span>';
+    if (st === 'closed'){
+      var p = s.result_pips;
+      var win = (s.outcome === 'win') || (p != null && p > 0);
+      var label = p != null
+        ? ((p > 0 ? '+' : '') + Math.round(p) + ' pips')
+        : (win ? 'WON' : 'LOST');
+      return '<span class="sig-status ' + (win ? 'won' : 'lost') + '">' +
+             label + '</span>';
+    }
+    return '';
   }
 
   var UPD_ICON = {trail:'\uD83D\uDD12', secured:'\u2705', closed:'\uD83C\uDFC1',
