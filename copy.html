@@ -101,11 +101,16 @@ Master performance shown is derived from connected account data; demo entries ar
 <label>Value (multiplier / lots / %)</label><input id="aVal" value="1.0">
 <label>Max lot</label><input id="aMaxLot" value="1.0">
 <label>Max daily loss %</label><input id="aMaxDL" value="5"></div>
-<div id="w3" style="display:none"><p style="font-size:13.5px">Attach <b>SKLZCopySlave.mq5</b>
-to any chart in this account's terminal, allow WebRequest to
-<span style="font-family:var(--mono)">api.sklzlabs.com</span>, and paste this key:</p>
+<div id="w3" style="display:none">
+<a class="btn" href="/files/SKLZCopySlave.mq5" download style="display:inline-block;margin-bottom:12px">&#8595; Download SKLZCopySlave.mq5</a>
+<p style="font-size:13.5px;line-height:1.7">
+1. Open MetaEditor from your MT5 (F4), drop the file into <b>Experts</b>, press <b>Compile</b>.<br>
+2. In MT5: Tools &rarr; Options &rarr; Expert Advisors &rarr; allow WebRequest for
+<span style="font-family:var(--mono)">https://api.sklzlabs.com</span>.<br>
+3. Drag the EA onto any chart and paste this key into <b>CopyKey</b>:</p>
 <div class="keybox" id="keyOut">…</div>
-<div class="note">The key only reads this account's copy queue. It is not a trading password.</div></div>
+<div class="note">The key only reads this account's copy queue — it is not a trading
+password, and your login credentials never leave your terminal.</div></div>
 <div class="mrow"><button class="btn ghost" onclick="closeAdd()">Cancel</button>
 <button class="btn" id="wNext" onclick="wizNext()">Next</button></div>
 </div></div>
