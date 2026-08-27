@@ -117,7 +117,11 @@ password, and your login credentials never leave your terminal.</div></div>
 
 <script>
 var API=location.hostname==="localhost"?"http://localhost:8000":"https://api.sklzlabs.com";
-var TOKEN=localStorage.getItem("sklz_token")||"";
+var TOKEN=localStorage.getItem("sklz_access")||localStorage.getItem("sklz_token")||"";
+if(!TOKEN){document.addEventListener("DOMContentLoaded",function(){
+  var b=document.getElementById("modeBadge");
+  if(b){b.textContent="LOG IN TO CONNECT REAL ACCOUNTS";b.style.cursor="pointer";
+        b.onclick=function(){location.href="/account.html";};}});}
 var paused=false, step=1, demo=true;
 
 function hdrs(){return TOKEN?{"Authorization":"Bearer "+TOKEN,"Content-Type":"application/json"}:{"Content-Type":"application/json"};}
