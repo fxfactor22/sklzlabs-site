@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.03"
+#property version   "1.04"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -185,6 +185,28 @@ void OnTimer(){
             if(maxsp>0 && spr>maxsp){ st="failed"; err="spread "+DoubleToString(spr,1)+" > cap"; }
             else{
                double vol = ResolveLots(mode, lval, lots, sym, sl, side);
+               // retcode 10019 taught us: exotic brokers report exotic
+               // tick values and the risk formula can size past the
+               // account's margin. Ask the broker what the position
+               // actually costs and shrink until it fits inside 80% of
+               // free margin — a copier must never margin-call anyone.
+               double px0 = side>0 ? SymbolInfoDouble(sym, SYMBOL_ASK)
+                                   : SymbolInfoDouble(sym, SYMBOL_BID);
+               double need = 0.0;
+               double freeM = AccountInfoDouble(ACCOUNT_MARGIN_FREE);
+               double lstep = SymbolInfoDouble(sym, SYMBOL_VOLUME_STEP);
+               double lmin2 = SymbolInfoDouble(sym, SYMBOL_VOLUME_MIN);
+               if(lstep <= 0) lstep = 0.01;
+               for(int gu = 0; gu < 20; gu++){
+                  if(!OrderCalcMargin(side>0?ORDER_TYPE_BUY:ORDER_TYPE_SELL,
+                                      sym, vol, px0, need)) break;
+                  if(need <= freeM * 0.8 || vol <= lmin2) break;
+                  vol = MathMax(lmin2,
+                                MathFloor(vol/2.0/lstep)*lstep);
+               }
+               Print("SKLZ COPY: sizing ", sym, " -> ", vol,
+                     " lots (margin ", DoubleToString(need,2),
+                     ", free ", DoubleToString(freeM,2), ")");
                MqlTradeRequest rq; MqlTradeResult rs;
                ZeroMemory(rq); ZeroMemory(rs);
                rq.action=TRADE_ACTION_DEAL; rq.symbol=sym; rq.volume=vol;
