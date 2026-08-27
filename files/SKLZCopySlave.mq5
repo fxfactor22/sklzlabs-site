@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.01"
+#property version   "1.02"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -43,8 +43,8 @@ string HttpGet(string url){
 }
 void HttpPostJson(string url, string body){
    char post[], result[]; string rh;
-   StringToCharArray(body, post, 0, StringLen(body), CP_UTF8);
-   ArrayResize(post, ArraySize(post)-1);        // drop the trailing NUL
+   StringToCharArray(body, post, 0, -1, CP_UTF8);   // includes the NUL
+   ArrayResize(post, ArraySize(post)-1);            // drop ONLY the NUL
    int code = WebRequest("POST", url, "Content-Type: application/json\r\n",
                          8000, post, result, rh);
    if(code != 200) Print("SKLZ COPY: report HTTP ", code);
@@ -170,6 +170,12 @@ void OnTimer(){
                rq.type = side>0 ? ORDER_TYPE_BUY : ORDER_TYPE_SELL;
                rq.sl=sl; rq.tp=tp; rq.deviation=30; rq.magic=MagicNumber;
                rq.comment="SKLZ#"+(string)mtk;
+               // retcode 10030 taught us: never let the broker guess the
+               // filling mode — ask the symbol which ones it accepts
+               long fm = SymbolInfoInteger(sym, SYMBOL_FILLING_MODE);
+               if((fm & SYMBOL_FILLING_IOC) != 0)      rq.type_filling = ORDER_FILLING_IOC;
+               else if((fm & SYMBOL_FILLING_FOK) != 0) rq.type_filling = ORDER_FILLING_FOK;
+               else                                    rq.type_filling = ORDER_FILLING_RETURN;
                if(!OrderSend(rq,rs) || rs.retcode!=TRADE_RETCODE_DONE){
                   st="failed"; err="retcode "+(string)rs.retcode;
                } else { sticket=(long)rs.order; fpx=rs.price; }
