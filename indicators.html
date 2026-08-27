@@ -388,5 +388,20 @@
 <!-- /ISKRA widget -->
 <script src="/sklz-i18n.js" defer></script>
 <script src="/sklz-mobile.js" defer></script>
+<script>
+/* SKLZ paywall: members areas need an active plan. Public pages are
+   exempt; everyone else routes through pricing. */
+(async function(){
+  var API=location.hostname==="localhost"?"http://localhost:8000":"https://api.sklzlabs.com";
+  var tok=localStorage.getItem("sklz_access")||"";
+  if(!tok){ location.href="/account.html?next="+encodeURIComponent(location.pathname); return; }
+  try{
+    var r=await fetch(API+"/api/billing/status",{headers:{"Authorization":"Bearer "+tok}});
+    if(r.status===401){ location.href="/account.html?next="+encodeURIComponent(location.pathname); return; }
+    var d=await r.json();
+    if(!(d&&(d.active||d.plan==="suite_lifetime"))){ location.href="/pricing.html?join=1"; }
+  }catch(e){/* API down: fail open — never lock paying users out on our outage */}
+})();
+</script>
 </body>
 </html>

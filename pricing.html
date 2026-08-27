@@ -1,272 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<meta name="theme-color" content="#080A0F"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<title>Pricing — SKLZ Labs</title>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKLZ LABS — Pricing</title>
 <style>
-  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;
-    --muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--gold2:#FFC24B;--blue:#1DA9E0;
-    --green:#34D399;--red:#F87171;
-    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
-    --sans:'Inter',-apple-system,system-ui,sans-serif}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
-  a{color:inherit;text-decoration:none}
-  nav{border-bottom:1px solid var(--line)}
-  .nav-in{max-width:1060px;margin:0 auto;padding:0 18px;height:60px;display:flex;
-    align-items:center;justify-content:space-between}
-  .logo{height:40px}
-  .btn{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);
-    border:1px solid var(--line);border-radius:7px;padding:7px 13px;cursor:pointer}
-  .wrap{max-width:1060px;margin:0 auto;padding:36px 18px 70px}
-  h1{font-size:30px;text-align:center;letter-spacing:-.02em}
-  .sub{color:var(--muted);text-align:center;margin:10px auto 8px;max-width:560px;line-height:1.6}
-  .founder{display:flex;justify-content:center;margin:14px 0 30px}
-  .founder span{font-family:var(--mono);font-size:11.5px;color:var(--gold);
-    border:1px solid rgba(245,166,35,.35);border-radius:20px;padding:7px 16px;
-    background:rgba(245,166,35,.07)}
-  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  @media(max-width:900px){.tiers{grid-template-columns:1fr}}
-  .tier{background:var(--panel);border:1px solid var(--line);border-radius:16px;
-    padding:24px;display:flex;flex-direction:column;position:relative}
-  .tier.hot{border-color:var(--gold);box-shadow:0 8px 44px rgba(245,166,35,.14)}
-  .pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);
-    font-family:var(--mono);font-size:9px;letter-spacing:.1em;background:linear-gradient(135deg,var(--gold),var(--gold2));
-    color:#08101A;padding:4px 12px;border-radius:11px;font-weight:700}
-  .tname{font-size:16px;font-weight:700}
-  .tdesc{color:var(--muted);font-size:12px;margin-top:4px;line-height:1.5;min-height:36px}
-  .price{margin:16px 0 2px;display:flex;align-items:baseline;gap:7px}
-  .price .n{font-family:var(--mono);font-size:40px;font-weight:700;
-    background:linear-gradient(100deg,var(--gold),var(--blue));
-    -webkit-background-clip:text;background-clip:text;color:transparent}
-  .price .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
-  .price .was{font-family:var(--mono);font-size:15px;color:var(--dim);text-decoration:line-through}
-  .renew{font-family:var(--mono);font-size:10.5px;color:var(--muted);min-height:16px}
-  .feat{margin:16px 0;padding:0;list-style:none;flex:1}
-  .feat li{font-size:12.5px;color:var(--muted);padding:5px 0 5px 20px;position:relative}
-  .feat li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
-  .cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#08101A;border:none;
-    border-radius:9px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;width:100%}
-  .cta.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
-  .alt{font-family:var(--mono);font-size:10.5px;color:var(--dim);text-align:center;
-    margin-top:10px}
-  .alt a{color:var(--blue);cursor:pointer}
-  .fine{margin-top:34px;text-align:center;font-family:var(--mono);font-size:10.5px;
-    color:var(--dim);line-height:2}
-  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
-    background:var(--panel2);border:1px solid var(--gold);border-radius:9px;
-    padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
-  .toast.on{transform:translateX(-50%) translateY(0)}
-</style>
-<link rel="stylesheet" href="/sklz-mobile.css"/>
-</head>
-<body>
-<nav><div class="nav-in">
-  <a href="/"><img src="./sklz-logo.png" class="logo" alt="SKLZ"/></a>
-  <div id="nav-ctx" style="display:flex;gap:8px">
-    <a class="btn" href="/">← Home</a>
-    <a class="btn" href="/login.html">Log in</a>
-  </div>
-</div></nav>
-<script>
-  // context-aware nav: members see Dashboard, visitors see Home + Log in
-  if(localStorage.getItem('sklz_access')){
-    document.getElementById('nav-ctx').innerHTML =
-      '<a class="btn" href="/dashboard.html">← Dashboard</a>';
-  }
-</script>
-
+:root{--bg:#080A0F;--panel:#0F131C;--line:#1E2735;--ink:#EAEEF6;--dim:#8B94A8;--gold:#F5A623}
+*{margin:0;box-sizing:border-box}body{background:var(--bg);color:var(--ink);
+font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;text-align:center}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 20px 60px}
+h1{font-size:34px;margin-bottom:8px}
+h1 b{background:linear-gradient(90deg,#F5A623,#F7C566);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--dim);max-width:640px;margin:0 auto 30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;text-align:left}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;position:relative}
+.card.hot{border-color:var(--gold);box-shadow:0 0 34px rgba(245,166,35,.12)}
+.pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);
+color:#0a0a0a;font-size:10px;font-weight:800;letter-spacing:.1em;border-radius:6px;padding:3px 10px}
+h2{font-size:20px}.tag{color:var(--dim);font-size:13px;margin:4px 0 14px}
+.pr{margin:6px 0 16px;color:var(--dim)}.pr span{font-size:40px;font-weight:800;color:var(--gold)}
+.ft{font-size:13.5px;padding:6px 0;border-top:1px solid rgba(30,39,53,.6)}
+.btn{width:100%;margin-top:18px;background:var(--gold);color:#0a0a0a;border:0;border-radius:10px;
+padding:13px;font-weight:800;font-size:14px;cursor:pointer}
+.legal{color:var(--dim);font-size:11.5px;margin-top:36px;line-height:1.8}
+.keep{margin-top:22px;color:var(--dim);font-size:12.5px}
+a{color:var(--gold);text-decoration:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px}
+</style></head><body>
+<div class="topbar"><b>SKLZ<span style="color:var(--gold)">LABS</span></b>
+<a href="/dashboard.html">&larr; Dashboard</a></div>
 <div class="wrap">
-  <h1>Simple pricing. Honest tools.</h1>
-  <div class="sub">Every plan renews at the price on the button, cancels in one click from
-    your billing portal, and carries a 7-day money-back guarantee on your first purchase.</div>
-  <div class="founder"><span id="founder-badge">🔥 Founder pricing: first 100 bundle members lock $39/mo for life</span></div>
-
-  <div class="tiers">
-    <!-- SUITE -->
-    <div class="tier">
-      <div class="tname">Indicator Suite</div>
-      <div class="tdesc">All four TradingView tools — Pro, Trend, Flow, Radar — on your TV account.</div>
-      <div class="price"><span class="n">$7</span><span class="u">first month</span><span class="was">$29</span></div>
-      <div class="renew">then $29/mo · cancel anytime</div>
-      <ul class="feat">
-        <li>SKLZ Pro — structure &amp; trade plans</li>
-        <li>SKLZ Trend — regime-adaptive signals</li>
-        <li>SKLZ Flow — divergence matrix</li>
-        <li>SKLZ Radar — MTF scanner</li>
-        <li>Honest performance panels</li>
-      </ul>
-      <button class="cta" onclick="buy('suite_monthly')">Start for $7 →</button>
-      <div class="alt">or <a onclick="buy('suite_annual')">$290/yr</a> · <a onclick="buy('suite_lifetime')">$349 lifetime</a></div>
-    </div>
-
-    <!-- BUNDLE -->
-    <div class="tier hot">
-      <div class="pop">MOST POPULAR</div>
-      <div class="tname">The Bundle</div>
-      <div class="tdesc">Everything: all four indicators + TradeGPT Pro, one subscription.</div>
-      <div class="price"><span class="n" id="bundle-price">$39</span><span class="u">/month</span><span class="was" id="bundle-was">$58</span></div>
-      <div class="renew" id="bundle-renew">founder price — locked for life · cancel anytime</div>
-      <ul class="feat">
-        <li>Full Indicator Suite</li>
-        <li>TradeGPT Pro — unlimited chart analysis</li>
-        <li>AI performance reviews</li>
-        <li>English &amp; العربية</li>
-        <li>Priority access to Signals (coming)</li>
-      </ul>
-      <button class="cta" onclick="buy('bundle_monthly')" id="bundle-cta">Get the Bundle →</button>
-      <div class="alt">or <a onclick="buy('bundle_annual')">$490/yr</a></div>
-    </div>
-
-    <!-- TRADEGPT -->
-    <div class="tier">
-      <div class="tname">TradeGPT Pro</div>
-      <div class="tdesc">Your AI analyst — chart screenshots in, structured trade plans out.</div>
-      <div class="price"><span class="n">$29</span><span class="u">/month</span></div>
-      <div class="renew">cancel anytime</div>
-      <ul class="feat">
-        <li>Vision chart analysis</li>
-        <li>Exact position sizing</li>
-        <li>The case against every trade</li>
-        <li>Behavioural performance reviews</li>
-        <li>English &amp; العربية</li>
-      </ul>
-      <button class="cta ghost" onclick="buy('gpt_monthly')">Start TradeGPT →</button>
-      <div class="alt">or <a onclick="buy('gpt_annual')">$290/yr</a></div>
-    </div>
-  </div>
-
-  <div class="fine">
-    Prices in USD · Renewal price always shown at checkout · Manage or cancel anytime from your billing portal<br>
-    7-day money-back guarantee on first purchase · Software tools only — not financial advice · Trading involves risk of loss
-  </div>
+<h1>One platform. <b>Three ways in.</b></h1>
+<div class="sub">Every plan renews at the price on the button, cancels in one click from your
+billing portal, and carries a 7-day money-back guarantee on your first purchase.</div>
+<div class="grid"><div class="card"><h2>SKLZ Core</h2><div class="tag">The full platform, minus crypto</div><div class="pr"><span>$29</span>/month</div><div class="ft">&#10003; MT5 Bot copy trading — partner broker, 1 account</div><div class="ft">&#10003; SKLZ Engine as your master — honest track record</div><div class="ft">&#10003; All four TradingView indicators</div><div class="ft">&#10003; TradeGPT Pro — unlimited chart analysis</div><div class="ft">&#10003; Signals, Journal, AI reviews</div><div class="ft">&#10003; English &amp; العربية</div><button class="btn" onclick="checkout('copy_basic_monthly')">Start SKLZ Core &rarr;</button></div><div class="card hot"><div class=pop>MOST POPULAR</div><h2>SKLZ Plus</h2><div class="tag">Everything in Core, plus crypto</div><div class="pr"><span>$49</span>/month</div><div class="ft">&#10003; Everything in SKLZ Core</div><div class="ft">&#10003; Crypto trading &amp; crypto copy trading</div><div class="ft">&#10003; MT5 copy — partner broker, 1 account</div><div class="ft">&#10003; Priority access to new features</div><button class="btn" onclick="checkout('copy_crypto_monthly')">Start SKLZ Plus &rarr;</button></div><div class="card"><h2>SKLZ Pro</h2><div class="tag">Multi-account. Any broker.</div><div class="pr"><span>$79</span>/month</div><div class="ft">&#10003; Everything in SKLZ Plus</div><div class="ft">&#10003; MT5 copy on ANY broker</div><div class="ft">&#10003; Up to 10 MT5 accounts copying at once</div><div class="ft">&#10003; Built for prop-firm traders running multiple evals</div><button class="btn" onclick="checkout('copy_pro_monthly')">Start SKLZ Pro &rarr;</button></div></div>
+<div class="keep">Already subscribed on an earlier plan? Nothing changes for you &mdash;
+existing subscriptions, including Founder $39 locks, keep their price. Promises don't expire.</div>
+<div class="legal">Prices in USD &middot; Renewal price always shown at checkout &middot; Manage or cancel anytime
+from your billing portal<br>7-day money-back guarantee on first purchase &middot; Software tools only &mdash;
+not financial advice &middot; Trading involves risk of loss</div>
 </div>
-<div class="toast" id="toast"></div>
-
 <script>
-  const API="https://api.sklzlabs.com";
-  function tok(){return localStorage.getItem('sklz_access')}   // may be null: page is public
-  function toast(m){const t=document.getElementById('toast');t.textContent=m;
-    t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2800)}
-
-  let myPlan = null;
-  async function loadStatus(){
-    if(!tok()) return;
-    try{
-      const r=await fetch(API+'/api/billing/status',{headers:{'Authorization':'Bearer '+tok()}});
-      if(!r.ok) return;
-      const d=await r.json();
-      if(!d.active) return;
-      myPlan = d.plan||'';
-      const bar=document.createElement('div');
-      bar.style.cssText='max-width:1060px;margin:0 auto 22px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap';
-      bar.innerHTML=`<span style="font-family:var(--mono);font-size:12px;color:var(--green);border:1px solid rgba(52,211,153,.35);border-radius:20px;padding:7px 16px;background:rgba(52,211,153,.07)">● Your plan: ${myPlan}${d.founder?' 🔥':''}</span>
-        <button class="btn" onclick="portal()">Manage billing →</button>`;
-      document.querySelector('.tiers').before(bar);
-
-      const suiteBtn=document.querySelector('.tier:nth-child(1) .cta');
-      const bundleBtn=document.getElementById('bundle-cta');
-      const gptBtn=document.querySelector('.tier:nth-child(3) .cta');
-      const off=(b,t)=>{b.textContent=t;b.disabled=true;b.style.opacity=.45;b.style.cursor='default';b.onclick=null};
-
-      if(myPlan.includes('Bundle')){
-        off(bundleBtn,'✓ Current plan'); off(suiteBtn,'Included in your bundle'); off(gptBtn,'Included in your bundle');
-      }else if(myPlan.includes('Suite')){
-        off(suiteBtn, myPlan.includes('Lifetime') ? '✓ Lifetime access' : '✓ Current plan');
-        bundleBtn.textContent='Upgrade — $7 today →';
-        bundleBtn.onclick=doUpgrade;
-        off(gptBtn,'Get it in the Bundle ↑');
-      }else if(myPlan.includes('TradeGPT')){
-        off(gptBtn,'✓ Current plan');
-        bundleBtn.textContent='Upgrade — $7 today →';
-        bundleBtn.onclick=doUpgrade;
-        off(suiteBtn,'Get it in the Bundle ↑');
-      }
-    }catch(e){}
-  }
-  async function doUpgrade(){
-    const b=document.getElementById('bundle-cta');
-    b.disabled=true;b.textContent='Upgrading…';
-    try{
-      const r=await fetch(API+'/api/billing/upsell',{method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok()}});
-      const d=await r.json();
-      if(r.ok){ b.textContent='✓ Bundle active — $'+d.charged_today+' charged'; toast('Upgraded! Renews at $'+d.renews_at+'/mo'); setTimeout(()=>location.reload(),1800); }
-      else { b.disabled=false; b.textContent='Upgrade — $7 today →'; toast(d.detail||'Upgrade failed'); }
-    }catch(e){ b.disabled=false; b.textContent='Upgrade — $7 today →'; toast('Network error'); }
-  }
-  async function portal(){
-    try{
-      const r=await fetch(API+'/api/billing/portal',{headers:{'Authorization':'Bearer '+tok()}});
-      const d=await r.json();
-      if(r.ok) location.href=d.url; else toast(d.detail||'Portal unavailable');
-    }catch(e){ toast('Network error'); }
-  }
-  async function loadConfig(){
-    try{
-      const r=await fetch(API+'/api/billing/config',{headers:{'Authorization':'Bearer '+tok()}});
-      if(!r.ok) return;
-      const d=await r.json();
-      const n=d.founder_remaining;
-      if(n>0){
-        document.getElementById('founder-badge').textContent=
-          `🔥 Founder pricing: ${n} of 100 spots left — lock $39/mo for life`;
-      }else{
-        document.getElementById('founder-badge').textContent='Bundle — best value';
-        document.getElementById('bundle-price').textContent='$49';
-        document.getElementById('bundle-was').textContent='$58';
-        document.getElementById('bundle-renew').textContent='cancel anytime';
-      }
-    }catch(e){}
-  }
-  async function buy(product){
-    try{
-      const path = tok() ? '/api/billing/checkout' : '/api/billing/checkout-public';
-      const headers = {'Content-Type':'application/json'};
-      if(tok()) headers['Authorization']='Bearer '+tok();
-      const r=await fetch(API+path,{method:'POST',headers,body:JSON.stringify({product})});
-      const d=await r.json();
-      if(!r.ok){ toast(d.detail||'Checkout unavailable'); return; }
-      location.href=d.url;
-    }catch(e){ toast('Could not reach billing'); }
-  }
-  // config endpoint needs no auth-sensitive data; try with token, fall back public
-  loadConfig(); loadStatus();
-</script>
-<!-- ISKRA AI webchat widget -->
-<script>
-(function(){
-  var SLUG='sklz', API='https://www.iskra.marketing/api/chat', CONV=null, open=false, greeted=false, busy=false;
-  try{ CONV=localStorage.getItem('iskra_conv_'+SLUG)||null; }catch(e){}
-  var css=document.createElement('style');
-  css.textContent='#ikFab{position:fixed;right:20px;bottom:20px;z-index:99990;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#0ea5e9);color:#fff;border:0;font-size:23px;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.35)}#ikPanel{position:fixed;right:18px;bottom:90px;z-index:99991;width:min(360px,calc(100vw - 28px));height:min(500px,calc(100vh - 120px));background:#0f1523;border:1px solid #223;border-radius:16px;box-shadow:0 22px 60px rgba(0,0,0,.5);display:none;flex-direction:column;overflow:hidden;font-family:system-ui,sans-serif}#ikPanel.on{display:flex}.ikHd{background:#141b2e;color:#fff;padding:13px 15px;display:flex;align-items:center;gap:9px}.ikHd .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#0ea5e9);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}.ikHd b{font-size:14px;display:block}.ikHd span{font-size:11px;color:#7dd3fc}.ikHd .x{margin-left:auto;background:none;border:0;color:#fff;font-size:17px;cursor:pointer;opacity:.8}.ikMs{flex:1;overflow-y:auto;padding:12px;background:#0b1020;display:flex;flex-direction:column;gap:9px}.ikM{max-width:84%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.55;white-space:pre-wrap;color:#e6ecf7}.ikM.b{background:#141b2e;border:1px solid #223;border-bottom-left-radius:4px;align-self:flex-start}.ikM.u{background:#1d4ed8;border-bottom-right-radius:4px;align-self:flex-end}.ikIn{display:flex;gap:7px;padding:9px;border-top:1px solid #223;background:#0f1523}.ikIn input{flex:1;border:1px solid #2a3550;background:#0b1020;color:#e6ecf7;border-radius:999px;padding:9px 14px;font-size:13px;outline:none}.ikIn button{background:#22c55e;color:#06220f;border:0;border-radius:50%;width:38px;height:38px;font-size:14px;cursor:pointer;flex-shrink:0}.ikTy{display:inline-flex;gap:4px;padding:10px 13px;background:#141b2e;border:1px solid #223;border-radius:12px;align-self:flex-start}.ikTy i{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:ikp 1s infinite}.ikTy i:nth-child(2){animation-delay:.16s}.ikTy i:nth-child(3){animation-delay:.32s}@keyframes ikp{0%,100%{opacity:.3}50%{opacity:1}}';
-  document.head.appendChild(css);
-  var fab=document.createElement('button'); fab.id='ikFab'; fab.textContent='\uD83D\uDCAC'; fab.setAttribute('aria-label','Chat');
-  var p=document.createElement('div'); p.id='ikPanel';
-  p.innerHTML='<div class="ikHd"><div class="av">S</div><div><b>SKLZ AI</b><span>Ask about bots, tools & pricing</span></div><button class="x">\u2715</button></div><div class="ikMs" id="ikMs"></div><div class="ikIn"><input id="ikI" placeholder="Ask anything\u2026"/><button id="ikGo">\u27A4</button></div>';
-  document.body.appendChild(fab); document.body.appendChild(p);
-  function add(t,w){var m=document.getElementById('ikMs'),d=document.createElement('div');d.className='ikM '+w;d.textContent=t;m.appendChild(d);m.scrollTop=m.scrollHeight;}
-  function typing(on){var m=document.getElementById('ikMs'),e=document.getElementById('ikTy');if(e)e.remove();if(on){var d=document.createElement('div');d.className='ikTy';d.id='ikTy';d.innerHTML='<i></i><i></i><i></i>';m.appendChild(d);m.scrollTop=m.scrollHeight;}}
-  function send(){
-    if(busy)return; var i=document.getElementById('ikI'),q=(i.value||'').trim(); if(q==='')return;
-    i.value=''; add(q,'u'); typing(true); busy=true;
-    fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tenantSlug:SLUG,channel:'webchat',message:q,conversationId:CONV})})
-    .then(function(r){return r.json();}).then(function(d){
-      typing(false); busy=false;
-      if(d&&d.conversationId){CONV=d.conversationId;try{localStorage.setItem('iskra_conv_'+SLUG,CONV)}catch(e){}}
-      add((d&&(d.reply||d.error))||'Sorry \u2014 something went wrong.','b');
-    }).catch(function(){typing(false);busy=false;add('Connection problem \u2014 please try again.','b');});
-  }
-  fab.onclick=function(){open=(open===false);p.classList.toggle('on',open);if(open){if(greeted===false){greeted=true;add('Welcome to SKLZ Labs \uD83D\uDC4B I am SKLZ AI. Ask me about our MT5 bots, indicators, analytics, pricing \u2014 or join the copy-trading waitlist.','b');}document.getElementById('ikI').focus();}};
-  p.querySelector('.x').onclick=function(){open=false;p.classList.remove('on');};
-  document.getElementById('ikGo').onclick=send;
-  document.getElementById('ikI').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
-})();
-</script>
-<!-- /ISKRA widget -->
-<script src="/sklz-i18n.js" defer></script>
-<script src="/sklz-mobile.js" defer></script>
-</body>
-</html>
+var API=location.hostname==="localhost"?"http://localhost:8000":"https://api.sklzlabs.com";
+function tok(){return localStorage.getItem("sklz_access")||"";}
+async function checkout(product){
+  try{
+    var path = tok() ? "/api/billing/checkout" : "/api/billing/checkout-public";
+    var h={"Content-Type":"application/json"};
+    if(tok()) h["Authorization"]="Bearer "+tok();
+    var ref=localStorage.getItem("sklz_ref")||"";
+    var r=await fetch(API+path,{method:"POST",headers:h,
+      body:JSON.stringify(ref?{product:product,ref:ref}:{product:product})});
+    var d=await r.json();
+    if(d&&d.url) location.href=d.url;
+    else alert(d&&d.detail?d.detail:"Checkout unavailable - try again in a minute.");
+  }catch(e){alert("Checkout unavailable - try again in a minute.");}
+}
+</script></body></html>
