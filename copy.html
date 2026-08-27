@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKLZ LABS — Copy Trading</title>
+<style>
+:root{--bg:#080A0F;--panel:#0F131C;--line:#1E2735;--ink:#EAEEF6;--dim:#8B94A8;
+--gold:#F5A623;--green:#34D399;--red:#F87171;--mono:'SF Mono',Consolas,monospace}
+*{margin:0;box-sizing:border-box}body{background:var(--bg);color:var(--ink);
+font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--gold);text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap}
+h1{font-size:26px}h2{font-size:17px;margin:34px 0 12px}
+.sub{color:var(--dim);font-size:13.5px;margin-bottom:22px}
+.demo{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:#0a0a0a;
+background:var(--gold);border-radius:5px;padding:2px 7px;font-weight:800}
+.engine{display:flex;align-items:center;gap:16px;background:var(--panel);
+border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--green);
+box-shadow:0 0 12px rgba(52,211,153,.7);animation:pul 2.5s infinite}
+@keyframes pul{50%{opacity:.5}}
+.btn{background:var(--gold);color:#0a0a0a;border:0;border-radius:9px;
+padding:10px 18px;font-weight:700;cursor:pointer;font-size:13.5px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.red{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.4)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative}
+.card .badges{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.badge{font-family:var(--mono);font-size:9.5px;padding:3px 8px;border-radius:6px;
+border:1px solid rgba(245,166,35,.4);color:var(--gold)}
+.stat{display:flex;justify-content:space-between;font-size:13px;color:var(--dim);
+border-top:1px solid var(--line);padding:7px 0}
+.stat b{color:var(--ink);font-family:var(--mono)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{color:var(--dim);text-align:left;font-weight:600;font-size:11px;
+text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid rgba(30,39,53,.6);font-family:var(--mono);font-size:12.5px}
+.ok{color:var(--green)}.bad{color:var(--red)}
+.modal{position:fixed;inset:0;background:rgba(4,6,10,.8);display:none;
+align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}
+.mbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+padding:24px;max-width:480px;width:100%}
+.mbox h3{margin-bottom:6px}.mbox .step{color:var(--dim);font-size:12px;
+font-family:var(--mono);margin-bottom:14px}
+.mbox label{display:block;font-size:12.5px;color:var(--dim);margin:12px 0 5px}
+.mbox input,.mbox select{width:100%;background:#0a0e15;border:1px solid var(--line);
+border-radius:8px;color:var(--ink);padding:10px;font-size:14px}
+.mrow{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.keybox{background:#0a0e15;border:1px dashed var(--gold);border-radius:9px;
+padding:12px;font-family:var(--mono);font-size:12px;word-break:break-all;margin-top:10px}
+.note{font-size:12px;color:var(--dim);margin-top:10px}
+.disc{color:var(--dim);font-size:11px;text-align:center;margin-top:44px;
+border-top:1px solid var(--line);padding-top:18px;line-height:1.7}
+</style></head><body><div class="wrap">
+<div class="top"><h1>SKLZ LABS COPY</h1><span class="demo" id="modeBadge">DEMO MODE</span>
+<a href="/dashboard.html" style="margin-left:auto;font-size:13px">&larr; Dashboard</a></div>
+<div class="sub">One master. Multiple accounts. Your credentials never leave your terminal —
+slave accounts run the SKLZ EA with a copy key, execute locally, and report every fill.</div>
+
+<div class="engine"><div class="dot" id="engDot"></div>
+<div style="flex:1"><b id="engState">COPY ENGINE — ACTIVE</b>
+<div style="color:var(--dim);font-size:12.5px" id="engSub">Master: SKLZ Engine · queue healthy</div></div>
+<button class="btn ghost" id="pauseBtn" onclick="togglePause()">PAUSE ALL COPYING</button>
+</div><div class="note">Emergency close of copied positions is done per account in MT5 or via your account row — never automatic.</div>
+
+<h2>Find a master</h2>
+<div class="grid" id="masters"></div>
+
+<h2>My accounts</h2>
+<div class="card"><table><thead><tr><th>Account</th><th>Broker</th><th>Status</th>
+<th>Copying</th><th></th></tr></thead><tbody id="slaves"></tbody></table>
+<div style="margin-top:14px"><button class="btn" onclick="openAdd()">+ Connect MT5 account</button></div></div>
+
+<h2>Execution log <span class="demo" id="logDemo">DEMO DATA</span></h2>
+<div class="card" style="overflow-x:auto"><table><thead><tr>
+<th>Time</th><th>Symbol</th><th>Side</th><th>Master&rarr;Slave</th><th>Status</th>
+<th>Latency</th></tr></thead><tbody id="log"></tbody></table></div>
+
+<div class="disc">Past performance does not guarantee future results. Copy trading involves
+substantial risk of loss. You remain responsible for your accounts at all times.
+Master performance shown is derived from connected account data; demo entries are labelled.
+<br>&copy; 2026 SKLZ Labs · software only — not financial advice</div>
+</div>
+
+<div class="modal" id="addModal"><div class="mbox">
+<h3 id="wTitle">Connect an MT5 account</h3><div class="step" id="wStep">STEP 1 OF 3 — ACCOUNT</div>
+<div id="w1"><label>Label</label><input id="aLabel" placeholder="My IC Markets">
+<label>Broker</label><input id="aBroker" placeholder="IC Markets">
+<label>MT5 login (number only — never your password)</label><input id="aLogin" placeholder="52952532"></div>
+<div id="w2" style="display:none"><label>Master</label>
+<select id="aMaster"><option value="sklz">SKLZ Engine (Verified)</option></select>
+<label>Copy mode</label><select id="aMode"><option value="multiplier">Multiplier</option>
+<option value="fixed">Fixed lot</option><option value="balance">Balance auto-scale</option>
+<option value="risk_pct">Risk % per trade</option></select>
+<label>Value (multiplier / lots / %)</label><input id="aVal" value="1.0">
+<label>Max lot</label><input id="aMaxLot" value="1.0">
+<label>Max daily loss %</label><input id="aMaxDL" value="5"></div>
+<div id="w3" style="display:none"><p style="font-size:13.5px">Attach <b>SKLZCopySlave.mq5</b>
+to any chart in this account's terminal, allow WebRequest to
+<span style="font-family:var(--mono)">api.sklzlabs.com</span>, and paste this key:</p>
+<div class="keybox" id="keyOut">…</div>
+<div class="note">The key only reads this account's copy queue. It is not a trading password.</div></div>
+<div class="mrow"><button class="btn ghost" onclick="closeAdd()">Cancel</button>
+<button class="btn" id="wNext" onclick="wizNext()">Next</button></div>
+</div></div>
+
+<script>
+var API=location.hostname==="localhost"?"http://localhost:8000":"https://api.sklzlabs.com";
+var TOKEN=localStorage.getItem("sklz_token")||"";
+var paused=false, step=1, demo=true;
+
+function hdrs(){return TOKEN?{"Authorization":"Bearer "+TOKEN,"Content-Type":"application/json"}:{"Content-Type":"application/json"};}
+
+var DEMO_MASTERS=[
+ {display_name:"SKLZ Engine",strategy:"Structured models A/B/D + institutional filter",
+  style:"Algorithmic",markets:"Gold, FX, Indices",risk_score:34,is_system:true,
+  badges:["Verified","Algorithmic","Honest Track Record"],
+  stats:{trades:"live journal",wr:"published with losses",dd:"tracked"}},
+ {display_name:"Aurora FX (DEMO)",strategy:"London breakout swing",style:"Swing",
+  markets:"FX majors",risk_score:41,badges:["DEMO DATA"],demo:true,
+  stats:{trades:"214",wr:"58%",dd:"9.4%"}},
+ {display_name:"Basalt Gold (DEMO)",strategy:"XAUUSD mean reversion",style:"Day trading",
+  markets:"Gold",risk_score:55,badges:["DEMO DATA"],demo:true,
+  stats:{trades:"131",wr:"64%",dd:"14.1%"}}];
+
+function masterCard(m){
+ var b=(m.badges||[]).map(function(x){return '<span class="badge">'+x+'</span>';}).join("");
+ var s=m.stats||{};
+ return '<div class="card">'+(m.demo?'<span class="demo" style="position:absolute;top:12px;right:12px">DEMO</span>':"")
+ +'<b>'+m.display_name+'</b><div style="color:var(--dim);font-size:12.5px">'+m.strategy+'</div>'
+ +'<div class="badges">'+b+'</div>'
+ +'<div class="stat"><span>Style</span><b>'+m.style+'</b></div>'
+ +'<div class="stat"><span>Markets</span><b>'+m.markets+'</b></div>'
+ +'<div class="stat"><span>Trades</span><b>'+(s.trades||"—")+'</b></div>'
+ +'<div class="stat"><span>Win rate</span><b>'+(s.wr||"—")+'</b></div>'
+ +'<div class="stat"><span>Max DD</span><b>'+(s.dd||"—")+'</b></div>'
+ +'<div class="stat"><span>Risk score</span><b>'+(m.risk_score||"—")+'/100</b></div>'
+ +'<div style="margin-top:12px"><button class="btn" onclick="openAdd()">START COPYING</button></div></div>';}
+
+var DEMO_SLAVES=[{label:"Demo Account A",broker:"IC Markets",enabled:true,demo:true},
+                 {label:"Demo Account B",broker:"FTMO",enabled:false,demo:true}];
+function slaveRow(s,i){
+ return '<tr><td>'+s.label+(s.demo?' <span class="demo">DEMO</span>':"")+'</td><td>'+(s.broker||"—")
+ +'</td><td class="'+(s.enabled?"ok":"")+'">'+(s.enabled?"connected":"paused")
+ +'</td><td>'+(s.enabled?"ON":"OFF")+'</td>'
+ +'<td><button class="btn ghost" style="padding:5px 10px;font-size:11px" '
+ +'onclick="toggleSlave('+i+')">'+(s.enabled?"Pause":"Resume")+'</button></td></tr>';}
+
+var DEMO_LOG=[
+ {at:"12:03:11",symbol:"XAUUSD",side:1,ml:"0.10",sl:"0.05",status:"done",lat:212},
+ {at:"11:41:02",symbol:"EURUSD",side:-1,ml:"0.20",sl:"0.10",status:"done",lat:187},
+ {at:"10:15:44",symbol:"US30",side:1,ml:"0.50",sl:"0.25",status:"failed: spread 8.1 > cap",lat:0},
+ {at:"09:58:20",symbol:"XAUUSD",side:1,ml:"0.10",sl:"0.05",status:"done",lat:341}];
+function logRow(r){
+ var bad=String(r.status).indexOf("fail")===0;
+ return '<tr><td>'+r.at+'</td><td>'+r.symbol+'</td><td>'+(r.side>0?"BUY":"SELL")
+ +'</td><td>'+r.ml+' &rarr; '+r.sl+'</td><td class="'+(bad?"bad":"ok")+'">'+r.status
+ +'</td><td>'+(r.lat?r.lat+"ms":"—")+'</td></tr>';}
+
+var slaves=DEMO_SLAVES.slice();
+function render(){
+ document.getElementById("masters").innerHTML=DEMO_MASTERS.map(masterCard).join("");
+ document.getElementById("slaves").innerHTML=slaves.map(slaveRow).join("");
+ document.getElementById("log").innerHTML=DEMO_LOG.map(logRow).join("");
+}
+async function boot(){
+ render();
+ try{
+  var r=await fetch(API+"/api/mt5copy/masters"); var d=await r.json();
+  if(d.masters&&d.masters.length){
+    var real=d.masters.map(function(m){
+      if(m.is_system){m.stats={trades:"live journal",wr:"published with losses",dd:"tracked"};}
+      return m;});
+    document.getElementById("masters").innerHTML=
+      real.map(masterCard).join("")+DEMO_MASTERS.slice(1).map(masterCard).join("");
+  }
+  if(TOKEN){
+    var s=await fetch(API+"/api/mt5copy/slaves",{headers:hdrs()});
+    if(s.ok){var sd=await s.json();
+      if(sd.slaves&&sd.slaves.length){slaves=sd.slaves;demo=false;
+        document.getElementById("modeBadge").style.display="none";render();}}
+    var l=await fetch(API+"/api/mt5copy/log",{headers:hdrs()});
+    if(l.ok){var ld=await l.json();
+      if(ld.log&&ld.log.length){
+        document.getElementById("logDemo").style.display="none";
+        document.getElementById("log").innerHTML=ld.log.map(function(r){
+          return logRow({at:(r.at||"").slice(11,19),symbol:r.symbol,side:r.side,
+            ml:"—",sl:r.slave_lots,status:r.status+(r.error?": "+r.error:""),
+            lat:r.latency_ms});}).join("");}}
+  }
+ }catch(e){}
+}
+function togglePause(){
+ paused=!paused;
+ document.getElementById("engState").textContent="COPY ENGINE — "+(paused?"PAUSED":"ACTIVE");
+ document.getElementById("engDot").style.background=paused?"var(--red)":"var(--green)";
+ document.getElementById("engDot").style.boxShadow=paused?"0 0 12px rgba(248,113,113,.7)":"0 0 12px rgba(52,211,153,.7)";
+ document.getElementById("pauseBtn").textContent=paused?"RESUME ALL":"PAUSE ALL COPYING";
+ if(!demo&&TOKEN){slaves.forEach(function(s,i){
+   fetch(API+"/api/mt5copy/slaves/"+s.id+"/toggle",{method:"POST",headers:hdrs(),
+     body:JSON.stringify({enabled:!paused})});});}
+}
+function toggleSlave(i){
+ slaves[i].enabled=!slaves[i].enabled;render();
+ if(!demo&&TOKEN&&slaves[i].id){
+   fetch(API+"/api/mt5copy/slaves/"+slaves[i].id+"/toggle",{method:"POST",
+     headers:hdrs(),body:JSON.stringify({enabled:slaves[i].enabled})});}
+}
+function openAdd(){step=1;showStep();document.getElementById("addModal").classList.add("on");}
+function closeAdd(){document.getElementById("addModal").classList.remove("on");}
+function showStep(){
+ document.getElementById("w1").style.display=step===1?"block":"none";
+ document.getElementById("w2").style.display=step===2?"block":"none";
+ document.getElementById("w3").style.display=step===3?"block":"none";
+ document.getElementById("wStep").textContent="STEP "+step+" OF 3 — "+
+   (step===1?"ACCOUNT":step===2?"COPY SETTINGS":"ACTIVATE");
+ document.getElementById("wNext").textContent=step===3?"Done":"Next";}
+async function wizNext(){
+ if(step<3){step++;
+   if(step===3){
+     var key="sk_copy_DEMO_"+Math.random().toString(36).slice(2,14);
+     if(TOKEN){try{
+       var r=await fetch(API+"/api/mt5copy/slaves",{method:"POST",headers:hdrs(),
+         body:JSON.stringify({label:document.getElementById("aLabel").value||"My account",
+           broker:document.getElementById("aBroker").value,
+           mt5_login:document.getElementById("aLogin").value})});
+       if(r.ok){var d=await r.json();key=d.slave.copy_key;
+         await fetch(API+"/api/mt5copy/configs",{method:"POST",headers:hdrs(),
+           body:JSON.stringify({slave_id:d.slave.id,master_id:"sklz",
+             lot_mode:document.getElementById("aMode").value,
+             lot_value:parseFloat(document.getElementById("aVal").value)||1,
+             max_lot:parseFloat(document.getElementById("aMaxLot").value)||1,
+             max_daily_loss_pct:parseFloat(document.getElementById("aMaxDL").value)||5})});
+         demo=false;}
+     }catch(e){}}
+     document.getElementById("keyOut").textContent=key;}
+   showStep();
+ } else { closeAdd(); boot(); }
+}
+boot();
+</script></body></html>
