@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.02"
+#property version   "1.03"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -89,7 +89,8 @@ double ResolveLots(string mode, double lotVal, double srvLots,
    return MathMax(lmin, MathMin(lmax, lots));
 }
 
-void CloseByMasterTicket(long mticket){
+int CloseByMasterTicket(long mticket){
+   int closed = 0;
    for(int i = PositionsTotal()-1; i >= 0; i--){
       ulong pt = PositionGetTicket(i);
       if(!PositionSelectByTicket(pt)) continue;
@@ -105,8 +106,15 @@ void CloseByMasterTicket(long mticket){
       rq.type     = PositionGetInteger(POSITION_TYPE)==POSITION_TYPE_BUY
                     ? ORDER_TYPE_SELL : ORDER_TYPE_BUY;
       rq.deviation= 30; rq.magic = MagicNumber;
-      OrderSend(rq, rs);
+      long fm = SymbolInfoInteger(rq.symbol, SYMBOL_FILLING_MODE);
+      if((fm & SYMBOL_FILLING_IOC) != 0)      rq.type_filling = ORDER_FILLING_IOC;
+      else if((fm & SYMBOL_FILLING_FOK) != 0) rq.type_filling = ORDER_FILLING_FOK;
+      else                                    rq.type_filling = ORDER_FILLING_RETURN;
+      if(OrderSend(rq, rs) && rs.retcode == TRADE_RETCODE_DONE) closed++;
+      else Print("SKLZ COPY: close attempt on ticket ", pt,
+                 " retcode ", rs.retcode);
    }
+   return closed;
 }
 
 void OnTimer(){
@@ -154,7 +162,20 @@ void OnTimer(){
       if(live!="true"){
          st="failed"; err="real-money copying disabled (flag)";
       } else if(ev=="close"){
-         CloseByMasterTicket(mtk);
+         int n = CloseByMasterTicket(mtk);
+         Print("SKLZ COPY: close matched ", n, " position(s) for SKLZ#", mtk);
+         if(n == 0){
+            // list what we DO hold, so a comment/ticket mismatch is visible
+            for(int pi = 0; pi < PositionsTotal(); pi++){
+               ulong pt2 = PositionGetTicket(pi);
+               if(PositionSelectByTicket(pt2) &&
+                  PositionGetInteger(POSITION_MAGIC) == MagicNumber)
+                  Print("SKLZ COPY:   holding: ",
+                        PositionGetString(POSITION_SYMBOL), " comment='",
+                        PositionGetString(POSITION_COMMENT), "'");
+            }
+            st = "failed"; err = "no position matched SKLZ#" + (string)mtk;
+         }
       } else if(ev=="open"){
          if(!SymbolSelect(sym, true)){ st="failed"; err="symbol not found: "+sym; }
          else{
