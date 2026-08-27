@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.00"
+#property version   "1.01"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -31,16 +31,23 @@ int OnInit(){
 void OnDeinit(const int r){ EventKillTimer(); }
 
 string HttpGet(string url){
-   char post[], result[]; string headers;
-   int code = WebRequest("GET", url, "", "", 8000, post, 0, result, headers);
-   if(code != 200){ Print("SKLZ COPY poll HTTP ", code); return ""; }
+   char post[], result[]; string rh;
+   ArrayResize(post, 0);
+   int code = WebRequest("GET", url, "", 8000, post, result, rh);
+   if(code != 200){
+      Print("SKLZ COPY: poll HTTP ", code,
+            code==-1 ? " (WebRequest blocked — check the URL allowance)" : "");
+      return "";
+   }
    return CharArrayToString(result);
 }
 void HttpPostJson(string url, string body){
-   char post[], result[]; string headers;
-   StringToCharArray(body, post, 0, StringLen(body));
-   WebRequest("POST", url, "Content-Type: application/json\r\n", "", 8000,
-              post, ArraySize(post)-1, result, headers);
+   char post[], result[]; string rh;
+   StringToCharArray(body, post, 0, StringLen(body), CP_UTF8);
+   ArrayResize(post, ArraySize(post)-1);        // drop the trailing NUL
+   int code = WebRequest("POST", url, "Content-Type: application/json\r\n",
+                         8000, post, result, rh);
+   if(code != 200) Print("SKLZ COPY: report HTTP ", code);
 }
 
 // minimal JSON field readers (server sends flat, known-shape objects)
@@ -129,6 +136,21 @@ void OnTimer(){
       ulong t0 = GetTickCount64();
       string st = "done", err = ""; long sticket = 0; double fpx = 0;
 
+      Print("SKLZ COPY: instruction ", ev, " ", sym, " qid=", qid);
+
+      // brokers dress the same instrument differently: XAUUSD.r, GOLDm, ...
+      if(!SymbolSelect(sym, true)){
+         string base = sym; string found = "";
+         for(int si = 0; si < SymbolsTotal(false); si++){
+            string cand = SymbolName(si, false);
+            if(StringFind(cand, base) == 0){ found = cand; break; }
+         }
+         if(found != ""){
+            Print("SKLZ COPY: ", sym, " resolved to broker symbol ", found);
+            sym = found; SymbolSelect(sym, true);
+         }
+      }
+
       if(live!="true"){
          st="failed"; err="real-money copying disabled (flag)";
       } else if(ev=="close"){
@@ -154,6 +176,9 @@ void OnTimer(){
             }
          }
       }
+      if(st=="done") Print("SKLZ COPY: ", ev, " ", sym, " OK",
+                           sticket>0 ? " ticket "+(string)sticket : "");
+      else Print("SKLZ COPY: ", ev, " ", sym, " FAILED — ", err);
       long ms = (long)(GetTickCount64()-t0);
       string body = "{\"queue_id\":"+(string)qid+",\"status\":\""+st+
                     "\",\"slave_ticket\":"+(string)sticket+
