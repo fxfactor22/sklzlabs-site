@@ -87,7 +87,13 @@ Master performance shown is derived from connected account data; demo entries ar
 <div id="w1"><label>Label</label><input id="aLabel" placeholder="My IC Markets">
 <label>Broker</label><input id="aBroker" placeholder="IC Markets">
 <label>MT5 login (number only — never your password)</label><input id="aLogin" placeholder="52952532"></div>
-<div id="w2" style="display:none"><label>Master</label>
+<div id="w2" style="display:none">
+<label>Account type</label><select id="aType" onchange="autofill()">
+<option value="normal">Normal account</option>
+<option value="prop">Prop firm account (daily + max drawdown rules)</option></select>
+<label>Account size (USD)</label><input id="aSize" value="10000" onchange="autofill()">
+<div class="note" id="recNote"></div>
+<label>Master</label>
 <select id="aMaster"><option value="sklz">SKLZ Engine (Verified)</option></select>
 <label>Copy mode</label><select id="aMode"><option value="multiplier">Multiplier</option>
 <option value="fixed">Fixed lot</option><option value="balance">Balance auto-scale</option>
@@ -207,6 +213,19 @@ function toggleSlave(i){
      headers:hdrs(),body:JSON.stringify({enabled:slaves[i].enabled})});}
 }
 function openAdd(){step=1;showStep();document.getElementById("addModal").classList.add("on");}
+async function autofill(){
+ var t=document.getElementById("aType").value,
+     s=parseFloat(document.getElementById("aSize").value)||10000;
+ try{
+  var r=await fetch(API+"/api/mt5copy/recommend?account_type="+t+"&account_size="+s);
+  var d=await r.json();
+  document.getElementById("aMode").value=d.lot_mode;
+  document.getElementById("aVal").value=d.lot_value;
+  document.getElementById("aMaxLot").value=d.max_lot;
+  document.getElementById("aMaxDL").value=d.max_daily_loss_pct;
+  document.getElementById("recNote").textContent=d.note;
+ }catch(e){}
+}
 function closeAdd(){document.getElementById("addModal").classList.remove("on");}
 function showStep(){
  document.getElementById("w1").style.display=step===1?"block":"none";
@@ -217,6 +236,7 @@ function showStep(){
  document.getElementById("wNext").textContent=step===3?"Done":"Next";}
 async function wizNext(){
  if(step<3){step++;
+   if(step===2){autofill();}
    if(step===3){
      var key="sk_copy_DEMO_"+Math.random().toString(36).slice(2,14);
      if(TOKEN){try{
@@ -227,6 +247,8 @@ async function wizNext(){
        if(r.ok){var d=await r.json();key=d.slave.copy_key;
          await fetch(API+"/api/mt5copy/configs",{method:"POST",headers:hdrs(),
            body:JSON.stringify({slave_id:d.slave.id,master_id:"sklz",
+             account_type:document.getElementById("aType").value,
+             account_size:parseFloat(document.getElementById("aSize").value)||10000,
              lot_mode:document.getElementById("aMode").value,
              lot_value:parseFloat(document.getElementById("aVal").value)||1,
              max_lot:parseFloat(document.getElementById("aMaxLot").value)||1,
