@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.04"
+#property version   "1.05"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -19,16 +19,33 @@ input long   MagicNumber   = 77555001;
 
 datetime g_lastPoll = 0;
 
+string g_lock = "";
+
 int OnInit(){
    if(StringLen(CopyKey) < 20){
       Print("SKLZ COPY: set your CopyKey (dashboard > Copy > your account)");
       return INIT_PARAMETERS_INCORRECT;
    }
+   // ONE KEY, ONE EA. Two instances racing the same key drain the queue
+   // invisibly from each other — a night was lost to a forgotten v1.00
+   // on a background chart eating instructions it couldn't execute.
+   g_lock = "SKLZ_COPY_" + StringSubstr(CopyKey, StringLen(CopyKey)-8);
+   if(GlobalVariableCheck(g_lock)
+      && TimeCurrent() - (datetime)GlobalVariableGet(g_lock) < 30){
+      Print("SKLZ COPY: ANOTHER COPY OF THIS EA IS ALREADY RUNNING with ",
+            "this key on another chart. Remove it first — two instances ",
+            "steal instructions from each other. This one will NOT start.");
+      return INIT_FAILED;
+   }
+   GlobalVariableSet(g_lock, (double)TimeCurrent());
    EventSetTimer(PollSeconds);
    Print("SKLZ COPY slave active. Polling every ", PollSeconds, "s.");
    return INIT_SUCCEEDED;
 }
-void OnDeinit(const int r){ EventKillTimer(); }
+void OnDeinit(const int r){
+   EventKillTimer();
+   if(g_lock != "") GlobalVariableDel(g_lock);
+}
 
 string HttpGet(string url){
    char post[], result[]; string rh;
@@ -118,6 +135,7 @@ int CloseByMasterTicket(long mticket){
 }
 
 void OnTimer(){
+   GlobalVariableSet(g_lock, (double)TimeCurrent());   // heartbeat
    string js = HttpGet(ApiBase + "/api/mt5copy/poll?key=" + CopyKey);
    if(js=="" || StringFind(js,"queue_id")<0) return;
 
