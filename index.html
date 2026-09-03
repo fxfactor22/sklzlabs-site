@@ -557,56 +557,54 @@
       <div class="p-sub">Every plan renews at the price on the button, cancels in one click,
         and carries a 7-day money-back guarantee on your first purchase.</div>
     </div>
-    <div class="p-founder"><span id="p-founder-badge">🔥 Founder pricing: first 100 bundle members lock $39/mo for life</span></div>
+    <div class="p-founder"><span id="p-founder-badge">⚡ MT5 copy trading is live — every plan follows the SKLZ Engine's honest track record</span></div>
     <div class="p-grid">
       <div class="p-card">
-        <div class="p-name">Indicator Suite</div>
-        <div class="p-desc">All four TradingView tools — Pro, Trend, Flow, Radar — on your TV account.</div>
-        <div class="p-price"><span class="p-n">$7</span><span class="p-u">first month</span><span class="p-was">$29</span></div>
-        <div class="p-renew">then $29/mo · cancel anytime</div>
-        <ul><li>Structure &amp; trade plans on your chart</li><li>Regime-adaptive trend signals</li>
-            <li>5-oscillator divergence matrix</li><li>Multi-timeframe scanner</li>
-            <li>Honest performance panels</li></ul>
-        <button class="p-cta" onclick="sklzBuy('suite_monthly')">Start for $7 →</button>
+        <div class="p-name">SKLZ Core</div>
+        <div class="p-desc">The full platform — MT5 copy, indicators, TradeGPT — minus crypto.</div>
+        <div class="p-price"><span class="p-n">$29</span><span class="p-u">/month</span></div>
+        <div class="p-renew">cancel anytime · or $278/yr — save 20%</div>
+        <ul><li>MT5 Bot copy trading — partner broker, 1 account</li>
+            <li>SKLZ Engine as your master — honest track record</li>
+            <li>All four TradingView indicators</li>
+            <li>TradeGPT Pro — unlimited chart analysis</li>
+            <li>Signals, Journal, AI reviews</li></ul>
+        <button class="p-cta" onclick="sklzBuy('copy_basic_monthly')">Start Core →</button>
       </div>
       <div class="p-card hot">
         <div class="p-pop">MOST POPULAR</div>
-        <div class="p-name">The Bundle</div>
-        <div class="p-desc">Everything: all four indicators + TradeGPT Pro, one subscription.</div>
-        <div class="p-price"><span class="p-n" id="p-bundle-n">$39</span><span class="p-u">/month</span><span class="p-was">$58</span></div>
-        <div class="p-renew" id="p-bundle-renew">founder price — locked for life · cancel anytime</div>
-        <ul><li>Full Indicator Suite</li><li>TradeGPT Pro — unlimited AI chart analysis</li>
-            <li>AI performance reviews</li><li>English &amp; العربية</li>
-            <li>Priority access to Signals (coming)</li></ul>
-        <button class="p-cta" onclick="sklzBuy('bundle_monthly')">Get the Bundle →</button>
+        <div class="p-name">SKLZ Plus</div>
+        <div class="p-desc">Everything in Core, plus crypto trading and crypto copy.</div>
+        <div class="p-price"><span class="p-n">$49</span><span class="p-u">/month</span></div>
+        <div class="p-renew">cancel anytime · or $470/yr — save 20%</div>
+        <ul><li>Everything in SKLZ Core</li>
+            <li>Crypto trading &amp; crypto copy trading</li>
+            <li>MT5 copy — partner broker, 1 account</li>
+            <li>English &amp; العربية</li>
+            <li>Priority access to new features</li></ul>
+        <button class="p-cta" onclick="sklzBuy('copy_crypto_monthly')">Get Plus →</button>
       </div>
       <div class="p-card">
-        <div class="p-name">TradeGPT Pro</div>
-        <div class="p-desc">Your AI analyst — chart screenshots in, structured trade plans out.</div>
-        <div class="p-price"><span class="p-n">$29</span><span class="p-u">/month</span></div>
-        <div class="p-renew">cancel anytime</div>
-        <ul><li>Vision chart analysis</li><li>Exact position sizing</li>
-            <li>The case against every trade</li><li>Behavioural reviews</li>
+        <div class="p-name">SKLZ Pro</div>
+        <div class="p-desc">Multi-account. Any broker. Built for prop-firm traders.</div>
+        <div class="p-price"><span class="p-n">$79</span><span class="p-u">/month</span></div>
+        <div class="p-renew">cancel anytime · or $758/yr — save 20%</div>
+        <ul><li>Everything in SKLZ Plus</li>
+            <li>MT5 copy on ANY broker</li>
+            <li>Up to 10 MT5 accounts copying at once</li>
+            <li>Run multiple prop evals from one master</li>
             <li>English &amp; العربية</li></ul>
-        <button class="p-cta ghost" onclick="sklzBuy('gpt_monthly')">Start TradeGPT →</button>
+        <button class="p-cta ghost" onclick="sklzBuy('copy_pro_monthly')">Go Pro →</button>
       </div>
     </div>
     <div class="p-fine">Prices in USD · Renewal price always shown at checkout · Cancel anytime from your billing portal<br>
       7-day money-back guarantee on first purchase · Software tools only — not financial advice · Trading involves risk of loss ·
-      <a href="/pricing.html" style="color:var(--blue)">annual &amp; lifetime options →</a></div>
+      <a href="/pricing.html" style="color:var(--blue)">all plans &amp; annual pricing →</a></div>
   </div>
 </section>
 <script>
   (function(){
     const API="https://api.sklzlabs.com";
-    fetch(API+'/api/billing/config').then(r=>r.json()).then(d=>{
-      const n=d.founder_remaining;
-      const b=document.getElementById('p-founder-badge');
-      if(n>0){ b.textContent='🔥 Founder pricing: '+n+' of 100 spots left — lock $39/mo for life'; }
-      else{ b.textContent='Bundle — best value';
-        document.getElementById('p-bundle-n').textContent='$49';
-        document.getElementById('p-bundle-renew').textContent='cancel anytime'; }
-    }).catch(()=>{});
     window.sklzBuy=async function(product){
       const t=localStorage.getItem('sklz_access');
       const path=t?'/api/billing/checkout':'/api/billing/checkout-public';
