@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.06"
+#property version   "1.07"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -17,6 +17,7 @@ input double MaxLotCap     = 2.0;       // absolute lot ceiling, whatever SKLZ s
 input int    PollSeconds   = 2;
 input long   MagicNumber   = 77555001;
 input double MaxTotalLossPct = 0.0;     // overall DD stop, 0 = off (prop: set below the firm's limit)
+input double NoStopLots      = 0.0;     // lots when SKLZ sends no stop; 0 = refuse the copy
 
 datetime g_lastPoll = 0;
 
@@ -86,12 +87,19 @@ string JStr(string js, string key){
 double JNum(string js, string key){ string s=JStr(js,key); return StringToDouble(s); }
 
 double ResolveLots(string mode, double lotVal, double srvLots,
-                   string sym, double sl, int side){
+                   string sym, double sl, int side, double srvMaxLot){
    double lots = srvLots;                       // fixed/multiplier resolved server-side
    double bal  = AccountInfoDouble(ACCOUNT_BALANCE);
    double eq   = AccountInfoDouble(ACCOUNT_EQUITY);
    if(mode=="balance")      lots = NormalizeDouble(srvLots * bal / 10000.0, 2);
    else if(mode=="equity")  lots = NormalizeDouble(srvLots * eq  / 10000.0, 2);
+   else if(mode=="risk_pct" && sl <= 0){
+      // No stop means risk sizing is impossible, and falling back to the
+      // MASTER's lot size ignores this account entirely — a $1k follower
+      // would mirror a $50k master's position. That fallback is how a
+      // 0.1 ceiling got bypassed by a 0.25 copy. Refuse by default.
+      return NoStopLots > 0 ? NoStopLots : -1.0;
+   }
    else if(mode=="risk_pct" && sl > 0){
       double px    = side>0 ? SymbolInfoDouble(sym, SYMBOL_ASK)
                             : SymbolInfoDouble(sym, SYMBOL_BID);
@@ -104,6 +112,10 @@ double ResolveLots(string mode, double lotVal, double srvLots,
    }
    double lmin = SymbolInfoDouble(sym, SYMBOL_VOLUME_MIN);
    double lmax = MathMin(SymbolInfoDouble(sym, SYMBOL_VOLUME_MAX), MaxLotCap);
+   // max_lot was stored in the dashboard config and read by nobody: the
+   // only ceiling lived in a per-terminal input, so one wrong dialog on
+   // one follower's machine could size 2.0 lots. The LOWER of the two wins.
+   if(srvMaxLot > 0) lmax = MathMin(lmax, srvMaxLot);
    return MathMax(lmin, MathMin(lmax, lots));
 }
 
@@ -160,6 +172,7 @@ void OnTimer(){
       double maxsp = JNum(it,"max_spread_pips");
       double maxdd = JNum(it,"max_daily_loss_pct");
       double maxop = JNum(it,"max_open");
+      double maxlot = JNum(it,"max_lot");
       string live  = JStr(it,"live");
 
       ulong t0 = GetTickCount64();
@@ -254,7 +267,12 @@ void OnTimer(){
                          / SymbolInfoDouble(sym,SYMBOL_POINT) / 10.0;
             if(maxsp>0 && spr>maxsp){ st="failed"; err="spread "+DoubleToString(spr,1)+" > cap"; }
             else{
-               double vol = ResolveLots(mode, lval, lots, sym, sl, side);
+               double vol = ResolveLots(mode, lval, lots, sym, sl, side, maxlot);
+               if(vol < 0){
+                  st = "failed";
+                  err = "no stop loss in the instruction — risk sizing impossible, copy refused";
+                  Print("SKLZ COPY: ", sym, " REFUSED — ", err);
+               } else {
                // retcode 10019 taught us: exotic brokers report exotic
                // tick values and the risk formula can size past the
                // account's margin. Ask the broker what the position
@@ -292,6 +310,7 @@ void OnTimer(){
                if(!OrderSend(rq,rs) || rs.retcode!=TRADE_RETCODE_DONE){
                   st="failed"; err="retcode "+(string)rs.retcode;
                } else { sticket=(long)rs.order; fpx=rs.price; }
+               }
             }
          }
       }
