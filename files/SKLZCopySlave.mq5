@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.05"
+#property version   "1.06"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -16,6 +16,7 @@ input double RiskPctCap    = 1.0;       // hard per-trade risk cap (risk_pct mod
 input double MaxLotCap     = 2.0;       // absolute lot ceiling, whatever SKLZ says
 input int    PollSeconds   = 2;
 input long   MagicNumber   = 77555001;
+input double MaxTotalLossPct = 0.0;     // overall DD stop, 0 = off (prop: set below the firm's limit)
 
 datetime g_lastPoll = 0;
 
@@ -157,6 +158,8 @@ void OnTimer(){
       string mode  = JStr(it,"lot_mode");
       double lval  = JNum(it,"lot_value");
       double maxsp = JNum(it,"max_spread_pips");
+      double maxdd = JNum(it,"max_daily_loss_pct");
+      double maxop = JNum(it,"max_open");
       string live  = JStr(it,"live");
 
       ulong t0 = GetTickCount64();
@@ -195,7 +198,56 @@ void OnTimer(){
             st = "failed"; err = "no position matched SKLZ#" + (string)mtk;
          }
       } else if(ev=="open"){
-         if(!SymbolSelect(sym, true)){ st="failed"; err="symbol not found: "+sym; }
+         // ── ACCOUNT GUARDS ───────────────────────────────────────────
+         // These were stored in the config and enforced by nobody. On a
+         // prop account whose rules are the whole point, a limit that is
+         // displayed but not applied is worse than no limit: it is a
+         // limit the owner believes in. Closes are never blocked — only
+         // new risk is.
+         double eqNow  = AccountInfoDouble(ACCOUNT_EQUITY);
+         string gvDay  = "SKLZ_DAYEQ_" + IntegerToString(MagicNumber);
+         string gvDate = "SKLZ_DAYNO_" + IntegerToString(MagicNumber);
+         MqlDateTime dt; TimeToStruct(TimeCurrent(), dt);
+         double today = (double)(dt.year * 1000 + dt.day_of_year);
+         if(!GlobalVariableCheck(gvDate)
+            || GlobalVariableGet(gvDate) != today){
+            GlobalVariableSet(gvDate, today);
+            GlobalVariableSet(gvDay, eqNow);
+            Print("SKLZ COPY: new trading day — day-start equity ",
+                  DoubleToString(eqNow, 2));
+         }
+         double dayEq = GlobalVariableGet(gvDay);
+         double dayDD = (dayEq > 0) ? (dayEq - eqNow) / dayEq * 100.0 : 0.0;
+
+         int mine = 0;
+         for(int pj = 0; pj < PositionsTotal(); pj++){
+            ulong pt3 = PositionGetTicket(pj);
+            if(PositionSelectByTicket(pt3)
+               && PositionGetInteger(POSITION_MAGIC) == MagicNumber) mine++;
+         }
+
+         double totDD = 0.0;
+         if(MaxTotalLossPct > 0){
+            string gvBase = "SKLZ_BASE_" + IntegerToString(MagicNumber);
+            if(!GlobalVariableCheck(gvBase))
+               GlobalVariableSet(gvBase, AccountInfoDouble(ACCOUNT_BALANCE));
+            double base = GlobalVariableGet(gvBase);
+            if(base > 0) totDD = (base - eqNow) / base * 100.0;
+         }
+
+         if(maxdd > 0 && dayDD >= maxdd){
+            st = "failed";
+            err = "daily loss " + DoubleToString(dayDD, 2) + "% >= cap "
+                  + DoubleToString(maxdd, 1) + "% — no new copies today";
+         } else if(MaxTotalLossPct > 0 && totDD >= MaxTotalLossPct){
+            st = "failed";
+            err = "overall drawdown " + DoubleToString(totDD, 2)
+                  + "% >= cap " + DoubleToString(MaxTotalLossPct, 1) + "%";
+         } else if(maxop > 0 && mine >= (int)maxop){
+            st = "failed";
+            err = "already holding " + IntegerToString(mine)
+                  + " copied position(s), cap is " + IntegerToString((int)maxop);
+         } else if(!SymbolSelect(sym, true)){ st="failed"; err="symbol not found: "+sym; }
          else{
             double spr = (SymbolInfoDouble(sym,SYMBOL_ASK)
                          -SymbolInfoDouble(sym,SYMBOL_BID))
