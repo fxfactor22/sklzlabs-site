@@ -7,7 +7,7 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.07"
+#property version   "1.08"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
@@ -218,8 +218,15 @@ void OnTimer(){
          // limit the owner believes in. Closes are never blocked — only
          // new risk is.
          double eqNow  = AccountInfoDouble(ACCOUNT_EQUITY);
-         string gvDay  = "SKLZ_DAYEQ_" + IntegerToString(MagicNumber);
-         string gvDate = "SKLZ_DAYNO_" + IntegerToString(MagicNumber);
+         // Anchors are per ACCOUNT, not per magic number. Pointing the
+         // terminal at a different account used to inherit the previous
+         // account's day-start equity: a $10,000 anchor against a $122
+         // balance read as a 99.81% daily loss and locked the follower
+         // out of every copy until someone deleted global variables by
+         // hand. The login is part of the key now.
+         string acct   = IntegerToString(AccountInfoInteger(ACCOUNT_LOGIN));
+         string gvDay  = "SKLZ_DAYEQ_" + acct;
+         string gvDate = "SKLZ_DAYNO_" + acct;
          MqlDateTime dt; TimeToStruct(TimeCurrent(), dt);
          double today = (double)(dt.year * 1000 + dt.day_of_year);
          if(!GlobalVariableCheck(gvDate)
@@ -230,6 +237,17 @@ void OnTimer(){
                   DoubleToString(eqNow, 2));
          }
          double dayEq = GlobalVariableGet(gvDay);
+         // No real account loses or gains half its value between two polls.
+         // A discrepancy that large means the anchor belongs to a different
+         // account or a deposit landed — re-anchor instead of refusing
+         // trades forever on arithmetic nobody can see.
+         if(dayEq > 0 && (eqNow < dayEq * 0.5 || eqNow > dayEq * 2.0)){
+            Print("SKLZ COPY: day-start anchor ", DoubleToString(dayEq, 2),
+                  " is impossible against equity ", DoubleToString(eqNow, 2),
+                  " — account changed or funds moved. Re-anchoring.");
+            GlobalVariableSet(gvDay, eqNow);
+            dayEq = eqNow;
+         }
          double dayDD = (dayEq > 0) ? (dayEq - eqNow) / dayEq * 100.0 : 0.0;
 
          int mine = 0;
@@ -241,10 +259,17 @@ void OnTimer(){
 
          double totDD = 0.0;
          if(MaxTotalLossPct > 0){
-            string gvBase = "SKLZ_BASE_" + IntegerToString(MagicNumber);
+            string gvBase = "SKLZ_BASE_" + acct;
             if(!GlobalVariableCheck(gvBase))
                GlobalVariableSet(gvBase, AccountInfoDouble(ACCOUNT_BALANCE));
             double base = GlobalVariableGet(gvBase);
+            if(base > 0 && (eqNow < base * 0.5 || eqNow > base * 2.0)){
+               Print("SKLZ COPY: overall anchor ", DoubleToString(base, 2),
+                     " is impossible against equity ",
+                     DoubleToString(eqNow, 2), " — re-anchoring.");
+               GlobalVariableSet(gvBase, AccountInfoDouble(ACCOUNT_BALANCE));
+               base = AccountInfoDouble(ACCOUNT_BALANCE);
+            }
             if(base > 0) totDD = (base - eqNow) / base * 100.0;
          }
 
