@@ -7,13 +7,14 @@
 //| Advisors > Allow WebRequest before attaching.                    |
 //+------------------------------------------------------------------+
 #property copyright "SKLZ LABS"
-#property version   "1.08"
+#property version   "1.09"
 #property strict
 
 input string CopyKey       = "";        // your copy key from the dashboard
 input string ApiBase       = "https://api.sklzlabs.com";
 input double RiskPctCap    = 1.0;       // hard per-trade risk cap (risk_pct mode)
 input double MaxLotCap     = 2.0;       // absolute lot ceiling, whatever SKLZ says
+input double MinLots       = 0.0;       // lot FLOOR, 0 = off (raises risk above the calculated size)
 input int    PollSeconds   = 2;
 input long   MagicNumber   = 77555001;
 input double MaxTotalLossPct = 0.0;     // overall DD stop, 0 = off (prop: set below the firm's limit)
@@ -87,7 +88,8 @@ string JStr(string js, string key){
 double JNum(string js, string key){ string s=JStr(js,key); return StringToDouble(s); }
 
 double ResolveLots(string mode, double lotVal, double srvLots,
-                   string sym, double sl, int side, double srvMaxLot){
+                   string sym, double sl, int side, double srvMaxLot,
+                   double srvMinLot){
    double lots = srvLots;                       // fixed/multiplier resolved server-side
    double bal  = AccountInfoDouble(ACCOUNT_BALANCE);
    double eq   = AccountInfoDouble(ACCOUNT_EQUITY);
@@ -111,6 +113,15 @@ double ResolveLots(string mode, double lotVal, double srvLots,
          lots = NormalizeDouble(risk / (dist / tsize * tick), 2);
    }
    double lmin = SymbolInfoDouble(sym, SYMBOL_VOLUME_MIN);
+   // A FLOOR is not a safety feature — it deliberately trades LARGER than
+   // the risk calculation asked for, so it is applied before the ceiling
+   // and it announces itself. The ceiling always wins over the floor.
+   double floorLots = MathMax(MinLots, srvMinLot);
+   if(floorLots > 0 && lots < floorLots){
+      Print("SKLZ COPY: sizing floor raised ", sym, " from ", lots,
+            " to ", floorLots, " lots — risk is ABOVE the calculated size");
+      lots = floorLots;
+   }
    double lmax = MathMin(SymbolInfoDouble(sym, SYMBOL_VOLUME_MAX), MaxLotCap);
    // max_lot was stored in the dashboard config and read by nobody: the
    // only ceiling lived in a per-terminal input, so one wrong dialog on
@@ -173,6 +184,7 @@ void OnTimer(){
       double maxdd = JNum(it,"max_daily_loss_pct");
       double maxop = JNum(it,"max_open");
       double maxlot = JNum(it,"max_lot");
+      double minlot = JNum(it,"min_lot");
       string live  = JStr(it,"live");
 
       ulong t0 = GetTickCount64();
@@ -292,7 +304,7 @@ void OnTimer(){
                          / SymbolInfoDouble(sym,SYMBOL_POINT) / 10.0;
             if(maxsp>0 && spr>maxsp){ st="failed"; err="spread "+DoubleToString(spr,1)+" > cap"; }
             else{
-               double vol = ResolveLots(mode, lval, lots, sym, sl, side, maxlot);
+               double vol = ResolveLots(mode, lval, lots, sym, sl, side, maxlot, minlot);
                if(vol < 0){
                   st = "failed";
                   err = "no stop loss in the instruction — risk sizing impossible, copy refused";
