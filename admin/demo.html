@@ -89,17 +89,24 @@ a{color:var(--gold2)}
 <script>
 const API="https://api.sklzlabs.com";
 function tok(){
+  // The site stores the session as `sklz_access` — the same key every
+  // other admin page reads. Hunting for a Supabase-style "auth-token"
+  // key found nothing, because this app does not use one.
+  const direct = localStorage.getItem("sklz_access");
+  if(direct) return direct;
+  // fall back to a Supabase-shaped session if one is ever introduced
   try{
-    const k=Object.keys(localStorage).find(k=>k.includes("auth-token"));
-    return JSON.parse(localStorage.getItem(k)).access_token;
-  }catch(e){ return null; }
+    const k = Object.keys(localStorage).find(k => k.includes("auth-token"));
+    if(k) return JSON.parse(localStorage.getItem(k)).access_token;
+  }catch(e){}
+  return null;
 }
 function v(id){return (document.getElementById(id).value||"").trim();}
 async function make(){
   const b=document.getElementById("go"), m=document.getElementById("msg");
   const t=tok();
   if(!t){ m.style.color="var(--red)";
-    m.textContent="No admin session found. Sign in at sklzlabs.com in this browser, then reload.";
+    m.textContent="No admin session found. Sign in at sklzlabs.com in this browser (the same one), then reload this page.";
     return; }
   if(!v("p_name")||!v("p_chan")){ m.style.color="var(--red)";
     m.textContent="Provider name and Telegram channel are required."; return; }
