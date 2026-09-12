@@ -212,21 +212,23 @@ section{padding:34px 0}
 
   <!-- ===== THE WOW ===== -->
   <section id="desk">
-    <div class="sec-h"><h2>Your Signal Desk</h2>
-      <span>live view of the master account and every connected subscriber</span></div>
+    <div class="sec-h"><h2>Your Signal Desk <span style="font-size:9.5px;color:var(--gold2);
+      border:1px solid rgba(245,166,35,.35);border-radius:4px;
+      padding:1px 5px;margin-left:6px">ILLUSTRATIVE FIGURES</span></h2>
+      <span>Illustrative provider dashboard preview</span></div>
 
     <div class="kpis">
-      <div class="kpi"><div class="l">Master equity</div><div class="v mono">$52,480</div></div>
+      <div class="kpi"><div class="l">Master account</div><div class="v mono">MT5 demo</div></div>
       <div class="kpi"><div class="l">Subscribers</div><div class="v mono" id="kSubs">3</div></div>
-      <div class="kpi"><div class="l">Signals sent</div><div class="v mono" id="kSig">128</div></div>
-      <div class="kpi"><div class="l">Copy success</div><div class="v mono up" id="kOk">98%</div></div>
+      <div class="kpi"><div class="l">Signals sent</div><div class="v mono" id="kSig">0</div></div>
+      <div class="kpi"><div class="l">Copy routing</div><div class="v mono" id="kOk">Per-account rules</div></div>
     </div>
 
     <div class="grid desk">
       <div class="flowbox">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <div>
-            <div style="font-size:12px;color:var(--dim2)" id="masterLbl">MASTER · IC Markets · Live</div>
+            <div style="font-size:12px;color:var(--dim2)" id="masterLbl">MASTER · MT5 broker DEMO account</div>
             <div style="font-size:17px;font-weight:700">EURUSD <span class="mono"
               id="px">1.08522</span></div>
           </div>
@@ -554,7 +556,9 @@ write your own. Nothing is sent until you press Send."
 
   <div class="foot">
     SKLZ Labs · Software tools only — not financial advice · Trading involves risk of loss<br>
-    This is a private demonstration. Trades and subscriber figures shown are simulated.
+    This is a private demonstration. Subscriber and copy-network figures are
+    illustrative previews. Broker execution is real on an MT5 broker DEMO
+    account. Automation is live; funds are virtual.
   </div>
 </div>
 
@@ -618,7 +622,7 @@ function expired(msg){
   set("brandName", d.provider_name);
   set("tgTitle", d.telegram_channel);
   set("tgDest", d.telegram_channel);
-  set("masterLbl", `MASTER · ${d.provider_name} · simulated`);
+  set("masterLbl", `MASTER · ${d.provider_name} · MT5 broker DEMO account`);
   const tag=document.getElementById("brandTag");
   if(tag){ tag.textContent=d.provider_name; tag.style.display=""; }
   CFG.demo_ends = Date.now() + (d.seconds_remaining*1000);
@@ -1109,7 +1113,7 @@ async function poll(cid){
         document.getElementById("tgtext").textContent=
           `${BRAND.name} — ${s.symbol}\n\n${s.side.toUpperCase()}  ${s.symbol}\n`+
           `Entry: ${s.fill_price}\nTicket: ${s.ticket}\n\n`+
-          `Executed on a broker DEMO account.`;
+          `Executed on an MT5 broker DEMO account.\nAutomation is live; funds are virtual.`;
         document.getElementById("tg").classList.add("on");
         if(tg.url){
           const a=document.createElement("a");
