@@ -12,9 +12,18 @@ const TOKEN = new URLSearchParams(location.search).get("t") || "";
 const SALES_LINK = "https://t.me/sklzlabsnew_bot?start=demo_channel";
 
 /* How long we will wait for personalisation before giving up on it.
-   The page is already on screen by then — this only decides how long
-   the fallback identity stays visible. */
-const BRAND_TIMEOUT_MS = 6000;
+   The page is already on screen by then, so waiting costs the prospect
+   nothing — this only decides how long the fallback identity stays up.
+   It is set well above the worst cold start we have measured (~13s):
+   at 6s the request was being killed at 6.2s while the answer was on
+   its way, and the demo lost the one thing it most wants to show — the
+   prospect's own name on the product. */
+const BRAND_TIMEOUT_MS = 20000;
+
+/* One retry, and only when the first attempt was cut off by our own
+   timeout. A refused or malformed answer is an answer; we do not ask
+   twice for it, and we never loop. */
+const BRAND_RETRIES = 1;
 
 /* The provider's own identity, from their private demo link.
    These defaults are what the page paints with immediately; the real
@@ -32,27 +41,46 @@ function initials(s) {
     .map(w => w[0]).join("").toUpperCase();
 }
 
+/* One GET with a deadline. Resolves {data} on success, or {timedOut:true}
+   when our own timer cut it off, or {} for anything else. It never throws
+   and never writes to the console, so a dead endpoint stays invisible to
+   the prospect. */
+async function _getJSON(url, timeoutMs) {
+  const ctl = typeof AbortController === "function" ? new AbortController() : null;
+  let timedOut = false;
+  const bail = setTimeout(() => { timedOut = true; if (ctl) ctl.abort(); },
+    timeoutMs);
+  try {
+    const r = await fetch(url, ctl ? { signal: ctl.signal } : undefined);
+    if (!r.ok) return {};
+    return { data: await r.json() };
+  } catch (e) {
+    return timedOut ? { timedOut: true } : {};
+  } finally { clearTimeout(bail); }
+}
+
 /* NOTHING on any page waits for this. The shell, the navigation and every
    CTA are on screen before it is called; a slow or dead brand endpoint can
    only delay personalisation, never first paint. */
 async function loadBrand() {
   if (!TOKEN) return BRAND;
-  const ctl = typeof AbortController === "function" ? new AbortController() : null;
-  const bail = setTimeout(() => { if (ctl) ctl.abort(); }, BRAND_TIMEOUT_MS);
-  try {
-    const r = await fetch(`${API}/api/demo-links/${TOKEN}`,
-      ctl ? { signal: ctl.signal } : undefined);
-    if (!r.ok) return BRAND;
-    const d = await r.json();
-    BRAND.name = d.provider_name || BRAND.name;
-    BRAND.channel = d.telegram_channel || BRAND.channel;
-    BRAND.language = d.language || BRAND.language;
-    BRAND.logo = d.logo_url || "";
-    BRAND.secondsLeft = d.seconds_remaining;
-    BRAND.loaded = true;
-  } catch (e) { /* timed out or unreachable — the fallback identity stands */ }
-  finally { clearTimeout(bail); }
-  return BRAND;
+  const url = `${API}/api/demo-links/${TOKEN}`;
+  for (let attempt = 0; attempt <= BRAND_RETRIES; attempt++) {
+    const r = await _getJSON(url, BRAND_TIMEOUT_MS);
+    if (r.data) {
+      const d = r.data;
+      BRAND.name = d.provider_name || BRAND.name;
+      BRAND.channel = d.telegram_channel || BRAND.channel;
+      BRAND.language = d.language || BRAND.language;
+      BRAND.logo = d.logo_url || "";
+      BRAND.secondsLeft = d.seconds_remaining;
+      BRAND.loaded = true;
+      return BRAND;
+    }
+    /* Only a timeout earns a second ask, and only once. */
+    if (!r.timedOut) break;
+  }
+  return BRAND;   /* fallback identity stands; nothing is shown to anyone */
 }
 
 /* Render first, hydrate second. Call this LAST on a page, never await it.
@@ -96,16 +124,13 @@ function mountPreviewControls() {
 
 /* Pricing is read from the platform's central package config so these
    pages can never drift from what Stripe actually charges. */
+/* Same deadline as the brand call — it shares the helper and the same
+   cold start — but a single attempt: the Pricing pane already has an
+   honest "could not be loaded" state, and re-asking for prices is not
+   worth a second round trip. */
 async function loadPackages() {
-  const ctl = typeof AbortController === "function" ? new AbortController() : null;
-  const bail = setTimeout(() => { if (ctl) ctl.abort(); }, BRAND_TIMEOUT_MS);
-  try {
-    const r = await fetch(`${API}/api/orders/packages`,
-      ctl ? { signal: ctl.signal } : undefined);
-    if (!r.ok) return null;
-    return await r.json();
-  } catch (e) { return null; }
-  finally { clearTimeout(bail); }
+  const r = await _getJSON(`${API}/api/orders/packages`, BRAND_TIMEOUT_MS);
+  return r.data || null;
 }
 
 function renderPackages(d, host) {
