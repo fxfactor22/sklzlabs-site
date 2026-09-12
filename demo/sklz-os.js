@@ -7,9 +7,20 @@
 const API = "https://api.sklzlabs.com";
 const TOKEN = new URLSearchParams(location.search).get("t") || "";
 
-/* The provider's own identity, from their private demo link. */
+/* One sales destination for every commercial CTA on every surface, so a
+   price or a route can never drift between the site, the OS and the bot. */
+const SALES_LINK = "https://t.me/sklzlabsnew_bot?start=demo_channel";
+
+/* How long we will wait for personalisation before giving up on it.
+   The page is already on screen by then — this only decides how long
+   the fallback identity stays visible. */
+const BRAND_TIMEOUT_MS = 6000;
+
+/* The provider's own identity, from their private demo link.
+   These defaults are what the page paints with immediately; the real
+   values replace them when (and only if) the brand call returns. */
 const BRAND = {
-  name: "SKLZ Pro Trader",
+  name: "SKLZ Pro Trader OS",
   channel: "SKLZ Signals",
   language: "en",
   logo: "",
@@ -21,10 +32,16 @@ function initials(s) {
     .map(w => w[0]).join("").toUpperCase();
 }
 
+/* NOTHING on any page waits for this. The shell, the navigation and every
+   CTA are on screen before it is called; a slow or dead brand endpoint can
+   only delay personalisation, never first paint. */
 async function loadBrand() {
   if (!TOKEN) return BRAND;
+  const ctl = typeof AbortController === "function" ? new AbortController() : null;
+  const bail = setTimeout(() => { if (ctl) ctl.abort(); }, BRAND_TIMEOUT_MS);
   try {
-    const r = await fetch(`${API}/api/demo-links/${TOKEN}`);
+    const r = await fetch(`${API}/api/demo-links/${TOKEN}`,
+      ctl ? { signal: ctl.signal } : undefined);
     if (!r.ok) return BRAND;
     const d = await r.json();
     BRAND.name = d.provider_name || BRAND.name;
@@ -33,8 +50,19 @@ async function loadBrand() {
     BRAND.logo = d.logo_url || "";
     BRAND.secondsLeft = d.seconds_remaining;
     BRAND.loaded = true;
-  } catch (e) { /* the page still renders without it */ }
+  } catch (e) { /* timed out or unreachable — the fallback identity stands */ }
+  finally { clearTimeout(bail); }
   return BRAND;
+}
+
+/* Render first, hydrate second. Call this LAST on a page, never await it.
+   `then` runs once the brand call has settled either way, so a page can
+   repaint the few places that embed the provider's name in content. */
+function hydrateBrand(then) {
+  loadBrand().then(() => {
+    paintBrand();
+    if (typeof then === "function") { try { then(BRAND); } catch (e) {} }
+  });
 }
 
 function paintBrand() {
@@ -47,26 +75,54 @@ function paintBrand() {
   document.querySelectorAll("[data-initials]").forEach(el => {
     el.textContent = initials(BRAND.name);
   });
-  if (BRAND.loaded) document.title = `${BRAND.name} · ${document.title}`;
+  if (BRAND.loaded && !paintBrand._titled &&
+      !document.title.startsWith(BRAND.name)) {
+    paintBrand._titled = true;
+    document.title = `${BRAND.name} · ${document.title}`;
+  }
+}
+
+/* Controls that represent functionality delivered during implementation.
+   They are never silent and never pretend to be live: the button carries a
+   PREVIEW pill (see .btn.preview) and says what ships with it. */
+function mountPreviewControls() {
+  document.addEventListener("click", e => {
+    const el = e.target.closest("[data-preview]");
+    if (!el) return;
+    e.preventDefault();
+    toast(`${el.dataset.preview} — comes with implementation`);
+  });
 }
 
 /* Pricing is read from the platform's central package config so these
    pages can never drift from what Stripe actually charges. */
 async function loadPackages() {
+  const ctl = typeof AbortController === "function" ? new AbortController() : null;
+  const bail = setTimeout(() => { if (ctl) ctl.abort(); }, BRAND_TIMEOUT_MS);
   try {
-    const r = await fetch(`${API}/api/orders/packages`);
+    const r = await fetch(`${API}/api/orders/packages`,
+      ctl ? { signal: ctl.signal } : undefined);
     if (!r.ok) return null;
     return await r.json();
   } catch (e) { return null; }
+  finally { clearTimeout(bail); }
 }
 
 function renderPackages(d, host) {
   if (!d || !host) return false;
   const order = ["signal_desk", "signal_desk_pro", "pro_trader_os"];
+  /* One product, three depths — not three products. The step label and the
+     "everything in…" chain are what stop a prospect asking whether the Desk
+     and the OS compete. */
+  const step = {
+    signal_desk: "Step 1 · the engine",
+    signal_desk_pro: "Step 2 · the engine at scale",
+    pro_trader_os: "Step 3 · the whole business",
+  };
   const blurb = {
-    signal_desk: "For traders and signal providers getting their desk live.",
-    signal_desk_pro: "For established signal businesses with a paying audience.",
-    pro_trader_os: "The full business layer — signals, live, academy, community.",
+    signal_desk: "The trading and distribution engine. Your desk, live.",
+    signal_desk_pro: "The same engine for an established, paying audience.",
+    pro_trader_os: "The engine plus the business around it — site, members, academy.",
   };
   const feat = {
     signal_desk: ["MT5 execution → Telegram", "Signal lifecycle updates",
@@ -82,7 +138,8 @@ function renderPackages(d, host) {
     const hero = k === "pro_trader_os";
     return `<div class="card ${hero ? "glow raise" : ""}" style="display:flex;
         flex-direction:column;gap:14px${hero ? ";border-color:rgba(245,166,35,.35)" : ""}">
-      ${hero ? '<span class="tag gold" style="align-self:flex-start">Most complete</span>' : ""}
+      <span class="tag ${hero ? "gold" : ""}" style="align-self:flex-start">
+        ${step[k] || ""}</span>
       <div>
         <div class="h-md">${p.name}</div>
         <div class="tiny" style="margin-top:5px">${blurb[k] || ""}</div>
@@ -98,7 +155,8 @@ function renderPackages(d, host) {
         ${(feat[k] || []).map(f => `<div>· ${f}</div>`).join("")}
       </div>
       <a class="btn ${hero ? "gold" : ""} full" style="margin-top:auto"
-         href="#pricing">GET MY TRADING DESK</a>
+         target="_blank" rel="noopener"
+         href="${SALES_LINK}">GET MY TRADING DESK</a>
     </div>`;
   }).join("");
   return true;

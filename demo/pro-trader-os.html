@@ -5,6 +5,21 @@
 <meta name="robots" content="noindex">
 <title>SKLZ Pro Trader OS</title>
 <link rel="stylesheet" href="sklz-os.css">
+<style>
+  /* The community room is three columns of very different content. A bare
+     1fr takes its min-width from the longest post, which pushed the member
+     rail off the right edge on a 13" screen — minmax(0,1fr) lets the middle
+     column shrink, and the rail drops below rather than disappearing. */
+  .room{display:grid;grid-template-columns:230px minmax(0,1fr) 250px;gap:16px}
+  @media(max-width:1240px){
+    .room{grid-template-columns:210px minmax(0,1fr)}
+    .room .members{grid-column:1 / -1}
+    .room .members .stack{flex-direction:row;flex-wrap:wrap;gap:14px}
+  }
+  @media(max-width:760px){
+    .room{grid-template-columns:1fr}
+  }
+</style>
 </head><body>
 
 <div class="shell">
@@ -148,6 +163,29 @@
             <b>demo</b> is presentation content for this walkthrough.</div>
         </div>
       </div>
+
+      <!-- One product, named parts. Stops the Desk and the OS reading as
+           competing purchases during the walkthrough. -->
+      <div class="card" style="margin-top:16px">
+        <div class="h-md" style="margin-bottom:4px">How the pieces fit</div>
+        <div class="tiny" style="margin-bottom:14px">Pro Trader OS is the
+          operating system. Everything below is a part of it, not an
+          alternative to it.</div>
+        <div class="grid g3" style="gap:12px">
+          <div class="note"><b style="color:var(--gold2)">Signal Desk</b><br>
+            The trading and distribution engine inside the OS.</div>
+          <div class="note"><b style="color:var(--gold2)">Public website</b><br>
+            Your front door — how people find and choose you.</div>
+          <div class="note"><b style="color:var(--gold2)">Client portal</b><br>
+            What a paying member logs into.</div>
+          <div class="note"><b style="color:var(--gold2)">Live · Academy ·
+            Community</b><br>Delivery, retention and what you sell next.</div>
+          <div class="note"><b style="color:var(--gold2)">AI Assistant</b><br>
+            One communication assistant across all of it.</div>
+          <div class="note"><b style="color:var(--gold2)">Audience, Leads,
+            Sell</b><br>The funnel that turns an audience into customers.</div>
+        </div>
+      </div>
     </section>
 
     <!-- SIGNAL DESK -->
@@ -157,9 +195,13 @@
           <h1 class="h-lg" style="margin-top:5px">Signal Desk</h1></div>
         <a class="btn sm" id="deskNew" target="_blank">Open full desk ↗</a>
       </div>
-      <div class="ribbon" style="margin-bottom:16px">This is the live Signal
-        Desk, embedded unchanged. Orders placed here reach a real MT5 broker
-        demo account and publish a real Telegram signal.</div>
+      <div class="ribbon" style="margin-bottom:16px"><b>Signal Desk is the
+        trading and distribution engine inside Pro Trader OS</b> — not a
+        separate product. This is that engine running live: orders placed
+        here reach a real MT5 broker demo account and publish a real Telegram
+        signal. Multi-account copying is available with Signal Desk
+        implementation; this public demo does not prove follower-account
+        copying.</div>
       <div class="card tight" style="padding:0;overflow:hidden">
         <iframe id="deskFrame" title="SKLZ Signal Desk" style="width:100%;
           height:1400px;border:0;display:block;background:var(--bg)"></iframe>
@@ -305,7 +347,7 @@ your own, and I'll prepare something for your approval.</div>
       <div class="topbar">
         <div><div class="eyebrow">Deliver</div>
           <h1 class="h-lg" style="margin-top:5px">Live Sessions</h1></div>
-        <button class="btn gold" onclick="toast('Session composer — demo surface')">
+        <button class="btn gold preview" data-preview="Session composer">
           Create session</button>
       </div>
 
@@ -324,8 +366,8 @@ your own, and I'll prepare something for your approval.</div>
             <div class="eyebrow">Starts in</div>
             <div class="mono" id="cd" style="font-size:30px;font-weight:650;
               letter-spacing:-.02em;margin-top:6px">—</div>
-            <button class="btn gold" style="margin-top:12px"
-              onclick="toast('Live room — demo surface')">Join live</button>
+            <button class="btn gold preview" style="margin-top:12px"
+              data-preview="Live room">Join live</button>
           </div>
         </div>
       </div>
@@ -393,15 +435,19 @@ your own, and I'll prepare something for your approval.</div>
         <div><div class="eyebrow">Deliver</div>
           <h1 class="h-lg" style="margin-top:5px">Academy</h1></div>
         <div class="row"><span class="tag demo">demo curriculum</span>
-          <button class="btn sm" onclick="toast('Course builder — demo surface')">
+          <button class="btn sm preview" data-preview="Course builder">
             New course</button></div>
       </div>
 
       <div class="grid g4" style="margin-bottom:18px">
-        <div class="kpi"><div class="l">Courses</div><div class="v">8</div></div>
-        <div class="kpi"><div class="l">Lessons</div><div class="v">96</div></div>
-        <div class="kpi"><div class="l">Students</div><div class="v">312</div></div>
-        <div class="kpi"><div class="l">Avg. completion</div>
+        <div class="kpi"><div class="l">Courses <span class="tag demo">demo</span></div>
+          <div class="v">8</div></div>
+        <div class="kpi"><div class="l">Lessons <span class="tag demo">demo</span></div>
+          <div class="v">96</div></div>
+        <div class="kpi"><div class="l">Students <span class="tag demo">demo</span></div>
+          <div class="v">312</div></div>
+        <div class="kpi"><div class="l">Avg. completion
+            <span class="tag demo">demo</span></div>
           <div class="v up">64%</div></div>
       </div>
 
@@ -428,11 +474,11 @@ your own, and I'll prepare something for your approval.</div>
         <div><div class="eyebrow">Engage</div>
           <h1 class="h-lg" style="margin-top:5px">Community</h1></div>
         <div class="row"><span class="tag demo">demo community</span>
-          <button class="btn sm" onclick="toast('Channel composer — demo surface')">
+          <button class="btn sm preview" data-preview="Channel composer">
             New channel</button></div>
       </div>
 
-      <div class="grid" style="grid-template-columns:230px 1fr 250px;gap:16px">
+      <div class="room">
         <div class="card tight">
           <div class="eyebrow" style="padding:4px 8px 8px" data-brand>Community</div>
           <div id="chans"></div>
@@ -450,12 +496,12 @@ your own, and I'll prepare something for your approval.</div>
           <div class="sep"></div>
           <div class="row">
             <input type="text" placeholder="Message #signal-discussion"
-              onkeydown="if(event.key==='Enter'){toast('Posting — demo surface');this.value=''}">
-            <button class="btn sm" onclick="toast('Posting — demo surface')">Send</button>
+              onkeydown="if(event.key==='Enter'){toast('Community posting — comes with implementation');this.value=''}">
+            <button class="btn sm preview" data-preview="Community posting">Send</button>
           </div>
         </div>
 
-        <div class="card tight">
+        <div class="card tight members">
           <div class="eyebrow" style="padding:4px 4px 10px">Members</div>
           <div class="stack" style="gap:9px">
             <div class="row"><span class="ava gold" style="width:26px;height:26px"
@@ -526,7 +572,7 @@ your own, and I'll prepare something for your approval.</div>
       <div class="topbar">
         <div><div class="eyebrow">Grow</div>
           <h1 class="h-lg" style="margin-top:5px">Brand &amp; Channel</h1></div>
-        <button class="btn sm" onclick="toast('Saved to this preview only')">
+        <button class="btn sm preview" data-preview="Brand save">
           Save preview</button>
       </div>
 
@@ -784,24 +830,38 @@ const LEADS = [
   ["Nadia H.","@nadiafx","academy","Education first","Academy","Qualified","3d ago","blue"],
 ];
 
-(async function(){
-  await loadBrand();
-  paintBrand();
-  mountNav();
+/* ── RENDER FIRST ──────────────────────────────────────────────────
+   The shell, the eleven panes, the navigation and every CTA are built
+   synchronously. Nothing here waits on a network call, so a slow or dead
+   brand endpoint can no longer leave the OS as an empty sidebar. */
+(function(){
+  paintBrand();          /* fallback identity, painted immediately */
+  mountNav();            /* the first pane is active before any fetch */
+  mountPreviewControls();
 
-  /* Signal Desk, embedded exactly as it is */
+  /* The Signal Desk is the engine inside the OS: embedded in OS mode, so
+     it drops its own brand bar, countdown, intro and Activate CTA. The
+     trading surface itself is identical — see signal-desk.html. */
   const deskURL = tokenLink("signal-desk.html");
-  document.getElementById("deskFrame").src = deskURL;
+  const deskEmbed = deskURL + (deskURL.includes("?") ? "&" : "?") + "embed=os";
+  document.getElementById("deskFrame").src = deskEmbed;
   document.getElementById("deskNew").href = deskURL;
   document.getElementById("linkSite").href = tokenLink("trader-site.html");
   document.getElementById("linkPortal").href = tokenLink("client-portal.html");
 
-  /* Overview: the one figure we can state truthfully without a command */
+  /* Overview: no naked dash. State what the tile is and where the real
+     number lives, rather than implying a figure failed to load. */
   const a = document.getElementById("kActive");
   const ad = document.getElementById("kActiveD");
-  a.textContent = "—";
-  ad.textContent = TOKEN ? "open the Signal Desk to read your positions"
-                         : "open this page from your private demo link";
+  if (TOKEN) {
+    a.innerHTML = '<span style="font-size:17px;font-weight:600;' +
+      'color:var(--gold2)">Live on your desk</span>';
+    ad.textContent = "positions are read and managed in the Signal Desk";
+  } else {
+    a.innerHTML = '<span style="font-size:17px;font-weight:600;' +
+      'color:var(--dim)">Private link required</span>';
+    ad.textContent = "open this page from your private demo link";
+  }
 
   /* Telegram previews */
   const pv = document.getElementById("tgPrev");
@@ -851,7 +911,7 @@ const LEADS = [
         ${kind === "signal" ? `<div class="row" style="gap:8px;margin-top:9px">
           <span class="tag blue">BTCUSD SELL · 1928027035</span>
           <button class="btn sm" onclick="go('desk')">View signal</button>
-          <button class="btn sm" onclick="toast('Thread — demo surface')">Discuss trade</button>
+          <button class="btn sm preview" data-preview="Community thread">Discuss trade</button>
         </div>` : ""}
         <span class="react">👍 ${react}</span>
       </div></div>`).join("");
@@ -881,8 +941,12 @@ const LEADS = [
       : fill(PREV.open).replace(BRAND.channel, bc.value || BRAND.channel);
     document.getElementById("pvText").textContent = base;
   }
+  window.__repaintBrandPreview = repaint;
   ["bName","bChan","bDisc","bStyle","bLang"].forEach(id =>
-    document.getElementById(id).addEventListener("input", repaint));
+    document.getElementById(id).addEventListener("input", function () {
+      this.dataset.touched = "1";   /* hydration must not clobber an edit */
+      repaint();
+    }));
   document.getElementById("accents").addEventListener("click", e => {
     const c = e.target.closest("[data-accent]"); if (!c) return;
     document.querySelectorAll("#accents .chip").forEach(x =>
@@ -896,23 +960,23 @@ const LEADS = [
   countdown(document.getElementById("cd"), Date.now() + 3 * 3600000 + 42 * 60000);
 
   /* Sell deep link */
-  document.getElementById("sellDeep").href =
-    "https://t.me/sklzlabsnew_bot?start=demo_channel";
-
-  /* Pricing from the platform's central config */
-  const pk = await loadPackages();
-  const ok = renderPackages(pk, document.getElementById("packs"));
-  if (!ok) {
-    document.getElementById("priceSrc").textContent = "package config unavailable";
-    document.getElementById("priceSrc").className = "tag";
-    document.getElementById("packs").innerHTML =
-      '<div class="note">Pricing could not be loaded from the platform just ' +
-      'now. Rather than print figures that might be stale, this page shows ' +
-      'none — ask us and we will quote from the same configuration.</div>';
-  }
+  document.getElementById("sellDeep").href = SALES_LINK;
   document.getElementById("ctaBuy").href = deskURL + "#buy";
-  document.getElementById("ctaDemo").href =
-    "https://t.me/sklzlabsnew_bot?start=demo_channel";
+  document.getElementById("ctaDemo").href = SALES_LINK;
+
+  /* Pricing comes from the platform's central package config — fetched
+     without blocking anything, so the pane is navigable while it lands. */
+  loadPackages().then(pk => {
+    const ok = renderPackages(pk, document.getElementById("packs"));
+    if (!ok) {
+      document.getElementById("priceSrc").textContent = "package config unavailable";
+      document.getElementById("priceSrc").className = "tag";
+      document.getElementById("packs").innerHTML =
+        '<div class="note">Pricing could not be loaded from the platform just ' +
+        'now. Rather than print figures that might be stale, this page shows ' +
+        'none — ask us and we will quote from the same configuration.</div>';
+    }
+  });
 
   /* ── AI assistant ── */
   const chat = document.getElementById("chat");
@@ -979,6 +1043,24 @@ const LEADS = [
     sendBtn.disabled = false;
     if (r.ok) { st.textContent = "sent to your demo channel."; toast("Sent"); }
     else { st.textContent = "refused: " + (r.reason || "unknown"); }
+  });
+
+  /* ── HYDRATE SECOND ── the provider's identity arrives whenever it
+     arrives, and repaints only the places that embed it in content. */
+  hydrateBrand(() => {
+    const pv = document.getElementById("tgPrev");
+    if (pv) pv.textContent = fill(PREV[
+      (document.querySelector("[data-prev].on") || {}).dataset
+        ? document.querySelector("[data-prev].on").dataset.prev : "open"]);
+    /* the brand editor adopts the real identity unless it has been edited */
+    const bn2 = document.getElementById("bName");
+    const bc2 = document.getElementById("bChan");
+    if (bn2 && !bn2.dataset.touched) bn2.value = BRAND.name;
+    if (bc2 && !bc2.dataset.touched) bc2.value = BRAND.channel;
+    const bl = document.getElementById("bLang");
+    if (bl && !bl.dataset.touched) bl.value = BRAND.language || "en";
+    if (typeof window.__repaintBrandPreview === "function")
+      window.__repaintBrandPreview();
   });
 })();
 </script>

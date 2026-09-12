@@ -93,6 +93,13 @@ h1,h2,h3,h4{letter-spacing:-.02em;line-height:1.15;font-weight:650}
 .btn.lg{padding:14px 26px;font-size:15px}
 .btn:disabled{opacity:.45;pointer-events:none}
 .btn.full{width:100%}
+/* A control that represents functionality delivered at implementation.
+   It must never read as live: dashed edge + an explicit PREVIEW pill. */
+.btn.preview{border-style:dashed;border-color:var(--line2);color:var(--dim)}
+.btn.preview:hover{color:var(--ink);border-color:var(--dim2)}
+.btn.preview:after{content:"preview";font-size:8.5px;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:700;opacity:.72;padding:1px 5px;
+  border:1px solid currentColor;border-radius:20px;line-height:1.5}
 
 /* ── KPI ──────────────────────────────────────────────────────── */
 .kpi{background:var(--panel);border:1px solid var(--line);

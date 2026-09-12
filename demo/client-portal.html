@@ -81,8 +81,7 @@
             <div><div class="tiny">Starts in</div>
               <div class="mono" id="cd" style="font-size:24px;font-weight:650;
                 margin-top:3px">—</div></div>
-            <button class="btn gold" onclick="toast('Live room — demo surface')">
-              Join live</button>
+            <button class="btn gold" onclick="go('live')">Join live</button>
           </div>
         </div>
       </div>
@@ -154,18 +153,18 @@
           <span class="eyebrow" style="color:var(--red)">Upcoming</span></div>
           <div class="h-sm" style="margin-top:9px">London Session</div>
           <div class="tiny" style="margin-top:5px">Today 08:00 · VIP</div>
-          <button class="btn gold sm full" style="margin-top:12px"
-            onclick="toast('Live room — demo surface')">Join</button></div>
+          <button class="btn gold sm full preview" style="margin-top:12px"
+            data-preview="Live room">Join</button></div>
         <div class="card"><div class="eyebrow">Scheduled</div>
           <div class="h-sm" style="margin-top:9px">New York Session</div>
           <div class="tiny" style="margin-top:5px">Today 14:30 · VIP</div>
-          <button class="btn sm full" style="margin-top:12px"
-            onclick="toast('Reminder set — demo surface')">Remind me</button></div>
+          <button class="btn sm full preview" style="margin-top:12px"
+            data-preview="Session reminders">Remind me</button></div>
         <div class="card"><div class="eyebrow">Replays</div>
           <div class="h-sm" style="margin-top:9px">36 sessions</div>
           <div class="tiny" style="margin-top:5px">Available on your tier</div>
-          <button class="btn sm full" style="margin-top:12px"
-            onclick="toast('Replay library — demo surface')">Browse</button></div>
+          <button class="btn sm full preview" style="margin-top:12px"
+            data-preview="Replay library">Browse</button></div>
       </div>
     </section>
 
@@ -198,8 +197,8 @@
           <div class="sep"></div>
           <div class="row">
             <input type="text" placeholder="Message the community"
-              onkeydown="if(event.key==='Enter'){toast('Posting — demo surface');this.value=''}">
-            <button class="btn sm" onclick="toast('Posting — demo surface')">Send</button>
+              onkeydown="if(event.key==='Enter'){toast('Community posting — comes with implementation');this.value=''}">
+            <button class="btn sm preview" data-preview="Community posting">Send</button>
           </div>
         </div>
       </div>
@@ -227,8 +226,8 @@
             <div class="spread"><span class="tiny">Live sessions</span>
               <span>VIP schedule</span></div>
           </div>
-          <button class="btn full" style="margin-top:16px"
-            onclick="toast('Billing portal — demo surface')">Manage membership</button>
+          <button class="btn full preview" style="margin-top:16px"
+            data-preview="Billing portal">Manage membership</button>
         </div>
         <div class="card">
           <div class="h-md">Upgrade</div>
@@ -279,15 +278,18 @@ const POSTS = [
   ["green","VP","VIP member","VIP","Appreciated the stop move being explained rather than just appearing.",0],
 ];
 
-(async function(){
-  await loadBrand();
-  paintBrand();
-  mountNav();
+/* ── RENDER FIRST ──────────────────────────────────────────────────
+   The portal is built and navigable on parse. Personalisation is
+   hydrated afterwards, so a slow brand call can no longer leave a
+   member looking at an empty sidebar. */
+(function(){
+  paintBrand();          /* fallback identity, painted immediately */
+  mountNav();            /* Home is the active pane before any fetch */
+  mountPreviewControls();
 
   document.getElementById("linkSite").href = tokenLink("trader-site.html");
   document.getElementById("linkOS").href = tokenLink("pro-trader-os.html");
-  document.getElementById("upgrade").href =
-    "https://t.me/sklzlabsnew_bot?start=demo_channel";
+  document.getElementById("upgrade").href = SALES_LINK;
 
   document.getElementById("sigTable").innerHTML =
     `<tr><th>Instrument</th><th>Side</th><th>Entry</th><th>Vol</th>
@@ -309,7 +311,7 @@ const POSTS = [
       <div class="h-sm">${t}</div>
       <div class="bar" style="margin-top:auto"><i style="width:${p}%"></i></div>
       <div class="spread"><span class="tiny">${p}%</span>
-        <button class="btn sm" onclick="toast('Lesson player — demo surface')">
+        <button class="btn sm preview" data-preview="Lesson player">
           ${p===100?"Review":p>0?"Resume":"Start"}</button></div>
     </div>`).join("");
 
@@ -337,6 +339,9 @@ const POSTS = [
       </div></div>`).join("");
 
   countdown(document.getElementById("cd"), Date.now() + 3*3600000 + 42*60000);
+
+  /* ── HYDRATE SECOND ── */
+  hydrateBrand();
 })();
 </script>
 </body></html>

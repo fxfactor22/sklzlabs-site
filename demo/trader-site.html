@@ -267,9 +267,9 @@ svg{display:block}
 .win .bd{display:grid;grid-template-columns:170px 1fr;min-height:330px}
 .win .sd{border-right:1px solid var(--line);padding:14px 10px;
   background:#FCFCFA}
-.win .sd a{display:block;padding:8px 11px;border-radius:8px;font-size:12.5px;
+.win .sd span{display:block;padding:8px 11px;border-radius:8px;font-size:12.5px;
   color:var(--slate);font-weight:550}
-.win .sd a.on{background:var(--navy);color:#fff}
+.win .sd span.on{background:var(--navy);color:#fff}
 .win .ct{padding:18px;display:grid;gap:12px;align-content:start}
 .mini{border:1px solid var(--line);border-radius:12px;padding:14px}
 .mini .h{font-size:10px;letter-spacing:.16em;text-transform:uppercase;
@@ -283,7 +283,7 @@ svg{display:block}
 @media(max-width:620px){.win .bd{grid-template-columns:1fr}
   .win .sd{border-right:0;border-bottom:1px solid var(--line);
     display:flex;flex-wrap:wrap;gap:4px}
-  .win .sd a{padding:6px 10px}
+  .win .sd span{padding:6px 10px}
   .blocks{grid-template-columns:1fr}}
 
 /* final CTA */
@@ -617,9 +617,12 @@ svg{display:block}
       <span data-brand>SKLZ Pro Trader</span>
       <span class="tag demo" style="margin-left:auto">demo view</span></div>
     <div class="bd">
+      <!-- a picture of the OS, not a menu: spans, so nothing here invites
+           a click it cannot answer -->
       <div class="sd">
-        <a class="on">Overview</a><a>Signals</a><a>Positions</a><a>Live</a>
-        <a>Academy</a><a>Community</a><a>Clients</a><a>AI centre</a>
+        <span class="on">Overview</span><span>Signals</span><span>Positions</span>
+        <span>Live</span><span>Academy</span><span>Community</span>
+        <span>Clients</span><span>AI centre</span>
       </div>
       <div class="ct">
         <div class="mini">
@@ -672,14 +675,16 @@ Automation is live; funds are virtual.</div>
 
 <script src="sklz-os.js"></script>
 <script>
-(async function(){
-  await loadBrand();
-  paintBrand();
+/* ── RENDER FIRST ──────────────────────────────────────────────────
+   Everything below runs synchronously on parse. The hero, the nav, the
+   CTAs and every section are usable before a single network call; the
+   provider's identity is hydrated afterwards and cannot hold the page. */
+(function(){
+  paintBrand();          /* fallback identity, painted immediately */
 
   /* links — the sales bot for a demo, the OS and portal carry the token */
-  const demo = "https://t.me/sklzlabsnew_bot?start=demo_channel";
   ["navDemo","heroDemo","endDemo"].forEach(id => {
-    const e = document.getElementById(id); if (e) e.href = demo; });
+    const e = document.getElementById(id); if (e) e.href = SALES_LINK; });
   ["heroOS","osEnter","endOS"].forEach(id => {
     const e = document.getElementById(id);
     if (e) e.href = tokenLink("pro-trader-os.html"); });
@@ -703,5 +708,8 @@ Automation is live; funds are virtual.</div>
   requestAnimationFrame(() => document.querySelectorAll(
     ".hero .rv").forEach(el => el.classList.add("in")));
 })();
+
+/* ── HYDRATE SECOND ── personalisation, on its own time. */
+hydrateBrand();
 </script>
 </body></html>
