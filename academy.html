@@ -57,6 +57,7 @@
   .pbox .x{position:absolute;top:14px;right:16px;cursor:pointer;color:var(--muted);font-size:20px;z-index:2}
   .pv{aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;margin-bottom:12px}
   .pv iframe{width:100%;height:100%;border:0}
+  .pv video{width:100%;height:100%;display:block;background:#000}
   .pt{font-size:17px;font-weight:700}.pd{color:var(--muted);font-size:13px;margin-top:5px}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
   .toast.on{transform:translateX(-50%) translateY(0)}
@@ -123,6 +124,10 @@
   function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}
   let DATA=null;
 
+  /* A hosted lesson file plays in a real <video>; an iframe around an .mp4
+     gives the browser's bare viewer with no poster and no playsinline. */
+  function isHostedMedia(u){return /\.(mp4|webm|m4v|ogv)(\?|#|$)/i.test(u||'')}
+
   function embedUrl(u){
     if(!u)return '';
     const yt=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|live\/|embed\/))([\w-]+)/);
@@ -173,11 +178,14 @@
     const all=[...DATA.live,...DATA.events,...DATA.recordings];
     const it=all.find(x=>x.id===id);
     if(!it||!it.video_url){toast('No video attached yet');return;}
-    const url=embedUrl(it.video_url);
+    const frame=isHostedMedia(it.video_url)
+      ? `<video src="${esc(it.video_url)}"${it.thumbnail?` poster="${esc(it.thumbnail)}"`:''}
+           controls playsinline preload="metadata" controlslist="nodownload"></video>`
+      : `<iframe src="${esc(embedUrl(it.video_url))}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
     let m=document.getElementById('player');
     if(!m){m=document.createElement('div');m.id='player';m.className='player';document.body.appendChild(m);}
     m.innerHTML=`<div class="pbox"><span class="x" onclick="closePlayer()">\u2715</span>
-      <div class="pv"><iframe src="${esc(url)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe></div>
+      <div class="pv">${frame}</div>
       <div class="pt">${esc(it.title)}</div><div class="pd">${esc(it.description||'')}</div></div>`;
     m.classList.add('open');
   }
