@@ -31,7 +31,8 @@ const BRAND_RETRIES = 1;
 const BRAND = {
   name: "SKLZ Pro Trader OS",
   channel: "SKLZ Signals",
-  language: "en",
+  language: "en",        /* display default */
+  tokenLanguage: null,   /* only set when the demo link actually carries one */
   logo: "",
   loaded: false,
 };
@@ -72,6 +73,7 @@ async function loadBrand() {
       BRAND.name = d.provider_name || BRAND.name;
       BRAND.channel = d.telegram_channel || BRAND.channel;
       BRAND.language = d.language || BRAND.language;
+      BRAND.tokenLanguage = d.language || null;
       BRAND.logo = d.logo_url || "";
       BRAND.secondsLeft = d.seconds_remaining;
       BRAND.loaded = true;
@@ -88,6 +90,10 @@ async function loadBrand() {
    repaint the few places that embed the provider's name in content. */
 function hydrateBrand(then) {
   loadBrand().then(() => {
+    /* The demo link carries the prospect's language. Adopting it re-renders
+       in place; a manual choice in this browser still wins (see I18N). */
+    if (window.I18N && BRAND.tokenLanguage)
+      I18N.setTokenLocale(BRAND.tokenLanguage);
     paintBrand();
     if (typeof then === "function") { try { then(BRAND); } catch (e) {} }
   });
@@ -118,7 +124,7 @@ function mountPreviewControls() {
     const el = e.target.closest("[data-preview]");
     if (!el) return;
     e.preventDefault();
-    toast(`${el.dataset.preview} — comes with implementation`);
+    toast(I18N.T("demo.previewToast", { name: I18N.T(el.dataset.preview) }));
   });
 }
 
@@ -139,23 +145,24 @@ function renderPackages(d, host) {
   /* One product, three depths — not three products. The step label and the
      "everything in…" chain are what stop a prospect asking whether the Desk
      and the OS compete. */
+  const T = I18N.T;
   const step = {
-    signal_desk: "Step 1 · the engine",
-    signal_desk_pro: "Step 2 · the engine at scale",
-    pro_trader_os: "Step 3 · the whole business",
+    signal_desk: T("pkg.step1"),
+    signal_desk_pro: T("pkg.step2"),
+    pro_trader_os: T("pkg.step3"),
   };
   const blurb = {
-    signal_desk: "The trading and distribution engine. Your desk, live.",
-    signal_desk_pro: "The same engine for an established, paying audience.",
-    pro_trader_os: "The engine plus the business around it — site, members, academy.",
+    signal_desk: T("pkg.blurb1"),
+    signal_desk_pro: T("pkg.blurb2"),
+    pro_trader_os: T("pkg.blurb3"),
   };
   const feat = {
-    signal_desk: ["MT5 execution → Telegram", "Signal lifecycle updates",
-      "AI communication centre", "VPS + Runner setup"],
-    signal_desk_pro: ["Everything in Signal Desk", "Multi-account copying available",
-      "Lead capture + qualification", "Priority implementation"],
-    pro_trader_os: ["Everything in Pro", "Public trader website",
-      "Live sessions + Academy", "Private community"],
+    signal_desk: [T("pkg.f.mt5Telegram"), T("pkg.f.lifecycle"),
+      T("pkg.f.aiCentre"), T("pkg.f.vps")],
+    signal_desk_pro: [T("pkg.f.everythingDesk"), T("pkg.f.multiCopy"),
+      T("pkg.f.leadCapture"), T("pkg.f.priority")],
+    pro_trader_os: [T("pkg.f.everythingPro"), T("pkg.f.website"),
+      T("pkg.f.liveAcademy"), T("pkg.f.community")],
   };
   host.innerHTML = order.map((k, i) => {
     const p = (d.packages || {})[k];
@@ -172,16 +179,16 @@ function renderPackages(d, host) {
       <div>
         <div style="font-size:34px;font-weight:650;letter-spacing:-.03em">
           ${p.setup.display}</div>
-        <div class="tiny">${p.setup.label}</div>
+        <div class="tiny">${I18N.SRV(p.setup.label)}</div>
         <div style="font-size:17px;margin-top:9px">+ ${p.monthly.display}
-          <span class="tiny">${p.monthly.label}</span></div>
+          <span class="tiny">${I18N.SRV(p.monthly.label)}</span></div>
       </div>
       <div class="stack" style="gap:7px;font-size:13px;color:var(--dim)">
         ${(feat[k] || []).map(f => `<div>· ${f}</div>`).join("")}
       </div>
       <a class="btn ${hero ? "gold" : ""} full" style="margin-top:auto"
          target="_blank" rel="noopener"
-         href="${SALES_LINK}">GET MY TRADING DESK</a>
+         href="${SALES_LINK}">${T("pkg.cta")}</a>
     </div>`;
   }).join("");
   return true;
@@ -191,20 +198,23 @@ function renderPackages(d, host) {
    The model is handed facts from the ledger; it is never asked what
    happened. Nothing is sent anywhere without an explicit click. */
 async function aiDraft(intent, instruction) {
-  if (!TOKEN) return { ok: false, reason: "no demo token in this link" };
+  if (!TOKEN) return { ok: false, reason: I18N.T("ai.noToken") };
   try {
     const r = await fetch(`${API}/api/demo-links/${TOKEN}/ai-draft`, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ intent, instruction: instruction || "" }),
+      /* The active locale is requested explicitly, and the directive
+         forbids the model from altering any verified trade fact. */
+      body: JSON.stringify({ intent,
+        instruction: I18N.aiDirective(instruction || "") }),
     });
     return await r.json();
   } catch (e) {
-    return { ok: false, reason: "could not reach the AI centre" };
+    return { ok: false, reason: I18N.T("ai.noAICentre") };
   }
 }
 
 async function aiSend(text) {
-  if (!TOKEN) return { ok: false, reason: "no demo token in this link" };
+  if (!TOKEN) return { ok: false, reason: I18N.T("ai.noToken") };
   try {
     const r = await fetch(`${API}/api/demo-links/${TOKEN}/ai-send`, {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -213,10 +223,10 @@ async function aiSend(text) {
     const d = await r.json();
     if (!r.ok) {
       const det = d.detail && d.detail.detail ? d.detail.detail : d.detail;
-      return { ok: false, reason: String(det || "refused") };
+      return { ok: false, reason: String(det || I18N.T("ai.refusedShort")) };
     }
     return d;
-  } catch (e) { return { ok: false, reason: "send failed" }; }
+  } catch (e) { return { ok: false, reason: I18N.T("ai.sendFailed") }; }
 }
 
 /* ── nav ── */
@@ -254,7 +264,7 @@ function toast(msg) {
 function countdown(el, target) {
   function tick() {
     const ms = target - Date.now();
-    if (ms <= 0) { el.textContent = "starting soon"; return; }
+    if (ms <= 0) { el.textContent = I18N.T("os.startingSoon"); return; }
     const h = Math.floor(ms / 3600000);
     const m = Math.floor(ms % 3600000 / 60000);
     const s = Math.floor(ms % 60000 / 1000);

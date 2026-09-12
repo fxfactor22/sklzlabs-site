@@ -5,6 +5,10 @@
 <meta name="robots" content="noindex">
 <title>SKLZ Pro Trader OS</title>
 <link rel="stylesheet" href="sklz-os.css">
+<!-- localisation: bundled and synchronous, so first paint is already
+     in the right language; only token/brand data hydrates later. -->
+<script src="sklz-i18n-dict.js"></script>
+<script src="sklz-i18n.js"></script>
 <style>
   /* The community room is three columns of very different content. A bare
      1fr takes its min-width from the longest post, which pushed the member
@@ -32,34 +36,34 @@
         <div style="font-size:14px;font-weight:700;letter-spacing:-.01em"
              data-brand>SKLZ Pro Trader</div>
         <div style="font-size:10px;color:var(--dim2);letter-spacing:.1em;
-             text-transform:uppercase">Pro Trader OS</div>
+             text-transform:uppercase" data-i18n="os.proTraderOS">Pro Trader OS</div>
       </div>
     </div>
 
     <div class="nav">
-      <div class="navgrp">Operate</div>
-      <a data-pane="overview"><span class="ic">◆</span>Overview</a>
-      <a data-pane="desk"><span class="ic">⌁</span>Signal Desk</a>
-      <a data-pane="telegram"><span class="ic">✈</span>Telegram Studio</a>
-      <a data-pane="ai"><span class="ic">✦</span>AI Assistant</a>
+      <div class="navgrp" data-i18n="navgrp.operate">Operate</div>
+      <a data-pane="overview"><span class="ic">◆</span><span data-i18n="nav.overview">Overview</span></a>
+      <a data-pane="desk"><span class="ic">⌁</span><span data-i18n="nav.signalDesk">Signal Desk</span></a>
+      <a data-pane="telegram"><span class="ic">✈</span><span data-i18n="nav.telegram">Telegram Studio</span></a>
+      <a data-pane="ai"><span class="ic">✦</span><span data-i18n="nav.ai">AI Assistant</span></a>
 
-      <div class="navgrp">Deliver</div>
-      <a data-pane="live"><span class="ic">●</span>Live Sessions</a>
-      <a data-pane="academy"><span class="ic">▤</span>Academy</a>
-      <a data-pane="community"><span class="ic">◍</span>Community</a>
+      <div class="navgrp" data-i18n="navgrp.deliver">Deliver</div>
+      <a data-pane="live"><span class="ic">●</span><span data-i18n="nav.live">Live Sessions</span></a>
+      <a data-pane="academy"><span class="ic">▤</span><span data-i18n="nav.academy">Academy</span></a>
+      <a data-pane="community"><span class="ic">◍</span><span data-i18n="nav.community">Community</span></a>
 
-      <div class="navgrp">Grow</div>
-      <a data-pane="audience"><span class="ic">◉</span>Audience &amp; Leads</a>
-      <a data-pane="brand"><span class="ic">◈</span>Brand &amp; Channel</a>
-      <a data-pane="sell"><span class="ic">▲</span>Sell</a>
-      <a data-pane="pricing"><span class="ic">$</span>Pricing</a>
+      <div class="navgrp" data-i18n="site.caps.grow">Grow</div>
+      <a data-pane="audience"><span class="ic">◉</span><span data-i18n="nav.audience">Audience &amp; Leads</span></a>
+      <a data-pane="brand"><span class="ic">◈</span><span data-i18n="nav.brand">Brand &amp; Channel</span></a>
+      <a data-pane="sell"><span class="ic">▲</span><span data-i18n="nav.sell">Sell</span></a>
+      <a data-pane="pricing"><span class="ic">$</span><span data-i18n="nav.pricing">Pricing</span></a>
     </div>
 
     <div class="sep"></div>
-    <a class="btn ghost sm full" id="linkSite" href="trader-site.html">
+    <a class="btn ghost sm full" id="linkSite" href="trader-site.html" data-i18n="os.viewPublic">
       View public website →</a>
     <a class="btn ghost sm full" id="linkPortal" style="margin-top:8px"
-       href="client-portal.html">View client portal →</a>
+       href="client-portal.html" data-i18n="os.viewPortal">View client portal →</a>
   </aside>
 
   <!-- ── main ───────────────────────────────────────────────── -->
@@ -69,39 +73,39 @@
     <section class="pane" id="pane-overview">
       <div class="topbar">
         <div>
-          <div class="eyebrow">Operating system</div>
-          <h1 class="h-lg" style="margin-top:5px">Overview</h1>
+          <div class="eyebrow" data-i18n="os.operatingSystem">Operating system</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="nav.overview">Overview</h1>
         </div>
         <div class="row wrap-r">
-          <span class="tag gold">Trade Once. Distribute Everywhere.</span>
+          <span class="tag gold" data-i18n="os.tradeOnceTitle">Trade Once. Distribute Everywhere.</span>
         </div>
       </div>
 
       <div class="flow" style="margin-bottom:22px">
-        <div class="step"><div class="n">01</div><div class="t">Trade</div>
-          <div class="s">One order on your master account.</div></div>
-        <div class="step"><div class="n">02</div><div class="t">Manage</div>
-          <div class="s">Stops, breakeven and trailing at the broker.</div></div>
-        <div class="step"><div class="n">03</div><div class="t">Distribute</div>
-          <div class="s">Telegram, updated in place as it moves.</div></div>
-        <div class="step"><div class="n">04</div><div class="t">Communicate</div>
-          <div class="s">AI drafts from verified facts. You approve.</div></div>
-        <div class="step"><div class="n">05</div><div class="t">Sell</div>
-          <div class="s">Qualify, recommend, convert.</div></div>
+        <div class="step"><div class="n">01</div><div class="t" data-i18n="site.caps.trade">Trade</div>
+          <div class="s" data-i18n="os.step1">One order on your master account.</div></div>
+        <div class="step"><div class="n">02</div><div class="t" data-i18n="os.manage">Manage</div>
+          <div class="s" data-i18n="os.step2">Stops, breakeven and trailing at the broker.</div></div>
+        <div class="step"><div class="n">03</div><div class="t" data-i18n="site.caps.distribute">Distribute</div>
+          <div class="s" data-i18n="os.step3">Telegram, updated in place as it moves.</div></div>
+        <div class="step"><div class="n">04</div><div class="t" data-i18n="os.communicate">Communicate</div>
+          <div class="s" data-i18n="os.step4">AI drafts from verified facts. You approve.</div></div>
+        <div class="step"><div class="n">05</div><div class="t" data-i18n="sell.title">Sell</div>
+          <div class="s" data-i18n="os.qualifyRecommend">Qualify, recommend, convert.</div></div>
       </div>
 
       <div class="grid g4" style="margin-bottom:16px">
-        <div class="kpi"><div class="l">Active signals</div>
+        <div class="kpi"><div class="l" data-i18n="os.activeSignals">Active signals</div>
           <div class="v" id="kActive">—</div>
-          <div class="d" id="kActiveD">reading your desk…</div></div>
-        <div class="kpi"><div class="l">Signals today
-            <span class="tag demo">demo</span></div>
-          <div class="v">14</div><div class="d">across 3 instruments</div></div>
-        <div class="kpi"><div class="l">Telegram subscribers
-            <span class="tag demo">demo</span></div>
-          <div class="v">1,240</div><div class="d">+38 this week</div></div>
-        <div class="kpi"><div class="l">Leads <span class="tag demo">demo</span></div>
-          <div class="v gold">27</div><div class="d">9 awaiting a reply</div></div>
+          <div class="d" id="kActiveD" data-i18n="os.readingDesk">reading your desk…</div></div>
+        <div class="kpi"><div class="l"><span data-i18n="os.kpi.signals">Signals today</span>
+            <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
+          <div class="v">14</div><div class="d" data-i18n="os.across3">across 3 instruments</div></div>
+        <div class="kpi"><div class="l"><span data-i18n="os.kpi.subs">Telegram subscribers</span>
+            <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
+          <div class="v">1,240</div><div class="d" data-i18n="os.plus38">+38 this week</div></div>
+        <div class="kpi"><div class="l"><span data-i18n="os.kpi.leads">Leads</span> <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
+          <div class="v gold">27</div><div class="d" data-i18n="os.awaitingReply">9 awaiting a reply</div></div>
       </div>
 
       <div class="grid g3" style="margin-bottom:16px">
@@ -109,81 +113,81 @@
           <div><div class="eyebrow">Telegram</div>
             <div class="h-sm" style="margin-top:6px" data-channel>SKLZ Signals</div></div>
           <span class="dot on"></span></div>
-          <div class="tiny" style="margin-top:9px">Lifecycle delivery connected.
+          <div class="tiny" style="margin-top:9px" data-i18n="os.lifecycleConnected">Lifecycle delivery connected.
             Signals post and edit in place.</div></div>
         <div class="card"><div class="spread">
-          <div><div class="eyebrow">AI assistant</div>
-            <div class="h-sm" style="margin-top:6px">Ready</div></div>
+          <div><div class="eyebrow" data-i18n="os.aiAssistant">AI assistant</div>
+            <div class="h-sm" style="margin-top:6px" data-i18n="os.ready">Ready</div></div>
           <span class="dot on"></span></div>
-          <div class="tiny" style="margin-top:9px">Drafts from verified trade
+          <div class="tiny" style="margin-top:9px" data-i18n="os.draftsOnlyVerified">Drafts from verified trade
             facts only. Never invents a number.</div></div>
         <div class="card"><div class="spread">
-          <div><div class="eyebrow">MT5 execution</div>
-            <div class="h-sm" style="margin-top:6px">Broker DEMO account</div></div>
+          <div><div class="eyebrow" data-i18n="os.mt5Execution">MT5 execution</div>
+            <div class="h-sm" style="margin-top:6px" data-i18n="os.brokerDemoAccount">Broker DEMO account</div></div>
           <span class="dot on" id="dotMt5"></span></div>
-          <div class="tiny" style="margin-top:9px">Automation is live;
+          <div class="tiny" style="margin-top:9px" data-i18n="os.automationLive">Automation is live;
             funds are virtual.</div></div>
       </div>
 
       <div class="grid g2">
         <div class="card">
           <div class="spread" style="margin-bottom:6px">
-            <div class="h-md">Today's activity</div>
-            <span class="tag demo">illustrative sequence</span></div>
+            <div class="h-md" data-i18n="os.todaysActivity">Today's activity</div>
+            <span class="tag demo" data-i18n="os.illustrativeSeq">illustrative sequence</span></div>
           <div class="tl" style="margin-top:12px">
-            <div class="tl-i done"><div class="t">Trade opened</div>
-              <div class="s">BTCUSD SELL 0.01 · filled at the broker</div></div>
-            <div class="tl-i done"><div class="t">Telegram signal published</div>
-              <div class="s">Posted to your channel with entry and ticket</div></div>
-            <div class="tl-i done"><div class="t">Stop updated</div>
-              <div class="s">Same message edited — no second post</div></div>
-            <div class="tl-i now"><div class="t">AI community update</div>
-              <div class="s">Draft ready for your approval</div></div>
-            <div class="tl-i"><div class="t">Signal closed</div>
-              <div class="s">Message becomes CLOSED when the trade ends</div></div>
+            <div class="tl-i done"><div class="t" data-i18n="os.tradeOpened">Trade opened</div>
+              <div class="s">BTCUSD <span data-i18n="desk.sellSide">SELL</span> 0.01 · <span data-i18n="os.act1">filled at the broker</span></div></div>
+            <div class="tl-i done"><div class="t" data-i18n="os.tgPublished">Telegram signal published</div>
+              <div class="s" data-i18n="os.act2">Posted to your channel with entry and ticket</div></div>
+            <div class="tl-i done"><div class="t" data-i18n="os.stopUpdated">Stop updated</div>
+              <div class="s" data-i18n="os.act3">Same message edited — no second post</div></div>
+            <div class="tl-i now"><div class="t" data-i18n="os.aiCommunityUpdate">AI community update</div>
+              <div class="s" data-i18n="os.act4">Draft ready for your approval</div></div>
+            <div class="tl-i"><div class="t" data-i18n="os.signalClosed">Signal closed</div>
+              <div class="s" data-i18n="os.act5">Message becomes CLOSED when the trade ends</div></div>
           </div>
         </div>
         <div class="card">
-          <div class="h-md" style="margin-bottom:12px">What runs where</div>
+          <div class="h-md" style="margin-bottom:12px" data-i18n="os.whatRunsWhere">What runs where</div>
           <div class="stack" style="gap:10px">
-            <div class="spread"><span>MT5 execution &amp; tickets</span>
-              <span class="tag green">real, broker demo</span></div>
-            <div class="spread"><span>Telegram signal lifecycle</span>
-              <span class="tag green">real</span></div>
-            <div class="spread"><span>AI drafting from trade facts</span>
-              <span class="tag green">real</span></div>
-            <div class="spread"><span>Subscriber &amp; revenue figures</span>
-              <span class="tag demo">demo</span></div>
-            <div class="spread"><span>Live sessions, Academy, Community</span>
-              <span class="tag demo">demo</span></div>
+            <div class="spread"><span data-i18n="os.mt5Tickets">MT5 execution &amp; tickets</span>
+              <span class="tag green" data-i18n="os.realBrokerDemo">real, broker demo</span></div>
+            <div class="spread"><span data-i18n="os.tgLifecycle">Telegram signal lifecycle</span>
+              <span class="tag green" data-i18n="desk.realTag">real</span></div>
+            <div class="spread"><span data-i18n="os.aiDrafting">AI drafting from trade facts</span>
+              <span class="tag green" data-i18n="desk.realTag">real</span></div>
+            <div class="spread"><span data-i18n="os.subRevenue">Subscriber &amp; revenue figures</span>
+              <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
+            <div class="spread"><span data-i18n="os.liveAcademyCommunityRow">Live sessions, Academy, Community</span>
+              <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
           </div>
-          <div class="note" style="margin-top:14px">Execution, the Runner, the
-            signal and its Telegram lifecycle are real on an MT5 broker DEMO
-            account. Automation is live; funds are virtual. Everything marked
-            <b>demo</b> is presentation content for this walkthrough.</div>
+          <div class="note" style="margin-top:14px"><span data-i18n="os.overviewNote">Execution,
+            the Runner, the signal and its Telegram lifecycle are real on an MT5 broker
+            DEMO account. Automation is live; funds are virtual. Everything marked</span>
+            <b data-i18n="os.demoTag">demo</b> <span data-i18n="os.isPresentation">is presentation content for this walkthrough.</span></div>
         </div>
       </div>
 
       <!-- One product, named parts. Stops the Desk and the OS reading as
            competing purchases during the walkthrough. -->
       <div class="card" style="margin-top:16px">
-        <div class="h-md" style="margin-bottom:4px">How the pieces fit</div>
-        <div class="tiny" style="margin-bottom:14px">Pro Trader OS is the
+        <div class="h-md" style="margin-bottom:4px" data-i18n="os.howPiecesFit">How the pieces fit</div>
+        <div class="tiny" style="margin-bottom:14px" data-i18n="os.osIsTheOS">Pro Trader OS is the
           operating system. Everything below is a part of it, not an
           alternative to it.</div>
         <div class="grid g3" style="gap:12px">
-          <div class="note"><b style="color:var(--gold2)">Signal Desk</b><br>
-            The trading and distribution engine inside the OS.</div>
-          <div class="note"><b style="color:var(--gold2)">Public website</b><br>
-            Your front door — how people find and choose you.</div>
-          <div class="note"><b style="color:var(--gold2)">Client portal</b><br>
-            What a paying member logs into.</div>
-          <div class="note"><b style="color:var(--gold2)">Live · Academy ·
-            Community</b><br>Delivery, retention and what you sell next.</div>
-          <div class="note"><b style="color:var(--gold2)">AI Assistant</b><br>
-            One communication assistant across all of it.</div>
-          <div class="note"><b style="color:var(--gold2)">Audience, Leads,
-            Sell</b><br>The funnel that turns an audience into customers.</div>
+          <div class="note"><b style="color:var(--gold2)" data-i18n="desk.title">Signal Desk</b><br>
+            <span data-i18n="os.piece.desk">The trading and distribution engine inside the OS.</span></div>
+          <div class="note"><b style="color:var(--gold2)" data-i18n="os.publicWebsite">Public website</b><br>
+            <span data-i18n="os.piece.site">Your front door — how people find and choose you.</span></div>
+          <div class="note"><b style="color:var(--gold2)" data-i18n="os.clientPortal">Client portal</b><br>
+            <span data-i18n="os.piece.portal">What a paying member logs into.</span></div>
+          <div class="note"><b style="color:var(--gold2)" data-i18n="os.liveAcademyCommunity">Live · Academy ·
+            Community</b><br><span data-i18n="os.piece.deliver">Delivery, retention and what you sell next.</span></div>
+          <div class="note"><b style="color:var(--gold2)" data-i18n="ai.title">AI Assistant</b><br>
+            <span data-i18n="os.piece.ai">One communication assistant across all of it.</span></div>
+          <div class="note"><b style="color:var(--gold2)" data-i18n="os.audienceLeadsSell">Audience, Leads,
+            Sell</b><br><span data-i18n="os.piece.funnel">The funnel that turns an audience into customers.</span></div>
         </div>
       </div>
     </section>
@@ -191,17 +195,16 @@
     <!-- SIGNAL DESK -->
     <section class="pane" id="pane-desk">
       <div class="topbar">
-        <div><div class="eyebrow">Operate</div>
-          <h1 class="h-lg" style="margin-top:5px">Signal Desk</h1></div>
-        <a class="btn sm" id="deskNew" target="_blank">Open full desk ↗</a>
+        <div><div class="eyebrow" data-i18n="navgrp.operate">Operate</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="desk.title">Signal Desk</h1></div>
+        <a class="btn sm" id="deskNew" target="_blank" data-i18n="os.openFullDesk">Open full desk ↗</a>
       </div>
-      <div class="ribbon" style="margin-bottom:16px"><b>Signal Desk is the
-        trading and distribution engine inside Pro Trader OS</b> — not a
-        separate product. This is that engine running live: orders placed
-        here reach a real MT5 broker demo account and publish a real Telegram
-        signal. Multi-account copying is available with Signal Desk
-        implementation; this public demo does not prove follower-account
-        copying.</div>
+      <div class="ribbon" style="margin-bottom:16px"><b data-i18n="os.deskIsEngine">Signal Desk is the
+        trading and distribution engine inside Pro Trader OS</b><span
+        data-i18n="os.deskRibbon"> — not a separate product. This is that engine running
+        live: orders placed here reach a real MT5 broker demo account and publish a real
+        Telegram signal. Multi-account copying is available with Signal Desk
+        implementation; this public demo does not prove follower-account copying.</span></div>
       <div class="card tight" style="padding:0;overflow:hidden">
         <iframe id="deskFrame" title="SKLZ Signal Desk" style="width:100%;
           height:1400px;border:0;display:block;background:var(--bg)"></iframe>
@@ -211,68 +214,68 @@
     <!-- TELEGRAM STUDIO -->
     <section class="pane" id="pane-telegram">
       <div class="topbar">
-        <div><div class="eyebrow">Distribute</div>
-          <h1 class="h-lg" style="margin-top:5px">Telegram Studio</h1></div>
+        <div><div class="eyebrow" data-i18n="site.caps.distribute">Distribute</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="tg.title">Telegram Studio</h1></div>
         <div class="row"><span class="dot on"></span>
-          <span class="tiny">Channel connected</span></div>
+          <span class="tiny" data-i18n="os.channelConnected">Channel connected</span></div>
       </div>
 
       <div class="grid g3" style="margin-bottom:18px">
-        <div class="card"><div class="eyebrow">Channel</div>
+        <div class="card"><div class="eyebrow" data-i18n="os.channel">Channel</div>
           <div class="h-md" style="margin-top:7px" data-channel>SKLZ Signals</div>
-          <div class="tiny" style="margin-top:6px">Signals post once and are
+          <div class="tiny" style="margin-top:6px" data-i18n="os.postOnceEdited">Signals post once and are
             edited in place through the trade's life.</div></div>
-        <div class="card"><div class="eyebrow">Lifecycle states</div>
+        <div class="card"><div class="eyebrow" data-i18n="os.lifecycleStates">Lifecycle states</div>
           <div class="row wrap-r" style="margin-top:10px">
-            <span class="tag green">OPEN</span><span class="tag blue">UPDATED</span>
-            <span class="tag violet">BREAKEVEN</span>
-            <span class="tag gold">TRAILING</span><span class="tag">CLOSED</span>
+            <span class="tag green" data-i18n="tg.statusOpen">OPEN</span><span class="tag blue" data-i18n="tg.statusUpdated">UPDATED</span>
+            <span class="tag violet" data-i18n="os.breakeven">BREAKEVEN</span>
+            <span class="tag gold" data-i18n="tg.statusTrailing">TRAILING</span><span class="tag" data-i18n="tg.statusClosed">CLOSED</span>
           </div>
-          <div class="tiny" style="margin-top:9px">One message per trade.
+          <div class="tiny" style="margin-top:9px" data-i18n="os.oneMessagePerTrade">One message per trade.
             Never a second post.</div></div>
-        <div class="card"><div class="eyebrow">Recent signals
-            <span class="tag demo">demo</span></div>
+        <div class="card"><div class="eyebrow"><span data-i18n="os.recentSignals">Recent signals</span>
+            <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
           <div class="stack" style="gap:8px;margin-top:10px;font-size:13px">
-            <div class="spread"><span class="mono">BTCUSD SELL</span>
-              <span class="tag">CLOSED</span></div>
-            <div class="spread"><span class="mono">XAUUSD BUY</span>
-              <span class="tag violet">BREAKEVEN</span></div>
-            <div class="spread"><span class="mono">EURUSD SELL</span>
-              <span class="tag blue">UPDATED</span></div>
+            <div class="spread"><span class="mono">BTCUSD <span data-i18n="desk.sellSide">SELL</span></span>
+              <span class="tag" data-i18n="tg.statusClosed">CLOSED</span></div>
+            <div class="spread"><span class="mono">XAUUSD <span data-i18n="desk.buySide">BUY</span></span>
+              <span class="tag violet" data-i18n="os.breakeven">BREAKEVEN</span></div>
+            <div class="spread"><span class="mono">EURUSD <span data-i18n="desk.sellSide">SELL</span></span>
+              <span class="tag blue" data-i18n="tg.statusUpdated">UPDATED</span></div>
           </div></div>
       </div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="spread"><div class="h-md">Message preview</div>
-            <span class="tag demo">example content</span></div>
+          <div class="spread"><div class="h-md" data-i18n="os.messagePreview">Message preview</div>
+            <span class="tag demo" data-i18n="os.exampleContent">example content</span></div>
           <div class="chips" style="margin:14px 0">
-            <div class="chip on" data-prev="open">Preview signal</div>
-            <div class="chip" data-prev="updated">Preview update</div>
-            <div class="chip" data-prev="be">Preview breakeven</div>
-            <div class="chip" data-prev="closed">Preview closed</div>
+            <div class="chip on" data-prev="open" data-i18n="os.previewSignal">Preview signal</div>
+            <div class="chip" data-prev="updated" data-i18n="os.previewUpdate">Preview update</div>
+            <div class="chip" data-prev="be" data-i18n="os.previewBreakeven">Preview breakeven</div>
+            <div class="chip" data-prev="closed" data-i18n="os.previewClosed">Preview closed</div>
           </div>
           <div class="tg">
             <div class="hd"><div class="av" data-initials>SK</div>
               <div><div style="font-size:13px;font-weight:650" data-channel>
                 SKLZ Signals</div>
-                <div style="font-size:10.5px;color:var(--dim2)">channel</div></div></div>
+                <div style="font-size:10.5px;color:var(--dim2)" data-i18n="os.channelLc">channel</div></div></div>
             <pre id="tgPrev"></pre>
-            <div class="ft">Same message, edited in place · demo example</div>
+            <div class="ft" data-i18n="os.sameMessageDemo">Same message, edited in place · demo example</div>
           </div>
         </div>
         <div class="card">
-          <div class="h-md">Follower-facing formatting</div>
+          <div class="h-md" data-i18n="os.followerFormatting">Follower-facing formatting</div>
           <div class="stack" style="gap:12px;margin-top:14px">
-            <div><div class="eyebrow">What every signal carries</div>
-              <div class="tiny" style="margin-top:7px">Instrument and direction ·
+            <div><div class="eyebrow" data-i18n="os.everySignalCarries">What every signal carries</div>
+              <div class="tiny" style="margin-top:7px" data-i18n="os.signalCarries">Instrument and direction ·
                 entry · volume · stop · target · ticket · current status ·
                 your disclaimer.</div></div>
-            <div><div class="eyebrow">What it never carries</div>
-              <div class="tiny" style="margin-top:7px">An invented exit price, a
+            <div><div class="eyebrow" data-i18n="os.neverCarries">What it never carries</div>
+              <div class="tiny" style="margin-top:7px" data-i18n="os.signalNeverCarries">An invented exit price, a
                 cause the broker did not report, a profit figure, or a win rate.
                 If a number is not in the trade record, it is not printed.</div></div>
-            <div class="note">Real signals are published by your signal bot.
+            <div class="note" data-i18n="os.studioPreviewNote">Real signals are published by your signal bot.
               This studio previews the format; it does not post on its own.</div>
           </div>
         </div>
@@ -282,24 +285,24 @@
     <!-- AI ASSISTANT -->
     <section class="pane" id="pane-ai">
       <div class="topbar">
-        <div><div class="eyebrow">Communicate</div>
-          <h1 class="h-lg" style="margin-top:5px">AI Assistant</h1></div>
-        <span class="tag green">drafts from verified trades</span>
+        <div><div class="eyebrow" data-i18n="os.communicate">Communicate</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="ai.title">AI Assistant</h1></div>
+        <span class="tag green" data-i18n="os.draftsFromVerified">drafts from verified trades</span>
       </div>
 
       <div class="grid" style="grid-template-columns:1.35fr .9fr;gap:16px">
         <div class="card">
           <div class="chips" style="margin-bottom:14px">
-            <div class="chip" data-ask="update">Update my followers about the current trade</div>
-            <div class="chip" data-ask="summary">Write today's market outlook</div>
-            <div class="chip" data-ask="breakeven">Explain why the stop was moved</div>
-            <div class="chip" data-ask="explain">Create a post from my positions</div>
-            <div class="chip" data-ask="risk">Write a professional risk reminder</div>
-            <div class="chip" data-ask="vip">Promote my VIP channel</div>
+            <div class="chip" data-ask="update" data-i18n="ai.p.updateTrade">Update my followers about the current trade</div>
+            <div class="chip" data-ask="summary" data-i18n="ai.p.outlook">Write today's market outlook</div>
+            <div class="chip" data-ask="breakeven" data-i18n="ai.p.stop">Explain why the stop was moved</div>
+            <div class="chip" data-ask="explain" data-i18n="ai.p.fromPositions">Create a post from my positions</div>
+            <div class="chip" data-ask="risk" data-i18n="ai.p.risk">Write a professional risk reminder</div>
+            <div class="chip" data-ask="vip" data-i18n="ai.p.vip">Promote my VIP channel</div>
           </div>
 
           <div class="chat" id="chat">
-            <div class="msg ai">I draft from your verified trade record — the
+            <div class="msg ai" data-i18n="ai.intro">I draft from your verified trade record — the
 fills, tickets and stops your broker actually reported.
 
 I will not invent a price, a profit or a result. Pick a prompt, or write
@@ -307,35 +310,35 @@ your own, and I'll prepare something for your approval.</div>
           </div>
 
           <div class="sep"></div>
-          <label for="aiInput">Your instruction</label>
+          <label for="aiInput" data-i18n="os.yourInstruction">Your instruction</label>
           <textarea id="aiInput" style="min-height:80px"
-            placeholder="e.g. keep it short, mention that the stop is now at entry"></textarea>
+            data-i18n-attr="placeholder:ai.instructionPlaceholder" placeholder="e.g. keep it short, mention that the stop is now at entry"></textarea>
           <div class="row" style="margin-top:12px;flex-wrap:wrap">
-            <button class="btn gold" id="aiGo">Draft with AI</button>
+            <button class="btn gold" id="aiGo" data-i18n="desk.draftWithAI">Draft with AI</button>
             <span class="tiny" id="aiState"></span>
           </div>
         </div>
 
         <div class="card">
-          <div class="h-md">Preview &amp; send</div>
-          <div class="tiny" style="margin-top:6px">Edit freely. It is checked
+          <div class="h-md" data-i18n="os.previewSend">Preview &amp; send</div>
+          <div class="tiny" style="margin-top:6px" data-i18n="ai.editFreely">Edit freely. It is checked
             again before anything leaves.</div>
           <textarea id="aiDraftBox" style="margin-top:12px;min-height:210px"
-            placeholder="Your approved draft appears here."></textarea>
+            data-i18n-attr="placeholder:ai.draftPlaceholder" placeholder="Your approved draft appears here."></textarea>
 
-          <label style="margin-top:14px">Destination</label>
+          <label style="margin-top:14px" data-i18n="os.destination">Destination</label>
           <div class="chips">
             <div class="chip on" data-dest="telegram">Telegram</div>
-            <div class="chip" data-dest="community">Community</div>
-            <div class="chip" data-dest="announce">Announcement</div>
-            <div class="chip" data-dest="academy">Academy draft</div>
-            <div class="chip" data-dest="website">Website draft</div>
+            <div class="chip" data-dest="community" data-i18n="community.title">Community</div>
+            <div class="chip" data-dest="announce" data-i18n="os.announcement">Announcement</div>
+            <div class="chip" data-dest="academy" data-i18n="os.academyDraft">Academy draft</div>
+            <div class="chip" data-dest="website" data-i18n="os.websiteDraft">Website draft</div>
           </div>
 
           <button class="btn gold full" id="aiSend" style="margin-top:14px"
-            disabled>Send</button>
+            disabled data-i18n="common.send">Send</button>
           <div class="tiny" id="sendState" style="margin-top:9px"></div>
-          <div class="note" style="margin-top:12px">Telegram is a real send to
+          <div class="note" style="margin-top:12px" data-i18n="ai.destinationNote">Telegram is a real send to
             your demo channel and needs your explicit click. The other
             destinations are demonstration surfaces in this walkthrough.</div>
         </div>
@@ -345,9 +348,9 @@ your own, and I'll prepare something for your approval.</div>
     <!-- LIVE -->
     <section class="pane" id="pane-live">
       <div class="topbar">
-        <div><div class="eyebrow">Deliver</div>
-          <h1 class="h-lg" style="margin-top:5px">Live Sessions</h1></div>
-        <button class="btn gold preview" data-preview="Session composer">
+        <div><div class="eyebrow" data-i18n="navgrp.deliver">Deliver</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="live.title">Live Sessions</h1></div>
+        <button class="btn gold preview" data-preview="preview.sessionComposer" data-i18n="os.createSession">
           Create session</button>
       </div>
 
@@ -355,74 +358,75 @@ your own, and I'll prepare something for your approval.</div>
         <div class="spread" style="flex-wrap:wrap">
           <div>
             <div class="row"><span class="dot live"></span>
-              <span class="eyebrow" style="color:var(--red)">Next session</span>
-              <span class="tag demo">demo schedule</span></div>
-            <div class="h-lg" style="margin-top:9px">London Session — Live Trade
+              <span class="eyebrow" style="color:var(--red)" data-i18n="os.nextSession">Next session</span>
+              <span class="tag demo" data-i18n="portal.demoSchedule">demo schedule</span></div>
+            <div class="h-lg" style="margin-top:9px" data-i18n="portal.sessionTitle">London Session — Live Trade
               Management</div>
-            <div class="tiny" style="margin-top:7px">Forex &amp; Gold ·
-              hosted by <span data-brand>SKLZ Pro Trader</span> · VIP + Pro Academy</div>
+            <div class="tiny" style="margin-top:7px"><span data-i18n="os.fxGoldHosted">Forex &amp; Gold ·
+              hosted by</span> <span data-brand>SKLZ Pro Trader</span> · VIP + Pro Academy</div>
           </div>
           <div style="text-align:right">
-            <div class="eyebrow">Starts in</div>
+            <div class="eyebrow" data-i18n="portal.startsIn">Starts in</div>
             <div class="mono" id="cd" style="font-size:30px;font-weight:650;
               letter-spacing:-.02em;margin-top:6px">—</div>
             <button class="btn gold preview" style="margin-top:12px"
-              data-preview="Live room">Join live</button>
+              data-preview="preview.liveRoom" data-i18n="portal.joinLive">Join live</button>
           </div>
         </div>
       </div>
 
       <div class="grid g3" style="margin-bottom:18px">
-        <div class="card"><div class="eyebrow">Upcoming</div>
+        <div class="card"><div class="eyebrow" data-i18n="live.upcoming">Upcoming</div>
           <div class="v" style="font-size:28px;font-weight:650;margin-top:7px">4</div>
-          <div class="tiny">this week</div></div>
-        <div class="card"><div class="eyebrow">Live now</div>
+          <div class="tiny" data-i18n="os.thisWeek">this week</div></div>
+        <div class="card"><div class="eyebrow" data-i18n="os.liveNow">Live now</div>
           <div class="v" style="font-size:28px;font-weight:650;margin-top:7px">0</div>
-          <div class="tiny">next starts shortly</div></div>
-        <div class="card"><div class="eyebrow">Replays</div>
+          <div class="tiny" data-i18n="os.nextStartsShortly">next starts shortly</div></div>
+        <div class="card"><div class="eyebrow" data-i18n="portal.replays">Replays</div>
           <div class="v" style="font-size:28px;font-weight:650;margin-top:7px">36</div>
-          <div class="tiny">available to members</div></div>
+          <div class="tiny" data-i18n="os.availableToMembers">available to members</div></div>
       </div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="spread"><div class="h-md">Schedule</div>
-            <span class="tag demo">demo</span></div>
+          <div class="spread"><div class="h-md" data-i18n="os.schedule">Schedule</div>
+            <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
           <div class="scroll-x" style="margin-top:12px"><table>
-            <tr><th>Session</th><th>Market</th><th>Access</th><th>When</th><th>State</th></tr>
-            <tr><td>London Session</td><td>FX · Gold</td><td>VIP</td>
-              <td>Today 08:00</td><td><span class="tag red">soon</span></td></tr>
-            <tr><td>New York Session</td><td>Indices</td><td>VIP</td>
-              <td>Today 14:30</td><td><span class="tag">scheduled</span></td></tr>
-            <tr><td>Weekly Market Outlook</td><td>All</td><td>Members</td>
-              <td>Sunday 18:00</td><td><span class="tag">scheduled</span></td></tr>
-            <tr><td>Live Trade Management</td><td>FX</td><td>All Access</td>
-              <td>Wed 11:00</td><td><span class="tag">scheduled</span></td></tr>
-            <tr><td>Sunday Market Preparation</td><td>All</td><td>Public</td>
-              <td>Sunday 16:00</td><td><span class="tag green">open</span></td></tr>
+            <tr><th data-i18n="os.session">Session</th><th data-i18n="os.market">Market</th><th data-i18n="os.access">Access</th><th data-i18n="os.when">When</th><th data-i18n="os.state">State</th></tr>
+            <tr><td data-i18n="portal.londonSession">London Session</td><td data-i18n="os.fxGold">FX · Gold</td><td>VIP</td>
+              <td data-i18n="day.at" data-i18n-vars='{"d":"__day.today__","t":"08:00"}'>Today · 08:00</td><td><span class="tag red" data-i18n="os.soon">soon</span></td></tr>
+            <tr><td data-i18n="portal.nySession">New York Session</td><td data-i18n="os.indices">Indices</td><td>VIP</td>
+              <td data-i18n="day.at" data-i18n-vars='{"d":"__day.today__","t":"14:30"}'>Today · 14:30</td><td><span class="tag" data-i18n="os.scheduled">scheduled</span></td></tr>
+            <tr><td data-i18n="os.weeklyOutlook">Weekly Market Outlook</td><td data-i18n="common.all">All</td><td data-i18n="os.members">Members</td>
+              <td data-i18n="day.at" data-i18n-vars='{"d":"__day.sun__","t":"18:00"}'>Sunday · 18:00</td><td><span class="tag" data-i18n="os.scheduled">scheduled</span></td></tr>
+            <tr><td data-i18n="os.liveTradeMgmt">Live Trade Management</td><td data-i18n="os.fx">FX</td><td data-i18n="os.allAccess">All Access</td>
+              <td data-i18n="day.at" data-i18n-vars='{"d":"__day.wed__","t":"11:00"}'>Wed · 11:00</td><td><span class="tag" data-i18n="os.scheduled">scheduled</span></td></tr>
+            <tr><td data-i18n="os.sundayPrep">Sunday Market Preparation</td><td data-i18n="common.all">All</td><td data-i18n="os.public">Public</td>
+              <td data-i18n="day.at" data-i18n-vars='{"d":"__day.sun__","t":"16:00"}'>Sunday · 16:00</td><td><span class="tag green" data-i18n="os.open">open</span></td></tr>
           </table></div>
         </div>
 
         <div class="card">
-          <div class="spread"><div class="h-md">Live room</div>
-            <span class="tag demo">embed-ready shell</span></div>
+          <div class="spread"><div class="h-md" data-i18n="os.liveRoom">Live room</div>
+            <span class="tag demo" data-i18n="os.embedShell">embed-ready shell</span></div>
           <div style="margin-top:12px;aspect-ratio:16/9;border-radius:12px;
             border:1px solid var(--line2);background:
             radial-gradient(70% 90% at 50% 0%,rgba(61,139,255,.16),transparent 60%),
             var(--panel2);display:grid;place-items:center">
             <div style="text-align:center">
-              <div class="tiny">Video provider slot</div>
-              <div class="tiny" style="margin-top:5px;color:var(--dim)">
+              <div class="tiny" data-i18n="os.videoSlot">Video provider slot</div>
+              <div class="tiny" style="margin-top:5px;color:var(--dim)" data-i18n="os.streamProviders">
                 YouTube Live · Zoom · Meet · RTMP</div>
             </div>
           </div>
           <div class="grid g2" style="margin-top:12px;gap:10px">
-            <div class="note">Participants · <b>—</b> · live chat, pinned
-              message and shared charts attach to this room.</div>
-            <div class="note">After the session, the AI Assistant can draft a
+            <div class="note"><span data-i18n="os.participants">Participants</span> · <b>—</b> ·
+              <span data-i18n="os.liveRoomNote">live chat, pinned message and shared
+              charts attach to this room.</span></div>
+            <div class="note" data-i18n="os.recapNote">After the session, the AI Assistant can draft a
               recap from the session notes you keep.</div>
           </div>
-          <div class="tiny" style="margin-top:10px">No streaming infrastructure
+          <div class="tiny" style="margin-top:10px" data-i18n="os.noStreaming">No streaming infrastructure
             is included in this demo. The room is built so a provider can be
             connected later without rework.</div>
         </div>
@@ -432,37 +436,37 @@ your own, and I'll prepare something for your approval.</div>
     <!-- ACADEMY -->
     <section class="pane" id="pane-academy">
       <div class="topbar">
-        <div><div class="eyebrow">Deliver</div>
-          <h1 class="h-lg" style="margin-top:5px">Academy</h1></div>
-        <div class="row"><span class="tag demo">demo curriculum</span>
-          <button class="btn sm preview" data-preview="Course builder">
+        <div><div class="eyebrow" data-i18n="navgrp.deliver">Deliver</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="academy.title">Academy</h1></div>
+        <div class="row"><span class="tag demo" data-i18n="os.demoCurriculum">demo curriculum</span>
+          <button class="btn sm preview" data-preview="preview.courseBuilder" data-i18n="os.newCourse">
             New course</button></div>
       </div>
 
       <div class="grid g4" style="margin-bottom:18px">
-        <div class="kpi"><div class="l">Courses <span class="tag demo">demo</span></div>
+        <div class="kpi"><div class="l"><span data-i18n="os.coursesLabel">Courses</span> <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
           <div class="v">8</div></div>
-        <div class="kpi"><div class="l">Lessons <span class="tag demo">demo</span></div>
+        <div class="kpi"><div class="l"><span data-i18n="os.lessonsLabel">Lessons</span> <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
           <div class="v">96</div></div>
-        <div class="kpi"><div class="l">Students <span class="tag demo">demo</span></div>
+        <div class="kpi"><div class="l"><span data-i18n="os.studentsLabel">Students</span> <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
           <div class="v">312</div></div>
-        <div class="kpi"><div class="l">Avg. completion
-            <span class="tag demo">demo</span></div>
+        <div class="kpi"><div class="l"><span data-i18n="os.avgCompletion">Avg. completion</span>
+            <span class="tag demo" data-i18n="os.demoTag">demo</span></div>
           <div class="v up">64%</div></div>
       </div>
 
-      <div class="eyebrow" style="margin-bottom:12px">SKLZ Trading Academy</div>
+      <div class="eyebrow" style="margin-bottom:12px">SKLZ <span data-i18n="os.tradingAcademy">Trading Academy</span></div>
       <div class="grid g4" id="courses"></div>
 
       <div class="card" style="margin-top:18px">
-        <div class="h-md">What the provider manages</div>
+        <div class="h-md" data-i18n="os.providerManages">What the provider manages</div>
         <div class="grid g4" style="margin-top:14px;gap:12px">
-          <div class="note">Courses, modules and lessons</div>
-          <div class="note">Video, documents and quizzes</div>
-          <div class="note">Student access by membership tier</div>
-          <div class="note">Progress, completion and certificates</div>
+          <div class="note" data-i18n="os.coursesModules">Courses, modules and lessons</div>
+          <div class="note" data-i18n="os.videoDocsQuizzes">Video, documents and quizzes</div>
+          <div class="note" data-i18n="os.studentAccess">Student access by membership tier</div>
+          <div class="note" data-i18n="os.progressCerts">Progress, completion and certificates</div>
         </div>
-        <div class="tiny" style="margin-top:12px">The point of the Academy is
+        <div class="tiny" style="margin-top:12px" data-i18n="os.academyPoint">The point of the Academy is
           that a provider sells expertise from the same system that already
           sells signals — one audience, one checkout, one login.</div>
       </div>
@@ -471,16 +475,16 @@ your own, and I'll prepare something for your approval.</div>
     <!-- COMMUNITY -->
     <section class="pane" id="pane-community">
       <div class="topbar">
-        <div><div class="eyebrow">Engage</div>
-          <h1 class="h-lg" style="margin-top:5px">Community</h1></div>
-        <div class="row"><span class="tag demo">demo community</span>
-          <button class="btn sm preview" data-preview="Channel composer">
+        <div><div class="eyebrow" data-i18n="site.caps.engage">Engage</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="community.title">Community</h1></div>
+        <div class="row"><span class="tag demo" data-i18n="portal.demoCommunity">demo community</span>
+          <button class="btn sm preview" data-preview="preview.channelComposer" data-i18n="os.newChannel">
             New channel</button></div>
       </div>
 
       <div class="room">
         <div class="card tight">
-          <div class="eyebrow" style="padding:4px 8px 8px" data-brand>Community</div>
+          <div class="eyebrow" style="padding:4px 8px 8px" data-brand data-i18n="community.title">Community</div>
           <div id="chans"></div>
         </div>
 
@@ -489,42 +493,42 @@ your own, and I'll prepare something for your approval.</div>
             padding-bottom:12px;margin-bottom:6px">
             <div class="row"><span class="hash" style="color:var(--dim2);
               font-weight:700">#</span>
-              <span class="h-sm" id="chanName">signal-discussion</span></div>
-            <span class="tag">42 online</span>
+              <span class="h-sm" id="chanName" data-i18n="room.signalDiscussion">signal-discussion</span></div>
+            <span class="tag"><span data-i18n="portal.onlineCount" data-i18n-vars='{"n":42}'>42 online</span></span>
           </div>
           <div id="posts"></div>
           <div class="sep"></div>
           <div class="row">
-            <input type="text" placeholder="Message #signal-discussion"
-              onkeydown="if(event.key==='Enter'){toast('Community posting — comes with implementation');this.value=''}">
-            <button class="btn sm preview" data-preview="Community posting">Send</button>
+            <input type="text" data-i18n-attr="placeholder:community.messageRoom" data-i18n-vars='{"room":"__room.signalDiscussion__"}' placeholder="Message #signal-discussion"
+              id="communityInput">
+            <button class="btn sm preview" data-preview="preview.communityPosting" data-i18n="common.send">Send</button>
           </div>
         </div>
 
         <div class="card tight members">
-          <div class="eyebrow" style="padding:4px 4px 10px">Members</div>
+          <div class="eyebrow" style="padding:4px 4px 10px" data-i18n="os.members">Members</div>
           <div class="stack" style="gap:9px">
             <div class="row"><span class="ava gold" style="width:26px;height:26px"
-              data-initials>SK</span><div><div style="font-size:13px" data-brand>
-              Provider</div><div class="tiny">Trader · Admin</div></div></div>
+              data-initials>SK</span><div><div style="font-size:13px" data-brand data-i18n="os.provider">
+              Provider</div><div class="tiny" data-i18n="os.traderAdmin">Trader · Admin</div></div></div>
             <div class="row"><span class="ava violet" style="width:26px;height:26px">MO</span>
-              <div><div style="font-size:13px">Moderator</div>
-              <div class="tiny">Moderator</div></div></div>
+              <div><div style="font-size:13px" data-i18n="os.moderator">Moderator</div>
+              <div class="tiny" data-i18n="os.moderator">Moderator</div></div></div>
             <div class="row"><span class="ava green" style="width:26px;height:26px">VP</span>
-              <div><div style="font-size:13px">VIP member</div>
+              <div><div style="font-size:13px" data-i18n="os.vipMember">VIP member</div>
               <div class="tiny">VIP</div></div></div>
             <div class="row"><span class="ava" style="width:26px;height:26px">ST</span>
-              <div><div style="font-size:13px">Student</div>
-              <div class="tiny">Academy</div></div></div>
+              <div><div style="font-size:13px" data-i18n="os.student">Student</div>
+              <div class="tiny" data-i18n="academy.title">Academy</div></div></div>
           </div>
           <div class="sep"></div>
-          <div class="eyebrow">Roles</div>
+          <div class="eyebrow" data-i18n="os.roles">Roles</div>
           <div class="row wrap-r" style="margin-top:9px">
-            <span class="tag gold">Admin</span><span class="tag">Trader</span>
-            <span class="tag violet">Moderator</span><span class="tag green">VIP</span>
-            <span class="tag">Member</span><span class="tag">Student</span>
+            <span class="tag gold" data-i18n="os.admin">Admin</span><span class="tag" data-i18n="os.trader">Trader</span>
+            <span class="tag violet" data-i18n="os.moderator">Moderator</span><span class="tag green">VIP</span>
+            <span class="tag" data-i18n="portal.member">Member</span><span class="tag" data-i18n="os.student">Student</span>
           </div>
-          <div class="note" style="margin-top:12px">Presence and counts are
+          <div class="note" style="margin-top:12px" data-i18n="os.presenceNote">Presence and counts are
             demonstration UI. No presence backend is included.</div>
         </div>
       </div>
@@ -533,33 +537,33 @@ your own, and I'll prepare something for your approval.</div>
     <!-- AUDIENCE -->
     <section class="pane" id="pane-audience">
       <div class="topbar">
-        <div><div class="eyebrow">Grow</div>
-          <h1 class="h-lg" style="margin-top:5px">Audience &amp; Leads</h1></div>
-        <span class="tag demo">demo records</span>
+        <div><div class="eyebrow" data-i18n="site.caps.grow">Grow</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="audience.title">Audience &amp; Leads</h1></div>
+        <span class="tag demo" data-i18n="os.demoRecords">demo records</span>
       </div>
 
       <div class="grid g4" style="margin-bottom:18px">
-        <div class="kpi"><div class="l">New leads</div><div class="v">27</div>
-          <div class="d">last 7 days</div></div>
-        <div class="kpi"><div class="l">Qualified</div><div class="v">12</div>
-          <div class="d">answered the funnel</div></div>
-        <div class="kpi"><div class="l">Conversion</div><div class="v up">18%</div>
-          <div class="d">qualified → customer</div></div>
-        <div class="kpi"><div class="l">VIP interest</div>
-          <div class="v gold">9</div><div class="d">asked about VIP</div></div>
+        <div class="kpi"><div class="l" data-i18n="os.newLeads">New leads</div><div class="v">27</div>
+          <div class="d" data-i18n="os.last7">last 7 days</div></div>
+        <div class="kpi"><div class="l" data-i18n="os.qualified">Qualified</div><div class="v">12</div>
+          <div class="d" data-i18n="os.answeredFunnel">answered the funnel</div></div>
+        <div class="kpi"><div class="l" data-i18n="os.conversion">Conversion</div><div class="v up">18%</div>
+          <div class="d" data-i18n="os.qualifiedToCustomer">qualified → customer</div></div>
+        <div class="kpi"><div class="l" data-i18n="os.vipInterest">VIP interest</div>
+          <div class="v gold">9</div><div class="d" data-i18n="os.askedAboutVip">asked about VIP</div></div>
       </div>
 
       <div class="card">
         <div class="spread" style="margin-bottom:12px">
-          <div class="h-md">Leads</div>
+          <div class="h-md" data-i18n="os.leads">Leads</div>
           <div class="row wrap-r">
-            <span class="tag">New</span><span class="tag blue">Qualified</span>
-            <span class="tag violet">Interested</span>
-            <span class="tag green">Customer</span><span class="tag gold">Follow up</span>
+            <span class="tag" data-i18n="os.new">New</span><span class="tag blue" data-i18n="os.qualified">Qualified</span>
+            <span class="tag violet" data-i18n="os.interested">Interested</span>
+            <span class="tag green" data-i18n="os.customer">Customer</span><span class="tag gold" data-i18n="os.followUp">Follow up</span>
           </div>
         </div>
         <div class="scroll-x"><table id="leads"></table></div>
-        <div class="note" style="margin-top:14px">Your live funnel already
+        <div class="note" style="margin-top:14px" data-i18n="os.funnelFields">Your live funnel already
           captures these fields — type, workflow, audience, accounts, problem,
           the recommended package and whether a human was requested. The rows
           above are demonstration data; the real ones are admin-gated and are
@@ -570,53 +574,53 @@ your own, and I'll prepare something for your approval.</div>
     <!-- BRAND -->
     <section class="pane" id="pane-brand">
       <div class="topbar">
-        <div><div class="eyebrow">Grow</div>
-          <h1 class="h-lg" style="margin-top:5px">Brand &amp; Channel</h1></div>
-        <button class="btn sm preview" data-preview="Brand save">
+        <div><div class="eyebrow" data-i18n="site.caps.grow">Grow</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="brand.title">Brand &amp; Channel</h1></div>
+        <button class="btn sm preview" data-preview="preview.brandSave" data-i18n="os.savePreview">
           Save preview</button>
       </div>
 
       <div class="grid g2">
         <div class="card">
-          <div class="h-md" style="margin-bottom:14px">Provider identity</div>
+          <div class="h-md" style="margin-bottom:14px" data-i18n="os.providerIdentity">Provider identity</div>
           <div class="stack" style="gap:14px">
-            <div><label for="bName">Provider name</label>
+            <div><label for="bName" data-i18n="os.providerName">Provider name</label>
               <input type="text" id="bName"></div>
-            <div><label for="bChan">Telegram channel</label>
+            <div><label for="bChan" data-i18n="os.telegramChannel">Telegram channel</label>
               <input type="text" id="bChan"></div>
             <div class="grid g2" style="gap:12px">
-              <div><label for="bLang">Language</label>
+              <div><label for="bLang" data-i18n="brand.language">Language</label>
                 <select id="bLang"><option value="en">English</option>
                   <option value="ar">العربية</option>
                   <option value="ru">Русский</option></select></div>
-              <div><label for="bStyle">Signal style</label>
-                <select id="bStyle"><option value="full">Full detail</option>
-                  <option value="compact">Compact</option></select></div>
+              <div><label for="bStyle" data-i18n="os.signalStyle">Signal style</label>
+                <select id="bStyle"><option value="full" data-i18n="os.fullDetail">Full detail</option>
+                  <option value="compact" data-i18n="os.compact">Compact</option></select></div>
             </div>
-            <div><label for="bDisc">Signal disclaimer</label>
-              <input type="text" id="bDisc" value="Not financial advice."></div>
-            <div><label>Accent</label>
+            <div><label for="bDisc" data-i18n="os.signalDisclaimer">Signal disclaimer</label>
+              <input type="text" id="bDisc" data-i18n-attr="value:os.notFinancialAdvice" value="Not financial advice."></div>
+            <div><label data-i18n="os.accent">Accent</label>
               <div class="chips" id="accents">
-                <div class="chip on" data-accent="#F5A623">Gold</div>
-                <div class="chip" data-accent="#3D8BFF">Blue</div>
-                <div class="chip" data-accent="#12C48B">Green</div>
-                <div class="chip" data-accent="#8B7CFF">Violet</div>
+                <div class="chip on" data-accent="#F5A623" data-i18n="community.r.gold">Gold</div>
+                <div class="chip" data-accent="#3D8BFF" data-i18n="os.blue">Blue</div>
+                <div class="chip" data-accent="#12C48B" data-i18n="os.green">Green</div>
+                <div class="chip" data-accent="#8B7CFF" data-i18n="os.violet">Violet</div>
               </div></div>
           </div>
         </div>
 
         <div class="card">
-          <div class="spread"><div class="h-md">Live preview</div>
-            <span class="tag demo">example trade</span></div>
+          <div class="spread"><div class="h-md" data-i18n="os.livePreview">Live preview</div>
+            <span class="tag demo" data-i18n="os.exampleTrade">example trade</span></div>
           <div class="tg" style="margin-top:14px">
             <div class="hd"><div class="av" id="pvAv">SK</div>
               <div><div style="font-size:13px;font-weight:650" id="pvChan">
                 SKLZ Signals</div>
-                <div style="font-size:10.5px;color:var(--dim2)">channel</div></div></div>
+                <div style="font-size:10.5px;color:var(--dim2)" data-i18n="os.channelLc">channel</div></div></div>
             <pre id="pvText"></pre>
-            <div class="ft">This is how your followers see a signal</div>
+            <div class="ft" data-i18n="os.howFollowersSee">This is how your followers see a signal</div>
           </div>
-          <div class="note" style="margin-top:14px">Presentation only. Changing
+          <div class="note" style="margin-top:14px" data-i18n="os.brandPresentationNote">Presentation only. Changing
             these fields here does not reconfigure your live channel — that is
             part of implementation.</div>
         </div>
@@ -626,46 +630,46 @@ your own, and I'll prepare something for your approval.</div>
     <!-- SELL -->
     <section class="pane" id="pane-sell">
       <div class="topbar">
-        <div><div class="eyebrow">Monetize</div>
-          <h1 class="h-lg" style="margin-top:5px">Sell</h1></div>
-        <a class="btn sm" id="sellDeep" target="_blank">Open sales funnel ↗</a>
+        <div><div class="eyebrow" data-i18n="os.monetize">Monetize</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="sell.title">Sell</h1></div>
+        <a class="btn sm" id="sellDeep" target="_blank" data-i18n="os.openFunnel">Open sales funnel ↗</a>
       </div>
 
       <div class="flow" style="margin-bottom:18px">
-        <div class="step"><div class="n">Attract</div><div class="t">Content</div>
-          <div class="s">Website, channel and live sessions.</div></div>
-        <div class="step"><div class="n">Capture</div><div class="t">Telegram</div>
-          <div class="s">One deep link into your funnel.</div></div>
-        <div class="step"><div class="n">Qualify</div><div class="t">AI</div>
-          <div class="s">Five questions, then a recommendation.</div></div>
-        <div class="step"><div class="n">Offer</div><div class="t">VIP</div>
-          <div class="s">The right tier, not the biggest one.</div></div>
-        <div class="step"><div class="n">Convert</div><div class="t">Checkout</div>
-          <div class="s">Card or crypto, on your own terms.</div></div>
+        <div class="step"><div class="n" data-i18n="os.attract">Attract</div><div class="t" data-i18n="os.content">Content</div>
+          <div class="s" data-i18n="os.funnel1">Website, channel and live sessions.</div></div>
+        <div class="step"><div class="n" data-i18n="os.capture">Capture</div><div class="t">Telegram</div>
+          <div class="s" data-i18n="os.funnel2">One deep link into your funnel.</div></div>
+        <div class="step"><div class="n" data-i18n="os.qualify">Qualify</div><div class="t">AI</div>
+          <div class="s" data-i18n="os.funnel3">Five questions, then a recommendation.</div></div>
+        <div class="step"><div class="n" data-i18n="os.offer">Offer</div><div class="t">VIP</div>
+          <div class="s" data-i18n="os.funnel4">The right tier, not the biggest one.</div></div>
+        <div class="step"><div class="n" data-i18n="os.convert">Convert</div><div class="t" data-i18n="os.checkout">Checkout</div>
+          <div class="s" data-i18n="os.funnel5">Card or crypto, on your own terms.</div></div>
       </div>
 
       <div class="grid g4">
-        <div class="card"><div class="eyebrow">Free</div>
-          <div class="h-md" style="margin-top:7px">Telegram Channel</div>
-          <div class="tiny" style="margin-top:7px">Public signals and market
+        <div class="card"><div class="eyebrow" data-i18n="os.free">Free</div>
+          <div class="h-md" style="margin-top:7px" data-i18n="os.telegramChannelName">Telegram Channel</div>
+          <div class="tiny" style="margin-top:7px" data-i18n="os.tier1">Public signals and market
             notes. The top of your funnel.</div></div>
-        <div class="card"><div class="eyebrow">Paid</div>
-          <div class="h-md" style="margin-top:7px">VIP Channel</div>
-          <div class="tiny" style="margin-top:7px">Full signal lifecycle,
+        <div class="card"><div class="eyebrow" data-i18n="os.paid">Paid</div>
+          <div class="h-md" style="margin-top:7px" data-i18n="os.vipChannel">VIP Channel</div>
+          <div class="tiny" style="margin-top:7px" data-i18n="os.tier2">Full signal lifecycle,
             management updates and session access.</div></div>
-        <div class="card"><div class="eyebrow">Recurring</div>
-          <div class="h-md" style="margin-top:7px">Monthly Membership</div>
-          <div class="tiny" style="margin-top:7px">Signals, community and live
+        <div class="card"><div class="eyebrow" data-i18n="os.recurring">Recurring</div>
+          <div class="h-md" style="margin-top:7px" data-i18n="os.monthlyMembership">Monthly Membership</div>
+          <div class="tiny" style="margin-top:7px" data-i18n="os.tier3">Signals, community and live
             sessions, billed monthly.</div></div>
-        <div class="card glow"><div class="eyebrow">Best value</div>
-          <div class="h-md" style="margin-top:7px">Annual Membership</div>
-          <div class="tiny" style="margin-top:7px">Everything, plus the Academy
+        <div class="card glow"><div class="eyebrow" data-i18n="os.bestValue">Best value</div>
+          <div class="h-md" style="margin-top:7px" data-i18n="os.annualMembership">Annual Membership</div>
+          <div class="tiny" style="margin-top:7px" data-i18n="os.tier4">Everything, plus the Academy
             and the private community.</div></div>
       </div>
 
       <div class="card" style="margin-top:18px">
-        <div class="h-md">Your funnel already runs</div>
-        <div class="tiny" style="margin-top:8px">A prospect opens your deep
+        <div class="h-md" data-i18n="os.funnelRuns">Your funnel already runs</div>
+        <div class="tiny" style="margin-top:8px" data-i18n="os.funnelExplain">A prospect opens your deep
           link, the sales bot qualifies them across five questions, and the
           recommendation is drawn from your central package configuration —
           so a price can never drift between the bot, the site and checkout.
@@ -677,35 +681,37 @@ your own, and I'll prepare something for your approval.</div>
     <!-- PRICING -->
     <section class="pane" id="pane-pricing">
       <div class="topbar">
-        <div><div class="eyebrow">Implementation</div>
-          <h1 class="h-lg" style="margin-top:5px">Pricing</h1></div>
-        <span class="tag green" id="priceSrc">from live package config</span>
+        <div><div class="eyebrow" data-i18n="os.implementation">Implementation</div>
+          <h1 class="h-lg" style="margin-top:5px" data-i18n="nav.pricing">Pricing</h1></div>
+        <span class="tag green" id="priceSrc" data-i18n="os.fromLivePackage">from live package config</span>
       </div>
       <div class="grid g3" id="packs"></div>
       <div class="grid g2" style="margin-top:18px">
-        <div class="card"><div class="h-md">What implementation includes</div>
-          <div class="tiny" style="margin-top:9px">VPS · MT5 · SKLZ Runner ·
+        <div class="card"><div class="h-md" data-i18n="os.implIncludes">What implementation includes</div>
+          <div class="tiny" style="margin-top:9px" data-i18n="os.implIncludesBody">VPS · MT5 · SKLZ Runner ·
             master account · Telegram channel wiring · copier configuration ·
             testing · go-live. The monthly service covers the platform,
             automation, hosting, maintenance and support.</div></div>
-        <div class="card"><div class="h-md">What we do not claim</div>
-          <div class="tiny" style="margin-top:9px">No profit figure, no win
+        <div class="card"><div class="h-md" data-i18n="os.weDoNotClaim">What we do not claim</div>
+          <div class="tiny" style="margin-top:9px" data-i18n="os.noClaimBody">No profit figure, no win
             rate, no return. Trading carries risk of loss, and these are
             software and operations tools — not financial advice and not a
             promise of results.</div></div>
       </div>
       <div class="row" style="margin-top:20px;flex-wrap:wrap">
-        <a class="btn gold lg" id="ctaBuy">GET MY TRADING DESK</a>
-        <a class="btn lg" id="ctaDemo">BOOK A DEMO</a>
+        <a class="btn gold lg" id="ctaBuy" data-i18n="os.getMyDesk">GET MY TRADING DESK</a>
+        <a class="btn lg" id="ctaDemo" data-i18n="os.bookDemoCaps">BOOK A DEMO</a>
       </div>
     </section>
 
     <div class="foot">
-      SKLZ Labs · Software and operations tools — not financial advice ·
-      Trading involves risk of loss<br>
-      Execution shown in the Signal Desk is real on an MT5 broker DEMO account.
-      Automation is live; funds are virtual. Sections marked <b>demo</b> are
-      presentation content for this walkthrough.
+      SKLZ Labs · <span data-i18n="os.footLine1">Software and operations tools —
+      not financial advice · Trading involves risk of loss</span><br>
+      <span data-i18n="os.footLine2">Execution shown in the Signal Desk is real on an
+      MT5 broker DEMO account. Automation is live; funds are virtual.</span>
+      <span data-i18n="os.sectionsMarked">Sections marked</span>
+      <b data-i18n="os.demoTag">demo</b>
+      <span data-i18n="os.arePresentation">are presentation content for this walkthrough.</span>
     </div>
 
   </main>
@@ -714,120 +720,75 @@ your own, and I'll prepare something for your approval.</div>
 <script src="sklz-os.js"></script>
 <script>
 /* ── Telegram previews. Example trades, plainly labelled. ── */
-const PREV = {
-  open:`📊 {CH} — LIVE DEMO SIGNAL
-
-BTCUSD SELL
-
-Entry: 77183.5
-Volume: 0.01
-SL: 77283.26
-
-🟢 STATUS: OPEN
-
-Ticket: 1928027035
-
-Executed on an MT5 broker DEMO account.
-Automation is live; funds are virtual.
-
-{DISC}`,
-  updated:`📊 {CH} — LIVE DEMO SIGNAL
-
-BTCUSD SELL
-
-Entry: 77183.5
-Volume: 0.01
-SL: 77483.26
-
-🔄 STATUS: UPDATED
-
-Ticket: 1928027035
-
-Executed on an MT5 broker DEMO account.
-Automation is live; funds are virtual.
-
-{DISC}`,
-  be:`📊 {CH} — LIVE DEMO SIGNAL
-
-BTCUSD SELL
-
-Entry: 77183.5
-Volume: 0.01
-SL: 77183.5
-
-🛡 STATUS: BREAKEVEN
-
-Ticket: 1928027035
-
-Executed on an MT5 broker DEMO account.
-Automation is live; funds are virtual.
-
-{DISC}`,
-  closed:`📊 {CH} — LIVE DEMO SIGNAL
-
-BTCUSD SELL
-
-Entry: 77183.5
-Volume: 0.01
-
-✅ STATUS: CLOSED
-Reason: Closed at broker
-
-Ticket: 1928027035
-
-Executed on an MT5 broker DEMO account.
-Automation is live; funds are virtual.
-
-{DISC}`};
+/* The signal itself is what a follower reads, so its labels follow the
+   locale. Symbol, side, prices, volume and ticket are broker facts and are
+   printed exactly as the trade record holds them. */
+const PREV_ROWS = {
+  open:    { icon:"🟢", state:"tg.statusOpen",   sl:"77283.26", reason:null },
+  updated: { icon:"🔄", state:"status.updated",  sl:"77483.26", reason:null },
+  be:      { icon:"🛡", state:"demo.breakevenState", sl:"77183.5", reason:null },
+  closed:  { icon:"✅", state:"status.closed",   sl:null,       reason:"tg.closedAtBroker" }
+};
+function prevText(kind){
+  const r = PREV_ROWS[kind] || PREV_ROWS.open, T = I18N.T;
+  const lines = [
+    `📊 {CH} — ${T("tg.liveDemoSignal")}`, "",
+    `BTCUSD ${T("desk.sellSide")}`, "",
+    `${T("tg.entry")}: 77183.5`,
+    `${T("desk.volume")}: 0.01`
+  ];
+  if (r.sl) lines.push(`${T("tg.sl")}: ${r.sl}`);
+  lines.push("", `${r.icon} ${T("tg.status")}: ${T(r.state)}`);
+  if (r.reason) lines.push(`${T("tg.reason")}: ${T(r.reason)}`);
+  lines.push("", `${T("desk.ticket")}: 1928027035`, "",
+             T("cmp.brokerDemo"), "", "{DISC}");
+  return lines.join("\n");
+}
+const PREV = new Proxy({}, { get: (_, k) => prevText(String(k)) });
 
 function fill(t){
   return t.replace(/{CH}/g, BRAND.channel)
           .replace(/{DISC}/g, (document.getElementById("bDisc")||{}).value
-                              || "Not financial advice.");
+                              || I18N.T("os.notFinancialAdvice"));
 }
 
 /* ── Academy ── */
 const COURSES = [
-  ["01","Market Foundations","How price, sessions and instruments actually work.",100],
-  ["02","Market Structure","Trend, range, and the levels that matter.",100],
-  ["03","Risk Management","Position size, exposure and the loss you plan for.",72],
-  ["04","Trade Execution","Entries, orders and the mechanics of getting filled.",48],
-  ["05","Signal Reading","How to read a signal and manage it after entry.",20],
-  ["06","Trading Psychology","Process over outcome, and staying with the plan.",0],
-  ["07","Strategy Development","Building and testing something repeatable.",0],
-  ["08","Professional Trading Operations","Running it like a business.",0],
+  ["01","academy.c.foundations","academy.d.foundations",100],
+  ["02","academy.c.structure","academy.d.structure",100],
+  ["03","academy.c.risk","academy.d.risk",72],
+  ["04","academy.c.execution","academy.d.execution",48],
+  ["05","academy.c.signals","academy.d.signals",20],
+  ["06","academy.c.psychology","academy.d.psychology",0],
+  ["07","academy.c.strategy","academy.d.strategy",0],
+  ["08","academy.c.operations","academy.d.operations",0],
 ];
 
 /* ── Community ── */
 const CHANNELS = [
-  ["announcements","announcement"],["general","text"],["market-outlook","text"],
-  ["forex","text"],["gold","text"],["crypto","text"],
-  ["signal-discussion","signal"],["trade-reviews","signal"],
-  ["academy-questions","academy"],["vip-lounge","vip"],
+  ["announcements","announcement","room.announcements"],["general","text","room.general"],
+  ["market-outlook","text","room.marketOutlook"],["forex","text","room.forex"],
+  ["gold","text","room.gold"],["crypto","text","room.crypto"],
+  ["signal-discussion","signal","room.signalDiscussion"],
+  ["trade-reviews","signal","room.tradeReviews"],
+  ["academy-questions","academy","room.academyQuestions"],
+  ["vip-lounge","vip","room.vipLounge"],
 ];
 const POSTS = [
-  ["gold","SK","Provider","Admin",
-   "BTCUSD SELL is live — ticket 1928027035. Stop sits above entry while we see how the London open behaves.",
-   "signal", 12],
-  ["violet","MO","Moderator","Moderator",
-   "Reminder: signal discussion belongs in this channel, not in announcements. Keeps the feed clean for everyone.",
-   "", 3],
-  ["green","VP","VIP member","VIP",
-   "Appreciated the stop move being explained rather than just appearing. That's the part most channels skip.",
-   "", 8],
-  ["","ST","Student","Academy",
-   "Working through Risk Management — is position size covered before or after the execution module?",
-   "", 2],
+  ["gold","SK","os.provider","os.admin","os.post.signal","signal", 12],
+  ["violet","MO","os.moderator","os.moderator","os.post.reminder","", 3],
+  ["green","VP","os.vipMember","os.vipMember","os.post.thanks","", 8],
+  ["","ST","os.student","academy.title","os.post.question","", 2],
 ];
 
 /* ── Leads (demonstration records) ── */
 const LEADS = [
-  ["Amir K.","@amirfx","demo_channel","Signal channel owner","VIP","Qualified","2h ago","blue"],
-  ["Dana R.","@danatrades","website","Own account automation","Signal Desk","Interested","5h ago","violet"],
-  ["Yusuf A.","@yusufmarkets","demo_channel","Several accounts","Pro","Customer","1d ago","green"],
-  ["Lina M.","—","live session","Starting a channel","—","New","1d ago",""],
-  ["Omar S.","@omar_s","ar_channel","Signal channel owner","Pro Trader OS","Follow up","2d ago","gold"],
-  ["Nadia H.","@nadiafx","academy","Education first","Academy","Qualified","3d ago","blue"],
+  ["Amir K.","@amirfx","os.src.demoChannel","os.int.owner","VIP","os.qualified","os.ago.2h","blue"],
+  ["Dana R.","@danatrades","os.src.website","os.int.ownAccount","Signal Desk","os.interested","os.ago.5h","violet"],
+  ["Yusuf A.","@yusufmarkets","os.src.demoChannel","os.int.several","Pro","os.customer","os.ago.1d","green"],
+  ["Lina M.","—","os.src.live","os.int.starting","—","os.new","os.ago.1d",""],
+  ["Omar S.","@omar_s","os.src.arChannel","os.int.owner","Pro Trader OS","os.followUp","os.ago.2d","gold"],
+  ["Nadia H.","@nadiafx","os.src.academy","os.int.education","Academy","os.qualified","os.ago.3d","blue"],
 ];
 
 /* ── RENDER FIRST ──────────────────────────────────────────────────
@@ -855,17 +816,20 @@ const LEADS = [
   const ad = document.getElementById("kActiveD");
   if (TOKEN) {
     a.innerHTML = '<span style="font-size:17px;font-weight:600;' +
-      'color:var(--gold2)">Live on your desk</span>';
-    ad.textContent = "positions are read and managed in the Signal Desk";
+      'color:var(--gold2)" data-i18n="os.liveOnDesk">Live on your desk</span>';
+    ad.textContent = I18N.T("os.positionsReadInDesk");
   } else {
     a.innerHTML = '<span style="font-size:17px;font-weight:600;' +
-      'color:var(--dim)">Private link required</span>';
-    ad.textContent = "open this page from your private demo link";
+      'color:var(--dim)" data-i18n="os.privateLinkRequired">Private link required</span>';
+    ad.textContent = I18N.T("os.openFromPrivateLink");
   }
 
-  /* Telegram previews */
+  /* Everything below renders from keys, so a language switch has to repaint
+     it — translateTree only reaches data-i18n nodes, not JS-built markup. */
   const pv = document.getElementById("tgPrev");
-  pv.textContent = fill(PREV.open);
+  function paintDemoData() {
+  const cur = document.querySelector("[data-prev].on");
+  pv.textContent = fill(PREV[(cur && cur.dataset.prev) || "open"]);
   document.querySelectorAll("[data-prev]").forEach(c =>
     c.addEventListener("click", () => {
       document.querySelectorAll("[data-prev]").forEach(x =>
@@ -877,54 +841,61 @@ const LEADS = [
   document.getElementById("courses").innerHTML = COURSES.map(
     ([n, t, s, p]) => `<div class="card" style="display:flex;flex-direction:column;gap:10px">
       <div class="spread"><span class="eyebrow">${n}</span>
-        ${p === 100 ? '<span class="tag green">complete</span>'
-          : p > 0 ? '<span class="tag gold">in progress</span>'
-          : '<span class="tag">not started</span>'}</div>
-      <div class="h-sm">${t}</div>
-      <div class="tiny" style="flex:1">${s}</div>
+        ${p === 100 ? '<span class="tag green" data-i18n="portal.complete">complete</span>'
+          : p > 0 ? '<span class="tag gold" data-i18n="portal.inProgress">in progress</span>'
+          : '<span class="tag" data-i18n="os.notStarted">not started</span>'}</div>
+      <div class="h-sm">${I18N.T(t)}</div>
+      <div class="tiny" style="flex:1">${I18N.T(s)}</div>
       <div class="bar"><i style="width:${p}%"></i></div>
-      <div class="tiny">${p}% complete</div>
+      <div class="tiny">${I18N.T("portal.pctComplete",{p:p})}</div>
     </div>`).join("");
 
   /* Community */
   const chans = document.getElementById("chans");
-  chans.innerHTML = CHANNELS.map(([c, kind], i) =>
-    `<div class="chan ${c === "signal-discussion" ? "on" : ""}" data-chan="${c}">
-      <span class="hash">#</span><span style="flex:1">${c}</span>
+  chans.innerHTML = CHANNELS.map(([c, kind, key], i) =>
+    `<div class="chan ${c === "signal-discussion" ? "on" : ""}" data-chan="${c}" data-key="${key}">
+      <span class="hash">#</span><span style="flex:1">${I18N.T(key)}</span>
       ${kind === "vip" ? '<span class="tag gold">VIP</span>'
-        : kind === "signal" ? '<span class="tag blue">signal</span>'
-        : kind === "announcement" ? '<span class="tag violet">ann</span>' : ""}
+        : kind === "signal" ? '<span class="tag blue" data-i18n="os.signalLc">signal</span>'
+        : kind === "announcement" ? '<span class="tag violet" data-i18n="os.annLc">ann</span>' : ""}
     </div>`).join("");
   chans.addEventListener("click", e => {
     const el = e.target.closest("[data-chan]"); if (!el) return;
     chans.querySelectorAll(".chan").forEach(x => x.classList.toggle("on", x === el));
-    document.getElementById("chanName").textContent = el.dataset.chan;
+    document.getElementById("chanName").textContent = I18N.T(el.dataset.key) || el.dataset.chan;
   });
   document.getElementById("posts").innerHTML = POSTS.map(
     ([cls, ini, who, role, body, kind, react]) => `<div class="post">
       <div class="ava ${cls}">${ini}</div>
       <div style="flex:1;min-width:0">
-        <div class="row" style="gap:8px"><b style="font-size:13.5px">${who}</b>
-          <span class="tag">${role}</span>
-          <span class="tiny">just now</span></div>
-        <div style="font-size:14px;margin-top:4px">${body}</div>
+        <div class="row" style="gap:8px"><b style="font-size:13.5px">${I18N.T(who)}</b>
+          <span class="tag">${I18N.T(role)}</span>
+          <span class="tiny" data-i18n="os.justNow">just now</span></div>
+        <div style="font-size:14px;margin-top:4px">${I18N.T(body)}</div>
         ${kind === "signal" ? `<div class="row" style="gap:8px;margin-top:9px">
-          <span class="tag blue">BTCUSD SELL · 1928027035</span>
-          <button class="btn sm" onclick="go('desk')">View signal</button>
-          <button class="btn sm preview" data-preview="Community thread">Discuss trade</button>
+          <span class="tag blue">BTCUSD <span data-i18n="desk.sellSide">SELL</span> · 1928027035</span>
+          <button class="btn sm" onclick="go('desk')" data-i18n="portal.viewSignal">View signal</button>
+          <button class="btn sm preview" data-preview="preview.communityThread" data-i18n="os.discussTrade">Discuss trade</button>
         </div>` : ""}
         <span class="react">👍 ${react}</span>
       </div></div>`).join("");
 
   /* Leads */
   document.getElementById("leads").innerHTML =
-    `<tr><th>Name</th><th>Telegram</th><th>Source</th><th>Interest</th>
-       <th>Plan</th><th>Status</th><th>Last seen</th></tr>` +
+    `<tr><th data-i18n="os.name">Name</th><th>Telegram</th><th data-i18n="os.source">Source</th><th data-i18n="os.interest">Interest</th>
+       <th data-i18n="os.plan">Plan</th><th data-i18n="common.status">Status</th><th data-i18n="audience.lastSeen">Last seen</th></tr>` +
     LEADS.map(([n, tg, src, int, plan, st, seen, cls]) => `<tr>
-      <td><b>${n}</b></td><td class="mono">${tg}</td><td>${src}</td>
-      <td>${int}</td><td>${plan}</td>
-      <td><span class="tag ${cls}">${st}</span></td>
-      <td class="tiny">${seen}</td></tr>`).join("");
+      <td><b>${n}</b></td><td class="mono">${tg}</td><td>${I18N.T(src)||src}</td>
+      <td>${I18N.T(int)}</td><td>${plan}</td>
+      <td><span class="tag ${cls}">${I18N.T(st)}</span></td>
+      <td class="tiny">${I18N.T(seen)}</td></tr>`).join("");
+  if (window.I18N) I18N.translateTree(document);
+  }
+  paintDemoData();
+  if (window.I18N) I18N.onChange(function () {
+    paintDemoData();
+    if (window.__repaintBrandPreview) window.__repaintBrandPreview();
+  });
 
   /* Brand editor */
   const bn = document.getElementById("bName"), bc = document.getElementById("bChan");
@@ -935,8 +906,10 @@ const LEADS = [
     document.getElementById("pvAv").textContent = initials(bn.value);
     const compact = document.getElementById("bStyle").value === "compact";
     const base = compact
-      ? `📊 ${bc.value}\n\nBTCUSD SELL @ 77183.5\nSL 77283.26 · 0.01\n\n🟢 OPEN · 1928027035\n\n` +
-        `Executed on an MT5 broker DEMO account.\nAutomation is live; funds are virtual.\n\n` +
+      ? `📊 ${bc.value}\n\nBTCUSD ${I18N.T("desk.sellSide")} @ 77183.5\n` +
+        `${I18N.T("tg.sl")} 77283.26 · 0.01\n\n` +
+        `🟢 ${I18N.T("tg.statusOpen")} · 1928027035\n\n` +
+        I18N.T("cmp.brokerDemo") + `\n\n` +
         (document.getElementById("bDisc").value || "")
       : fill(PREV.open).replace(BRAND.channel, bc.value || BRAND.channel);
     document.getElementById("pvText").textContent = base;
@@ -969,12 +942,10 @@ const LEADS = [
   loadPackages().then(pk => {
     const ok = renderPackages(pk, document.getElementById("packs"));
     if (!ok) {
-      document.getElementById("priceSrc").textContent = "package config unavailable";
+      document.getElementById("priceSrc").textContent = I18N.T("os.packageUnavailable");
       document.getElementById("priceSrc").className = "tag";
       document.getElementById("packs").innerHTML =
-        '<div class="note">Pricing could not be loaded from the platform just ' +
-        'now. Rather than print figures that might be stale, this page shows ' +
-        'none — ask us and we will quote from the same configuration.</div>';
+        '<div class="note">' + I18N.T('os.pricingUnavailable') + '</div>';
     }
   });
 
@@ -1004,20 +975,21 @@ const LEADS = [
         x.classList.toggle("on", x === c));
       dest = c.dataset.dest;
       sendBtn.textContent = dest === "telegram"
-        ? "Send to Telegram" : "Send to " + c.textContent.trim();
+        ? I18N.T("ai.sendToTelegram")
+        : I18N.T("ai.sendTo", { dest: c.textContent.trim() });
     }));
 
   document.getElementById("aiGo").addEventListener("click", async () => {
     const instruction = document.getElementById("aiInput").value.trim();
     const st = document.getElementById("aiState");
-    say("me", instruction || "Draft an update for my followers.");
-    st.textContent = "drafting from your verified trades…";
+    say("me", instruction || I18N.T("ai.defaultAsk"));
+    st.textContent = I18N.T("ai.drafting");
     /* the API only knows a fixed set of intents; anything else is an update */
     const known = ["explain", "breakeven", "modified", "closed", "summary", "update"];
     const d = await aiDraft(known.includes(intent) ? intent : "update", instruction);
     st.textContent = "";
     if (!d.ok) {
-      say("ai", d.reason || "I could not draft anything from the record yet.");
+      say("ai", d.reason || I18N.T("ai.noDraft"));
       box.value = ""; sendBtn.disabled = true; return;
     }
     say("ai", d.draft);
@@ -1025,24 +997,25 @@ const LEADS = [
     sendBtn.disabled = false;
     if (d.policy_ok === false) {
       document.getElementById("sendState").textContent =
-        "policy check flagged this draft — edit before sending";
+        I18N.T("ai.policyFlagged");
     }
   });
 
   sendBtn.addEventListener("click", async () => {
     const text = box.value.trim();
     const st = document.getElementById("sendState");
-    if (text.length < 10) { st.textContent = "nothing to send yet"; return; }
+    if (text.length < 10) { st.textContent = I18N.T("ai.nothingToSend"); return; }
     if (dest !== "telegram") {
-      st.textContent = `${dest} is a demonstration destination in this walkthrough — nothing was sent.`;
-      toast("Demo destination — nothing sent");
+      st.textContent = I18N.T("ai.demoDestination", { dest: dest });
+      toast(I18N.T("ai.demoDestToast"));
       return;
     }
-    sendBtn.disabled = true; st.textContent = "sending to your demo channel…";
+    sendBtn.disabled = true; st.textContent = I18N.T("ai.sending");
     const r = await aiSend(text);
     sendBtn.disabled = false;
-    if (r.ok) { st.textContent = "sent to your demo channel."; toast("Sent"); }
-    else { st.textContent = "refused: " + (r.reason || "unknown"); }
+    if (r.ok) { st.textContent = I18N.T("ai.sent"); toast(I18N.T("ai.sentToast")); }
+    else { st.textContent = I18N.T("ai.refused",
+      { reason: r.reason || I18N.T("ai.unknownReason") }); }
   });
 
   /* ── HYDRATE SECOND ── the provider's identity arrives whenever it
@@ -1061,6 +1034,31 @@ const LEADS = [
     if (bl && !bl.dataset.touched) bl.value = BRAND.language || "en";
     if (typeof window.__repaintBrandPreview === "function")
       window.__repaintBrandPreview();
+  });
+})();
+
+/* language switcher — manual choice wins and persists for this browser */
+(function(){
+  var side = document.querySelector(".side"), bm = document.querySelector(".brandmark");
+  if (!side || !window.I18N) return;
+  var host = document.createElement("div");
+  host.style.cssText = "padding:2px 12px 10px";
+  if (bm && bm.nextSibling) side.insertBefore(host, bm.nextSibling); else side.appendChild(host);
+  I18N.mountSwitcher(host);
+})();
+
+/* Community composer. This was an inline onkeydown attribute; the
+   localisation call inside it contains double quotes, which ends the HTML
+   attribute early and leaves a syntax error that only fires on Enter. It
+   belongs in script. */
+(function(){
+  var i = document.getElementById("communityInput");
+  if(!i) return;
+  i.addEventListener("keydown", function(e){
+    if(e.key !== "Enter") return;
+    toast(I18N.T("demo.previewToast",
+      { name: I18N.T("preview.communityPosting") }));
+    i.value = "";
   });
 })();
 </script>

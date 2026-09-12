@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SKLZ Signal Desk — Private Demo</title>
+<title data-i18n="desk.pageTitle">SKLZ Signal Desk — Private Demo</title>
+<!-- localisation: bundled and synchronous, so first paint is already
+     in the right language; only token/brand data hydrates later. -->
+<script src="sklz-i18n-dict.js"></script>
+<script src="sklz-i18n.js"></script>
 <meta name="robots" content="noindex,nofollow">
 <style>
 :root{
@@ -195,6 +199,13 @@ section{padding:34px 0}
    path or truthfulness label is hidden or altered by this mode. */
 html.embed-os .os-hide{display:none!important}
 html.embed-os body{padding-top:4px}
+
+/* Prose the platform API supplies with the trailing-stop state. It is
+   server-originated, so it is marked as a secondary note rather than
+   presented as part of the localised sentence above it. In English it is
+   printed exactly as received; in another locale it passes through the
+   closed server vocabulary and falls back to a neutral localised line. */
+.srv-note{color:var(--dim2);font-size:12px}
 </style></head>
 <body>
 
@@ -208,46 +219,47 @@ if (new URLSearchParams(location.search).get("embed") === "os")
 <div class="top os-hide"><div class="wrap">
   <div class="brand"><span class="dot"></span>SKLZ<span style="color:var(--gold)">LABS</span></div>
   <span class="tag" id="brandTag" style="display:none"></span>
-  <span class="tag">Signal Desk</span>
+  <span class="tag" data-i18n="desk.title">Signal Desk</span>
   <div class="spacer"></div>
-  <div class="timer mono" id="timer">Private demo</div>
-  <button class="btn btn-gold" onclick="go('buy')">Activate Signal Desk</button>
+  <div class="timer mono" id="timer" data-i18n="desk.privateDemo">Private demo</div>
+  <button class="btn btn-gold" onclick="go('buy')" data-i18n="desk.activate">Activate Signal Desk</button>
 </div></div>
 
 <div class="wrap">
 
   <div class="hero os-hide">
-    <h1>Trade once.<br><em>Distribute everywhere.</em></h1>
-    <p>One trade on your master account becomes a signal to your channel,
+    <h1><span data-i18n="desk.tradeOnce">Trade once.</span><br><em data-i18n="desk.distributeEverywhere">Distribute everywhere.</em></h1>
+    <p data-i18n="desk.heroBody">One trade on your master account becomes a signal to your channel,
        managed in place through its whole life, and a line in your track
        record — automatically, in seconds. Multi-account copying is available
        with Signal Desk implementation; this public demo does not prove
        follower-account copying.</p>
-    <div class="who">Private demo prepared for <b id="brandName">…</b></div>
+    <div class="who"><span data-i18n="desk.preparedFor">Private demo prepared for</span> <b id="brandName">…</b></div>
+    <div id="langHost" style="margin-top:12px"></div>
     <div class="timer mono" id="timer2" style="display:inline-block;
       margin-top:12px"></div>
   </div>
 
   <!-- ===== THE WOW ===== -->
   <section id="desk">
-    <div class="sec-h"><h2>Your Signal Desk <span style="font-size:9.5px;color:var(--gold2);
+    <div class="sec-h"><h2><span data-i18n="desk.yourSignalDesk">Your Signal Desk</span> <span style="font-size:9.5px;color:var(--gold2);
       border:1px solid rgba(245,166,35,.35);border-radius:4px;
-      padding:1px 5px;margin-left:6px">ILLUSTRATIVE FIGURES</span></h2>
-      <span>Illustrative provider dashboard preview</span></div>
+      padding:1px 5px;margin-left:6px" data-i18n="desk.illustrative">ILLUSTRATIVE FIGURES</span></h2>
+      <span data-i18n="desk.illustrativeCaption">Illustrative provider dashboard preview</span></div>
 
     <div class="kpis">
-      <div class="kpi"><div class="l">Master account</div><div class="v mono">MT5 demo</div></div>
-      <div class="kpi"><div class="l">Subscribers</div><div class="v mono" id="kSubs">3</div></div>
-      <div class="kpi"><div class="l">Signals sent</div><div class="v mono" id="kSig">0</div></div>
-      <div class="kpi"><div class="l">Multi-account copying</div>
-        <div class="v mono" id="kOk" style="font-size:15px">At implementation</div></div>
+      <div class="kpi"><div class="l" data-i18n="desk.masterAccount">Master account</div><div class="v mono" data-i18n="desk.mt5Demo">MT5 demo</div></div>
+      <div class="kpi"><div class="l" data-i18n="desk.subscribers">Subscribers</div><div class="v mono" id="kSubs">3</div></div>
+      <div class="kpi"><div class="l" data-i18n="desk.signalsSent">Signals sent</div><div class="v mono" id="kSig">0</div></div>
+      <div class="kpi"><div class="l" data-i18n="desk.multiCopy">Multi-account copying</div>
+        <div class="v mono" id="kOk" style="font-size:15px" data-i18n="desk.atImplementation">At implementation</div></div>
     </div>
 
     <div class="grid desk">
       <div class="flowbox">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <div>
-            <div style="font-size:12px;color:var(--dim2)" id="masterLbl">MASTER · MT5 broker DEMO account</div>
+            <div style="font-size:12px;color:var(--dim2)" id="masterLbl" data-i18n="desk.masterLine">MASTER · MT5 broker DEMO account</div>
             <div style="font-size:17px;font-weight:700">EURUSD <span class="mono"
               id="px">1.08522</span></div>
           </div>
@@ -256,65 +268,65 @@ if (new URLSearchParams(location.search).get("embed") === "os")
               color:var(--ink);border:1px solid var(--line);border-radius:9px;
               padding:10px 11px;font:inherit;font-size:13px"></select>
             <button class="btn btn-gold" id="btnLive" onclick="runLive('buy')">
-              ▲ BUY</button>
+              ▲ <span data-i18n="desk.buyBtn">BUY</span></button>
             <button class="btn btn-ghost" id="btnSell" onclick="runLive('sell')">
-              ▼ SELL</button>
+              ▼ <span data-i18n="desk.sellBtn">SELL</span></button>
             <button class="btn btn-ghost" id="btnBuy" onclick="runFlow('buy')"
-              style="padding:10px 12px;font-size:12px">▶ Replay</button>
+              style="padding:10px 12px;font-size:12px">▶ <span data-i18n="desk.replay">Replay</span></button>
           </div>
         </div>
 
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 6px;
                     font-size:11px;color:var(--dim2)">
-          <span><span style="color:var(--green)">●</span> REAL — executed on a
-            live broker demo account</span>
-          <span><span style="color:var(--gold)">●</span> SIMULATED PREVIEW —
-            illustration only, nothing executed</span>
+          <span><span style="color:var(--green)">●</span> <span
+            data-i18n="desk.legendReal">REAL — executed on a live broker demo account</span></span>
+          <span><span style="color:var(--gold)">●</span> <span
+            data-i18n="desk.legendSim">SIMULATED PREVIEW — illustration only, nothing executed</span></span>
         </div>
         <div class="steps" id="steps">
           <div class="step" data-s="1"><div class="ic">📨</div>
-            <div><div class="t" id="s1t">Request accepted<span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em">REAL</span></div>
-              <div class="d" id="s1d">queued for the demo desk</div></div>
+            <div><div class="t" id="s1t"><span data-i18n="desk.step.accepted">Request accepted</span><span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em" data-i18n="demo.real">REAL</span></div>
+              <div class="d" id="s1d" data-i18n="desk.lc.queued">queued for the demo desk</div></div>
             <div class="k" data-k>—</div></div>
           <div class="step" data-s="2"><div class="ic">🛰️</div>
-            <div><div class="t">Runner dispatched<span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em">REAL</span></div>
-              <div class="d" id="s2d">the demo Runner picked up the command</div></div>
+            <div><div class="t"><span data-i18n="desk.step.dispatched">Runner dispatched</span><span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em" data-i18n="demo.real">REAL</span></div>
+              <div class="d" id="s2d" data-i18n="desk.lc.pickedUp">the demo Runner picked up the command</div></div>
             <div class="k" data-k>—</div></div>
           <div class="step" data-s="3"><div class="ic">⚡</div>
-            <div><div class="t" id="s3t">Broker filled<span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em">REAL</span></div>
-              <div class="d" id="s3d">waiting for the broker</div></div>
+            <div><div class="t" id="s3t"><span data-i18n="desk.step.filled">Broker filled</span><span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em" data-i18n="demo.real">REAL</span></div>
+              <div class="d" id="s3d" data-i18n="desk.lc.waiting">waiting for the broker</div></div>
             <div class="k" data-k>—</div></div>
           <div class="step" data-s="4"><div class="ic">✈️</div>
-            <div><div class="t">Signal generated &amp; sent to Telegram<span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em">REAL</span></div>
-              <div class="d" id="tgDest">SKLZ demo channel</div></div>
+            <div><div class="t"><span data-i18n="desk.step.published">Signal generated &amp; sent to Telegram</span><span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em" data-i18n="demo.real">REAL</span></div>
+              <div class="d" id="tgDest" data-i18n="desk.demoChannel">SKLZ demo channel</div></div>
             <div class="k" data-k>—</div></div>
           <div class="step" data-s="5"><div class="ic">🅰️</div>
-            <div><div class="t">Slave account A copied
+            <div><div class="t"><span data-i18n="desk.step.copiedA">Slave account A copied</span>
               <span style="font-size:10px;color:var(--gold2);border:1px solid
               rgba(245,166,35,.35);border-radius:4px;padding:1px 5px;
-              margin-left:6px">SIMULATED COPY PREVIEW</span></div>
-              <div class="d">Fixed Lot 0.50 · Exness · #8842119</div></div>
+              margin-left:6px" data-i18n="desk.simCopyPreview">SIMULATED COPY PREVIEW</span></div>
+              <div class="d"><span data-i18n="desk.fixedLot">Fixed Lot</span> 0.50 · Exness · #8842119</div></div>
             <div class="k" data-k>—</div></div>
           <div class="step" data-s="6"><div class="ic">🅱️</div>
-            <div><div class="t">Slave account B copied<span style="font-size:9.5px;color:var(--gold2);border:1px solid rgba(245,166,35,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em">SIMULATED PREVIEW</span></div>
-              <div class="d">Auto Scale 0.4× equity · IC Markets · #5510338</div></div>
+            <div><div class="t"><span data-i18n="desk.step.copiedB">Slave account B copied</span><span style="font-size:9.5px;color:var(--gold2);border:1px solid rgba(245,166,35,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em" data-i18n="demo.simulated">SIMULATED PREVIEW</span></div>
+              <div class="d"><span data-i18n="desk.autoScale">Auto Scale</span> 0.4× <span data-i18n="desk.equity">equity</span> · IC Markets · #5510338</div></div>
             <div class="k" data-k>—</div></div>
           <div class="step skip" data-s="7"><div class="ic">⏸️</div>
-            <div><div class="t">Slave account C skipped<span style="font-size:9.5px;color:var(--gold2);border:1px solid rgba(245,166,35,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em">SIMULATED PREVIEW</span></div>
-              <div class="d">copying paused by the subscriber — respected, not forced</div></div>
+            <div><div class="t"><span data-i18n="desk.step.skippedC">Slave account C skipped</span><span style="font-size:9.5px;color:var(--gold2);border:1px solid rgba(245,166,35,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em" data-i18n="demo.simulated">SIMULATED PREVIEW</span></div>
+              <div class="d" data-i18n="desk.copyPaused">copying paused by the subscriber — respected, not forced</div></div>
             <div class="k" data-k>—</div></div>
           <div class="step" data-s="8"><div class="ic">📒</div>
-            <div><div class="t">Auto-close scheduled<span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em">REAL</span></div>
-              <div class="d" id="s8d">the demo position closes itself shortly</div></div>
+            <div><div class="t"><span data-i18n="desk.step.autoClose">Auto-close scheduled</span><span style="font-size:9.5px;color:var(--green);border:1px solid rgba(18,196,139,.35);border-radius:4px;padding:1px 5px;margin-left:6px;letter-spacing:.04em" data-i18n="demo.real">REAL</span></div>
+              <div class="d" id="s8d" data-i18n="desk.lc.closing">the demo position closes itself shortly</div></div>
             <div class="k" data-k>—</div></div>
         </div>
 
         <div class="card" id="posPanel" style="margin-top:14px;
              border-color:rgba(18,196,139,.3)">
           <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
-            <b style="font-size:15px">Open position</b>
+            <b style="font-size:15px" data-i18n="desk.openPosition">Open position</b>
             <span style="font-size:9.5px;color:var(--green);border:1px solid
-              rgba(18,196,139,.35);border-radius:4px;padding:1px 5px">REAL</span>
+              rgba(18,196,139,.35);border-radius:4px;padding:1px 5px" data-i18n="demo.real">REAL</span>
             <span id="posState" style="font-size:11.5px;color:var(--dim2);
               margin-left:auto"></span>
           </div>
@@ -327,26 +339,26 @@ if (new URLSearchParams(location.search).get("embed") === "os")
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;
                       align-items:center">
             <label style="font-size:10px;color:var(--dim2);
-              text-transform:uppercase;letter-spacing:.07em">Stop</label>
+              text-transform:uppercase;letter-spacing:.07em" data-i18n="portal.stop">Stop</label>
             <input id="inSL" class="mono" inputmode="decimal" placeholder="—"
               style="width:96px;background:var(--panel2);color:var(--ink);
               border:1px solid var(--line);border-radius:8px;padding:8px 9px;
               font-size:13px">
             <label style="font-size:10px;color:var(--dim2);
-              text-transform:uppercase;letter-spacing:.07em">Target</label>
+              text-transform:uppercase;letter-spacing:.07em" data-i18n="desk.target">Target</label>
             <input id="inTP" class="mono" inputmode="decimal" placeholder="—"
               style="width:96px;background:var(--panel2);color:var(--ink);
               border:1px solid var(--line);border-radius:8px;padding:8px 9px;
               font-size:13px">
             <button class="btn btn-ghost" id="bMod" onclick="ctlModify()" disabled
               style="padding:9px 14px;font-size:13px;opacity:.45;
-              pointer-events:none">Apply</button>
+              pointer-events:none" data-i18n="desk.apply">Apply</button>
             <button class="btn btn-ghost" id="bBE" onclick="ctl('breakeven')" disabled
               style="padding:9px 14px;font-size:13px;opacity:.45;
-              pointer-events:none">Move to breakeven</button>
+              pointer-events:none" data-i18n="desk.moveToBE">Move to breakeven</button>
             <button class="btn btn-gold" id="bClose" onclick="ctl('close')" disabled
               style="padding:9px 14px;font-size:13px;opacity:.45;
-              pointer-events:none">Close trade</button>
+              pointer-events:none" data-i18n="desk.closeTrade">Close trade</button>
           </div>
           <div id="ctlMsg" style="font-size:12px;margin-top:9px;
                color:var(--dim2)"></div>
@@ -354,76 +366,79 @@ if (new URLSearchParams(location.search).get("embed") === "os")
 
         <div class="card" id="aiPanel" style="margin-top:14px">
           <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
-            <b style="font-size:15px">Subscriber communication</b>
+            <b style="font-size:15px" data-i18n="desk.subComms">Subscriber communication</b>
             <span style="font-size:9.5px;color:var(--green);border:1px solid
               rgba(18,196,139,.35);border-radius:4px;padding:1px 5px">AI</span>
-            <span style="font-size:11px;color:var(--dim2);margin-left:auto">
+            <span style="font-size:11px;color:var(--dim2);margin-left:auto" data-i18n="desk.draftedFrom">
               drafted from your verified trades</span>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"
                id="aiPresets"></div>
-          <textarea id="aiText" rows="6" placeholder="Pick a message above, or
-write your own. Nothing is sent until you press Send."
+          <textarea id="aiText" rows="6"
+            data-i18n-attr="placeholder:desk.ai.placeholder"
+            placeholder="Pick a message above, or write your own. Nothing is sent until you press Send."
             style="width:100%;margin-top:10px;background:var(--panel2);
             color:var(--ink);border:1px solid var(--line);border-radius:10px;
             padding:11px;font:inherit;font-size:13px;line-height:1.6"></textarea>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
             <button class="btn btn-ghost" id="aiDraftBtn" onclick="aiDraft()"
-              style="padding:9px 14px;font-size:13px">Draft with AI</button>
+              style="padding:9px 14px;font-size:13px" data-i18n="desk.draftWithAI">Draft with AI</button>
             <button class="btn btn-gold" id="aiSendBtn" onclick="aiSend()"
-              style="padding:9px 14px;font-size:13px">Send to channel</button>
+              style="padding:9px 14px;font-size:13px" data-i18n="desk.sendToChannel">Send to channel</button>
           </div>
           <div id="aiMsg" style="font-size:12px;margin-top:9px;
                color:var(--dim2)"></div>
         </div>
 
         <div class="tg" id="tg">
-          <div class="h"><b id="tgTitle">Your Signals</b><span>via SKLZ · just now</span></div>
+          <div class="h"><b id="tgTitle" data-i18n="desk.yourSignals">Your Signals</b><span data-i18n="desk.viaJustNow">via SKLZ · just now</span></div>
           <pre id="tgtext"></pre>
         </div>
-        <div class="simnote">The broker execution, Runner, signal, Telegram
-          delivery and auto-close are <b style="color:var(--green)">real</b>,
-          on a broker DEMO account. Copy accounts and subscriber figures are a
-          <b style="color:var(--gold2)">simulated preview</b> — no subscriber
-          account executed anything.</div>
+        <div class="simnote"><span data-i18n="desk.simNote1">The broker execution,
+          Runner, signal, Telegram delivery and auto-close are</span>
+          <b style="color:var(--green)" data-i18n="desk.realTag">real</b><span
+          data-i18n="desk.simNote2">, on a broker DEMO account. Copy accounts and
+          subscriber figures are a</span>
+          <b style="color:var(--gold2)" data-i18n="desk.simTag">simulated preview</b><span
+          data-i18n="desk.simNote3"> — no subscriber account executed anything.</span></div>
       </div>
 
       <div>
         <div class="card" style="margin-bottom:14px">
           <div class="sec-h" style="margin-bottom:6px"><h2 style="font-size:15px">
-            Connected accounts <span style="font-size:9.5px;color:var(--gold2);
+            <span data-i18n="desk.connectedAccounts">Connected accounts</span> <span style="font-size:9.5px;color:var(--gold2);
             border:1px solid rgba(245,166,35,.35);border-radius:4px;
-            padding:1px 5px;margin-left:6px">SIMULATED PREVIEW</span></h2></div>
+            padding:1px 5px;margin-left:6px" data-i18n="demo.simulated">SIMULATED PREVIEW</span></h2></div>
           <div class="acct"><div class="av">A</div>
-            <div><div class="n">Slave A · Exness</div>
-              <div class="s mono">#8842119 · Fixed Lot 0.50</div></div>
-            <div class="pill on">copying</div></div>
+            <div><div class="n"><span data-i18n="desk.slaveA">Slave A</span> · Exness</div>
+              <div class="s mono">#8842119 · <span data-i18n="desk.fixedLot">Fixed Lot</span> 0.50</div></div>
+            <div class="pill on" data-i18n="desk.copying">copying</div></div>
           <div class="acct"><div class="av">B</div>
-            <div><div class="n">Slave B · IC Markets</div>
-              <div class="s mono">#5510338 · Auto Scale 0.4×</div></div>
-            <div class="pill on">copying</div></div>
+            <div><div class="n"><span data-i18n="desk.slaveB">Slave B</span> · IC Markets</div>
+              <div class="s mono">#5510338 · <span data-i18n="desk.autoScale">Auto Scale</span> 0.4×</div></div>
+            <div class="pill on" data-i18n="desk.copying">copying</div></div>
           <div class="acct"><div class="av">C</div>
-            <div><div class="n">Slave C · Pepperstone</div>
-              <div class="s mono">#7719004 · Fixed Lot 0.20</div></div>
-            <div class="pill off">paused</div></div>
+            <div><div class="n"><span data-i18n="desk.slaveC">Slave C</span> · Pepperstone</div>
+              <div class="s mono">#7719004 · <span data-i18n="desk.fixedLot">Fixed Lot</span> 0.20</div></div>
+            <div class="pill off" data-i18n="desk.paused">paused</div></div>
         </div>
 
         <div class="card">
           <div class="sec-h" style="margin-bottom:6px"><h2 style="font-size:15px">
-            Subscriber business <span style="font-size:9.5px;color:var(--gold2);
+            <span data-i18n="desk.subscriberBusiness">Subscriber business</span> <span style="font-size:9.5px;color:var(--gold2);
             border:1px solid rgba(245,166,35,.35);border-radius:4px;
-            padding:1px 5px;margin-left:6px">ILLUSTRATIVE FIGURES</span></h2></div>
+            padding:1px 5px;margin-left:6px" data-i18n="desk.illustrative">ILLUSTRATIVE FIGURES</span></h2></div>
           <div class="kpis" style="grid-template-columns:1fr 1fr;margin:0">
-            <div class="kpi"><div class="l">Active subs</div>
+            <div class="kpi"><div class="l" data-i18n="desk.activeSubs">Active subs</div>
               <div class="v mono">1,240</div></div>
-            <div class="kpi"><div class="l">MRR</div>
+            <div class="kpi"><div class="l" data-i18n="desk.mrr">MRR</div>
               <div class="v mono up">$18,600</div></div>
-            <div class="kpi"><div class="l">Copy enabled</div>
+            <div class="kpi"><div class="l" data-i18n="desk.copyEnabled">Copy enabled</div>
               <div class="v mono">312</div></div>
-            <div class="kpi"><div class="l">Churn 30d</div>
+            <div class="kpi"><div class="l" data-i18n="desk.churn30">Churn 30d</div>
               <div class="v mono">4.1%</div></div>
           </div>
-          <div style="margin-top:12px;font-size:12px;color:var(--dim2)">
+          <div style="margin-top:12px;font-size:12px;color:var(--dim2)" data-i18n="desk.subsNote">
             Every copied trade is tied to a paying subscriber. You see who is
             connected, who paused, and what each account actually executed.</div>
         </div>
@@ -433,98 +448,98 @@ write your own. Nothing is sent until you press Send."
 
   <!-- ===== PACKAGES ===== -->
   <section id="buy" class="os-hide">
-    <div class="sec-h"><h2>Launch my trading business</h2>
-      <span>choose the package, then how you'd like to pay</span></div>
+    <div class="sec-h"><h2 data-i18n="sell.launch">Launch my trading business</h2>
+      <span data-i18n="sell.choosePackage">choose the package, then how you'd like to pay</span></div>
 
     <div class="grid pkgs" id="pkgs"></div>
-    <div style="text-align:center;margin-top:14px;font-size:12.5px;color:var(--dim2)">
+    <div style="text-align:center;margin-top:14px;font-size:12.5px;color:var(--dim2)" data-i18n="sell.planNote">
       Every plan is a one-time implementation plus an ongoing monthly service.
       You pay both — the setup and your first month are charged today, then the
       monthly service continues.</div>
 
-    <div class="sec-h" style="margin-top:26px"><h2>Payment</h2>
+    <div class="sec-h" style="margin-top:26px"><h2 data-i18n="sell.payment">Payment</h2>
       <span id="paySum">SKLZ Signal Desk</span></div>
 
     <div class="card" id="dueBox" style="margin-bottom:14px"></div>
     <div class="grid pays">
       <div class="card pay sel" data-pay="stripe" onclick="pickPay(this)">
-        <div class="m">💳</div><div class="n">Card</div>
-        <div class="s">Stripe Checkout</div></div>
+        <div class="m">💳</div><div class="n" data-i18n="sell.card">Card</div>
+        <div class="s" data-i18n="sell.stripeCheckout">Stripe Checkout</div></div>
       <div class="card pay" data-pay="usdt" onclick="pickPay(this)">
         <div class="m">₮</div><div class="n">USDT</div>
-        <div class="s">TRON · TRC20 only</div></div>
+        <div class="s" data-i18n="sell.trc20Only">TRON · TRC20 only</div></div>
       <div class="card pay" data-pay="sol" onclick="pickPay(this)">
         <div class="m">◎</div><div class="n">SOL</div>
-        <div class="s">Solana network</div></div>
+        <div class="s" data-i18n="sell.solNetwork">Solana network</div></div>
     </div>
 
     <div class="card" style="margin-top:14px" id="payBody">
       <!-- stripe -->
       <div id="w_stripe">
         <div style="text-align:center;padding:8px 0 4px">
-          <div style="font-size:13px;color:var(--dim);margin-bottom:14px">
+          <div style="font-size:13px;color:var(--dim);margin-bottom:14px" data-i18n="sell.cardNote">
             Secure card payment. You'll be returned here to finish onboarding.</div>
-          <button class="btn btn-gold" style="padding:13px 26px" onclick="stripe()">
+          <button class="btn btn-gold" style="padding:13px 26px" onclick="stripe()" data-i18n="sell.continueCheckout">
             Continue to secure checkout →</button>
         </div>
       </div>
 
       <!-- usdt -->
       <div class="wallet" id="w_usdt">
-        <div class="warn">USDT — TRC20 ONLY</div>
-        <div style="text-align:center;font-size:12px;color:var(--dim2);margin-top:8px">
+        <div class="warn" data-i18n="sell.usdtHeading">USDT — TRC20 ONLY</div>
+        <div style="text-align:center;font-size:12px;color:var(--dim2);margin-top:8px" data-i18n="sell.cryptoWarning">
           Crypto transfers are irreversible. Confirm the wallet address and
           network before sending.</div>
         <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;margin-top:14px;
                     align-items:center" class="paygrid">
-          <div class="qr"><img id="qrUsdt" alt="USDT TRC20 address QR"></div>
+          <div class="qr"><img id="qrUsdt" data-i18n-attr="alt:desk.qrAltUsdt" alt="USDT TRC20 address QR"></div>
           <div>
-            <div style="font-size:12px;color:var(--dim2)">AMOUNT</div>
+            <div style="font-size:12px;color:var(--dim2)" data-i18n="sell.amount">AMOUNT</div>
             <div style="font-size:26px;font-weight:800" class="mono">
               <span id="amtUsdt">—</span> USDT</div>
-            <div style="font-size:12px;color:var(--dim2);margin-top:10px">NETWORK</div>
+            <div style="font-size:12px;color:var(--dim2);margin-top:10px" data-i18n="sell.network">NETWORK</div>
             <div style="font-weight:700">TRON (TRC20)</div>
             <div class="addr"><span class="a mono" id="addrUsdt"></span>
-              <button class="cp" onclick="copy('addrUsdt',this)">Copy address</button></div>
+              <button class="cp" onclick="copy('addrUsdt',this)" data-i18n="sell.copyAddress">Copy address</button></div>
             <div class="addr"><span class="a mono"><span id="amtUsdt2">—</span> USDT</span>
-              <button class="cp" onclick="copy('amtUsdt2',this)">Copy amount</button></div>
+              <button class="cp" onclick="copy('amtUsdt2',this)" data-i18n="sell.copyAmount">Copy amount</button></div>
           </div>
         </div>
         <div style="font-size:12px;color:var(--dim2);text-align:center;
-                    margin-top:12px">This activates your desk: implementation
+                    margin-top:12px" data-i18n="sell.activatesNote">This activates your desk: implementation
           plus the first monthly period. Renewals are paid monthly in USDT or
           SOL until card billing is set up.</div>
         <div style="text-align:center;margin-top:14px">
-          <button class="btn btn-gold" onclick="go('paid')">I have paid →</button></div>
+          <button class="btn btn-gold" onclick="go('paid')" data-i18n="sell.iHavePaid">I have paid →</button></div>
       </div>
 
       <!-- sol -->
       <div class="wallet" id="w_sol">
-        <div class="warn">SOL — SOLANA NETWORK ONLY</div>
-        <div style="text-align:center;font-size:12px;color:var(--dim2);margin-top:8px">
+        <div class="warn" data-i18n="sell.solHeading">SOL — SOLANA NETWORK ONLY</div>
+        <div style="text-align:center;font-size:12px;color:var(--dim2);margin-top:8px" data-i18n="sell.cryptoWarning">
           Crypto transfers are irreversible. Confirm the wallet address and
           network before sending.</div>
         <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;margin-top:14px;
                     align-items:center" class="paygrid">
-          <div class="qr"><img id="qrSol" alt="Solana address QR"></div>
+          <div class="qr"><img id="qrSol" data-i18n-attr="alt:desk.qrAltSol" alt="Solana address QR"></div>
           <div>
-            <div style="font-size:12px;color:var(--dim2)">AMOUNT</div>
+            <div style="font-size:12px;color:var(--dim2)" data-i18n="sell.amount">AMOUNT</div>
             <div style="font-size:26px;font-weight:800" class="mono">
               <span id="amtSol">—</span> SOL</div>
-            <div style="font-size:12px;color:var(--dim2);margin-top:10px">NETWORK</div>
+            <div style="font-size:12px;color:var(--dim2);margin-top:10px" data-i18n="sell.network">NETWORK</div>
             <div style="font-weight:700">Solana</div>
             <div class="addr"><span class="a mono" id="addrSol"></span>
-              <button class="cp" onclick="copy('addrSol',this)">Copy address</button></div>
+              <button class="cp" onclick="copy('addrSol',this)" data-i18n="sell.copyAddress">Copy address</button></div>
             <div class="addr"><span class="a mono"><span id="amtSol2">—</span> SOL</span>
-              <button class="cp" onclick="copy('amtSol2',this)">Copy amount</button></div>
+              <button class="cp" onclick="copy('amtSol2',this)" data-i18n="sell.copyAmount">Copy amount</button></div>
           </div>
         </div>
         <div style="font-size:12px;color:var(--dim2);text-align:center;
-                    margin-top:12px">This activates your desk: implementation
+                    margin-top:12px" data-i18n="sell.activatesNote">This activates your desk: implementation
           plus the first monthly period. Renewals are paid monthly in USDT or
           SOL until card billing is set up.</div>
         <div style="text-align:center;margin-top:14px">
-          <button class="btn btn-gold" onclick="go('paid')">I have paid →</button></div>
+          <button class="btn btn-gold" onclick="go('paid')" data-i18n="sell.iHavePaid">I have paid →</button></div>
       </div>
     </div>
   </section>
@@ -532,55 +547,56 @@ write your own. Nothing is sent until you press Send."
   <!-- ===== CONFIRM PAYMENT ===== -->
   <section id="paid">
     <div class="card hi" id="paidCard">
-      <div class="sec-h"><h2>Confirm your payment</h2>
-        <span>we verify the transaction and activate your desk</span></div>
+      <div class="sec-h"><h2 data-i18n="sell.confirmPayment">Confirm your payment</h2>
+        <span data-i18n="sell.confirmSub">we verify the transaction and activate your desk</span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="f2">
-        <div class="field"><label>Your name</label><input id="f_name" placeholder="Ahmed Al-Farsi"></div>
-        <div class="field"><label>Email</label><input id="f_email" type="email" placeholder="you@company.com"></div>
-        <div class="field"><label>Telegram username</label><input id="f_tg" placeholder="@falconfx"></div>
-        <div class="field"><label>Package</label>
+        <div class="field"><label data-i18n="sell.yourName">Your name</label><input id="f_name" data-i18n-attr="placeholder:sell.namePlaceholder" placeholder="Ahmed Al-Farsi"></div>
+        <div class="field"><label data-i18n="sell.email">Email</label><input id="f_email" type="email" placeholder="you@company.com"></div>
+        <div class="field"><label data-i18n="sell.telegramUser">Telegram username</label><input id="f_tg" placeholder="@falconfx"></div>
+        <div class="field"><label data-i18n="sell.package">Package</label>
           <select id="f_pkg"><option value="signal_desk">SKLZ Signal Desk</option>
           <option value="signal_desk_pro">SKLZ Signal Desk Pro</option>
           <option value="pro_trader_os">SKLZ Pro Trader OS</option></select></div>
-        <div class="field"><label>Asset</label>
+        <div class="field"><label data-i18n="sell.asset">Asset</label>
           <select id="f_asset"><option>USDT</option><option>SOL</option></select></div>
-        <div class="field"><label>Network</label>
+        <div class="field"><label data-i18n="sell.network">Network</label>
           <select id="f_net"><option>TRC20</option><option>Solana</option></select></div>
       </div>
-      <div class="field"><label>Transaction hash (TXID)</label>
-        <input id="f_tx" class="mono" placeholder="paste the transaction hash from your wallet"></div>
+      <div class="field"><label data-i18n="sell.txid">Transaction hash (TXID)</label>
+        <input id="f_tx" class="mono" data-i18n-attr="placeholder:desk.txidPlaceholder" placeholder="paste the transaction hash from your wallet"></div>
       <div style="text-align:center;margin-top:16px">
         <button class="btn btn-gold" style="padding:13px 26px" onclick="submitPaid()"
-          id="btnPaid">Submit for verification →</button></div>
+          id="btnPaid" data-i18n="sell.submitVerify">Submit for verification →</button></div>
       <div id="paidErr" style="color:var(--red);font-size:12.5px;text-align:center;
         margin-top:10px"></div>
     </div>
 
     <div class="card ok" id="okCard">
       <div class="big">✅</div>
-      <h2 style="margin-top:8px">Payment submitted</h2>
-      <p style="color:var(--dim);margin-top:6px">We'll confirm the transaction and
+      <h2 style="margin-top:8px" data-i18n="sell.submitted">Payment submitted</h2>
+      <p style="color:var(--dim);margin-top:6px" data-i18n="sell.submittedBody">We'll confirm the transaction and
         activate your desk. You'll hear from us on Telegram within a few hours.</p>
       <div class="steps-ob">
-        <div class="ob"><div class="num">1</div><div><b>Verification</b>
-          <p>We check the transaction hash on-chain and mark your order confirmed.</p></div></div>
-        <div class="ob"><div class="num">2</div><div><b>Runner setup</b>
-          <p>We install SKLZ Runner on your VPS and connect your master MT5 account.</p></div></div>
-        <div class="ob"><div class="num">3</div><div><b>Channel connection</b>
-          <p>Your Telegram channel is linked and the signal format is set to your brand.</p></div></div>
-        <div class="ob"><div class="num">4</div><div><b>First subscribers</b>
-          <p>Subscribers install the copier, and their accounts appear on your desk.</p></div></div>
+        <div class="ob"><div class="num">1</div><div><b data-i18n="sell.step.verification">Verification</b>
+          <p data-i18n="sell.step.verificationD">We check the transaction hash on-chain and mark your order confirmed.</p></div></div>
+        <div class="ob"><div class="num">2</div><div><b data-i18n="sell.step.runner">Runner setup</b>
+          <p data-i18n="sell.step.runnerD">We install SKLZ Runner on your VPS and connect your master MT5 account.</p></div></div>
+        <div class="ob"><div class="num">3</div><div><b data-i18n="sell.step.channel">Channel connection</b>
+          <p data-i18n="sell.step.channelD">Your Telegram channel is linked and the signal format is set to your brand.</p></div></div>
+        <div class="ob"><div class="num">4</div><div><b data-i18n="sell.step.subs">First subscribers</b>
+          <p data-i18n="sell.step.subsD">Subscribers install the copier, and their accounts appear on your desk.</p></div></div>
       </div>
       <div style="margin-top:16px;font-size:12.5px;color:var(--dim2)">
-        Reference <span class="mono" id="okRef"></span></div>
+        <span data-i18n="desk.reference">Reference</span> <span class="mono" id="okRef"></span></div>
     </div>
   </section>
 
   <div class="foot">
-    SKLZ Labs · Software tools only — not financial advice · Trading involves risk of loss<br>
-    This is a private demonstration. Subscriber and copy-network figures are
-    illustrative previews. Broker execution is real on an MT5 broker DEMO
-    account. Automation is live; funds are virtual.
+    SKLZ Labs · <span data-i18n="desk.footLine1">Software tools only — not financial
+    advice · Trading involves risk of loss</span><br>
+    <span data-i18n="desk.footLine2">This is a private demonstration. Subscriber and
+    copy-network figures are illustrative previews. Broker execution is real on an
+    MT5 broker DEMO account. Automation is live; funds are virtual.</span>
   </div>
 </div>
 
@@ -605,7 +621,10 @@ const CFG = {
 let pkg="signal_desk", pay="stripe";
 
 /* ---- branding + expiry: the SERVER decides both ---- */
-const BRAND = {name:"Your Brand", channel:"Your Signals"};
+/* Placeholder identity for the instant before the token's brand arrives.
+   Localised, because in a slow network this is what a prospect reads. */
+const BRAND = {name:I18N.T("desk.brandFallback"),
+               channel:I18N.T("desk.channelFallback")};
 const TOKEN = new URLSearchParams(location.search).get("t") || "";
 
 function expired(msg){
@@ -614,37 +633,49 @@ function expired(msg){
     'padding:0 22px;font-family:inherit">'+
     '<div style="font-size:40px">⏳</div>'+
     '<h1 style="font-size:26px;margin-top:12px;letter-spacing:-.6px">'+
-    'This private demo has ended</h1>'+
-    '<p style="color:#8A94A6;margin-top:10px;line-height:1.6">'+(msg||
-    'Private demos stay open for 48 hours. Message us and we will open a '+
-    'fresh one for you.')+'</p>'+
+    I18N.T('desk.demoEnded')+'</h1>'+
+    '<p style="color:#8A94A6;margin-top:10px;line-height:1.6">'+
+    (msg||I18N.T('desk.demoEndedBody'))+'</p>'+
     '<a href="/signal-desk.html" style="display:inline-block;margin-top:22px;'+
     'background:linear-gradient(180deg,#FFC65C,#F5A623);color:#12100A;'+
     'font-weight:700;padding:13px 22px;border-radius:11px;'+
-    'text-decoration:none">See SKLZ Signal Desk →</a></div>';
+    'text-decoration:none" data-i18n="desk.seeDesk">See SKLZ Signal Desk →</a></div>';
+  if (window.I18N) {
+    I18N.translateTree(document);
+    /* A manual language switch has to reach the markup the desk builds
+       itself — package cards, the due box, the Telegram preview — not only
+       the static data-i18n nodes. */
+    I18N.onChange(function(){
+      I18N.translateTree(document);
+      try{ refresh(); }catch(e){}
+      var t=document.getElementById("tgtext");
+      if(t && t.textContent.trim()) t.textContent=TG_TEXT(LAST_SIDE, LAST_PX);
+    });
+  }
+  if (window.mountLangSwitch) mountLangSwitch();   /* body was replaced */
 }
 
 (async function(){
-  if(!TOKEN){ expired("This link is missing its demo code. Ask us for a "+
-    "fresh private link."); return; }
+  if(!TOKEN){ expired(I18N.T("demo.missingTokenBody")); return; }
   let d=null;
   try{
     const r=await fetch(API+"/api/demo-links/"+encodeURIComponent(TOKEN));
     if(r.status===410){ expired(); return; }
-    if(!r.ok){ expired("We could not find this demo. Ask us for a fresh "+
-      "private link."); return; }
+    if(!r.ok){ expired(I18N.T("desk.notFound")); return; }
     d=await r.json();
   }catch(e){
-    expired("We could not load this demo just now. Please try again shortly.");
+    expired(I18N.T("desk.loadFailed"));
     return;
   }
   BRAND.name=d.provider_name; BRAND.channel=d.telegram_channel;
-  document.title=`${d.provider_name} · SKLZ Signal Desk — Private Demo`;
+  /* the demo link carries the prospect's language; a manual choice wins */
+  if (window.I18N && d.language) I18N.setTokenLocale(d.language);
+  document.title=I18N.T("desk.docTitle", { name: d.provider_name });
   const set=(id,v)=>{const e=document.getElementById(id); if(e) e.textContent=v;};
   set("brandName", d.provider_name);
   set("tgTitle", d.telegram_channel);
   set("tgDest", d.telegram_channel);
-  set("masterLbl", `MASTER · ${d.provider_name} · MT5 broker DEMO account`);
+  set("masterLbl", I18N.T("desk.masterFor", { name: d.provider_name }));
   const tag=document.getElementById("brandTag");
   if(tag){ tag.textContent=d.provider_name; tag.style.display=""; }
   CFG.demo_ends = Date.now() + (d.seconds_remaining*1000);
@@ -655,10 +686,18 @@ function expired(msg){
       const r=await fetch(`${API}/api/demo-links/${TOKEN}/symbols`);
       const sd=await r.json();
       const sel=document.getElementById("symSel");
-      if(sel && sd.symbols){
-        sel.innerHTML=sd.symbols.map(s=>
-          `<option value="${s.symbol}"${s.symbol===sd.default?" selected":""}>`+
-          `${s.label} · ${s.lot}${s.always_open?" · 24/7":""}</option>`).join("");
+      if(sel && Array.isArray(sd.symbols)){
+        /* A symbol entry may arrive as a bare string, or without a label or
+           a default lot. Print what the server actually sent and nothing
+           else — never the word "undefined" in a prospect's instrument list. */
+        sel.innerHTML=sd.symbols.map(raw=>{
+          const s = (typeof raw === "string") ? { symbol: raw } : (raw || {});
+          const parts = [s.label || s.symbol, s.lot].filter(Boolean);
+          if(s.always_open) parts.push("24/7");
+          return `<option value="${s.symbol||""}"`+
+                 `${s.symbol===sd.default?" selected":""}>`+
+                 `${parts.join(" · ")}</option>`;
+        }).join("");
       }
     }catch(e){}
     try{ await refreshPositions(); }catch(e){}
@@ -667,11 +706,11 @@ function expired(msg){
   function tick(){
     const ms = CFG.demo_ends - Date.now();
     const el = document.getElementById("timer");
-    if(ms<=0){ el.textContent="Private demo — expired";
+    if(!(ms>0)){ const t0=I18N.T("desk.demoExpiredShort");
+      el.textContent=t0;
       const e2=document.getElementById("timer2");
-      if(e2) e2.textContent="Private demo — expired"; return; }
-    const h=Math.floor(ms/3600000), m=Math.floor(ms%3600000/60000);
-    const txt=`Private Demo — ${h}h ${String(m).padStart(2,"0")}m remaining`;
+      if(e2) e2.textContent=t0; return; }
+    const txt=I18N.T("desk.privateDemo")+" — "+I18N.REMAINING(ms);
     el.textContent=txt;
     const el2=document.getElementById("timer2"); if(el2) el2.textContent=txt;
   }
@@ -685,7 +724,7 @@ function go(id){document.getElementById(id).scrollIntoView({behavior:"smooth",bl
 function copy(id,btn){
   const t=document.getElementById(id).textContent.trim();
   navigator.clipboard.writeText(t).then(()=>{const o=btn.textContent;
-    btn.textContent="Copied";setTimeout(()=>btn.textContent=o,1400);});
+    btn.textContent=I18N.T("desk.copied");setTimeout(()=>btn.textContent=o,1400);});
 }
 function pickPkg(el){
   document.querySelectorAll(".pkg").forEach(p=>p.classList.remove("sel"));
@@ -705,33 +744,40 @@ function pickPay(el){
 function refresh(){
   const p=CFG.price[pkg]; if(!p) return;
   const part = p.activation || p.setup;
+  /* Until /api/orders/packages answers there are no figures to show. An
+     empty summary is honest; "undefined" is not. */
+  if(!part || !part.display){ document.getElementById("paySum").textContent=""; return; }
   document.getElementById("paySum").textContent =
-    `${p.label} · ${part.display} ${part.label}`;
+    `${p.label} · ${part.display} ${I18N.SRV(part.label)}`;
   const box=document.getElementById("dueBox");
   if(box) box.innerHTML=`
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;
                 font-size:14px">
-      <div><b>${p.setup.display}</b> one-time implementation
-        <div style="font-size:12px;color:var(--dim2)">VPS · MT5 · SKLZ Runner ·
+      <div><b>${p.setup.display}</b> <span data-i18n="sell.oneTimeImplementation">one-time implementation</span>
+        <div style="font-size:12px;color:var(--dim2)" data-i18n="sell.setupScope">VPS · MT5 · SKLZ Runner ·
           master account · Telegram · copier · testing · go-live</div></div>
-      <div style="text-align:right;color:var(--dim2);font-size:12px">setup</div>
+      <div style="text-align:right;color:var(--dim2);font-size:12px" data-i18n="sell.setup">setup</div>
       <div style="border-top:1px solid var(--line);padding-top:8px">
-        <b style="color:var(--gold2)">${p.monthly.display}</b> per month
-        <div style="font-size:12px;color:var(--dim2)">platform · automation ·
+        <b style="color:var(--gold2)">${p.monthly.display}</b> <span data-i18n="sell.perMonth">per month</span>
+        <div style="font-size:12px;color:var(--dim2)" data-i18n="sell.ongoingScope">platform · automation ·
           hosting · maintenance · support</div></div>
       <div style="text-align:right;color:var(--dim2);font-size:12px;
-                  border-top:1px solid var(--line);padding-top:8px">ongoing</div>
+                  border-top:1px solid var(--line);padding-top:8px" data-i18n="sell.ongoing">ongoing</div>
       <div style="border-top:1px solid var(--line);padding-top:8px;
-                  font-size:15px"><b>${part.display} due today</b>
-        <div style="font-size:12px;color:var(--dim2)">${part.breakdown||""}</div>
+                  font-size:15px"><b>${I18N.T("sell.dueTodayAmount", { amount: part.display })}</b>
+        <div style="font-size:12px;color:var(--dim2)">${I18N.SRV(part.breakdown||"")}</div>
       </div>
       <div style="text-align:right;border-top:1px solid var(--line);
                   padding-top:8px"></div>
     </div>`;
+  /* the markup above was just created, so it has not been through
+     translateTree yet */
+  if(box && window.I18N) I18N.translateTree(box);
   // USDT tracks the USD figure. SOL is quoted only when an operator has
   // set one — SOL moves, and there is no rate feed here.
   const u = part.usdt ?? "—";
-  const s = (part.sol===null||part.sol===undefined) ? "request amount" : part.sol;
+  const s = (part.sol===null||part.sol===undefined)
+            ? I18N.T("desk.requestAmount") : part.sol;
   document.getElementById("amtUsdt").textContent=u;
   document.getElementById("amtUsdt2").textContent=u;
   document.getElementById("amtSol").textContent=s;
@@ -749,8 +795,8 @@ function qr(el,data){
     box.style.background="var(--panel2)";
     box.style.border="1px dashed var(--line)";
     box.innerHTML='<div style="color:var(--dim2);font-size:11px;'+
-      'text-align:center;padding:10px;line-height:1.5">QR unavailable<br>'+
-      'copy the address below</div>';
+      'text-align:center;padding:10px;line-height:1.5">'+
+      I18N.T("desk.qrUnavailable")+'<br>'+I18N.T("desk.copyAddressBelow")+'</div>';
   };
   img.src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data="+
     encodeURIComponent(data);
@@ -776,15 +822,17 @@ let PKG={};
       el.className="card pkg"+(first===k?" sel":"");
       el.dataset.pkg=k; el.onclick=()=>pickPkg(el);
       el.innerHTML=`<h3>${p.name}</h3>
-        <div style="font-size:12.5px;color:var(--dim)">${p.who}</div>
-        <div class="price">${p.setup.display}<small> one-time setup</small></div>
+        <div style="font-size:12.5px;color:var(--dim)">${I18N.SRV(p.who)}</div>
+        <div class="price">${p.setup.display}<small data-i18n="sell.oneTimeSetup"> one-time setup</small></div>
         <div style="font-size:15px;color:var(--gold2);font-weight:700">
-          + ${p.monthly.display}<small style="color:var(--dim);font-weight:500">
+          + ${p.monthly.display}<small style="color:var(--dim);font-weight:500" data-i18n="sell.perMonthOngoing">
           / month ongoing</small></div>
         <div style="font-size:12px;color:var(--dim2);margin-top:6px">
-          ${p.activation ? p.activation.display+" due today" : ""}</div>`;
+          ${p.activation ? I18N.T("sell.dueTodayAmount",
+              { amount: p.activation.display }) : ""}</div>`;
       box.appendChild(el);
     }
+    if(window.I18N) I18N.translateTree(box);
     if(first) pkg=first;
     // wallets — an option with no address does not appear
     const w=d.wallets||{};
@@ -809,7 +857,7 @@ let PKG={};
   }catch(e){
     document.getElementById("pkgs").innerHTML=
       '<div class="card" style="text-align:center;color:var(--dim)">'+
-      'Pricing is loading — if it does not appear, message @sklzlabs.</div>';
+      I18N.T('desk.pricingLoading')+'</div>';
   }
 })();
 function hidePay(k){
@@ -827,8 +875,8 @@ async function stripe(){
       body:JSON.stringify({package:pkg})});
     const d=await r.json();
     if(d&&d.url) location.href=d.url;
-    else alert((d&&d.detail)||"Checkout is unavailable right now.");
-  }catch(e){alert("Checkout is unavailable right now.");}
+    else alert((d&&d.detail)||I18N.T("desk.checkoutUnavailable"));
+  }catch(e){alert(I18N.T("desk.checkoutUnavailable"));}
 }
 
 /* ---- crypto order ---- */
@@ -844,44 +892,61 @@ async function submitPaid(){
     wallet:val("f_asset")==="USDT"?CFG.usdt_address:CFG.sol_address
   };
   if(!body.name||!body.email||!body.tx_hash){
-    err.textContent="Name, email and transaction hash are required."; return;}
+    err.textContent=I18N.T("desk.fieldsRequired"); return;}
   err.textContent=""; b.disabled=true; b.textContent="Submitting…";
   try{
     const r=await fetch(API+"/api/orders/crypto",{method:"POST",
       headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
     const d=await r.json();
-    if(!r.ok||!d.ok) throw new Error(d.detail||"could not submit");
+    if(!r.ok||!d.ok) throw new Error(d.detail||I18N.T("desk.couldNotSubmit"));
     document.getElementById("paidCard").style.display="none";
     document.getElementById("okCard").classList.add("on");
     document.getElementById("okRef").textContent=d.reference||"—";
     go("paid");
   }catch(e){
-    err.textContent="We couldn't record that just now — message @sklzlabs on "+
-                    "Telegram with your TXID and we'll activate you manually.";
-    b.disabled=false; b.textContent="Submit for verification →";
+    err.textContent=I18N.T("desk.couldNotRecord");
+    b.disabled=false; b.textContent=I18N.T("sell.submitVerify");
   }
 }
 function val(id){return (document.getElementById(id).value||"").trim();}
 
 /* ---- the flow ---- */
+/* Telegram preview. The instrument, side token and price levels are trade
+   facts and are printed exactly as they stand; only the field labels and the
+   risk line follow the reader's language. */
+let LAST_SIDE="buy", LAST_PX="1.08500";
 const TG_TEXT=(side,px)=>
 `📊 ${BRAND.name} — EURUSD
 
 ${side==="buy"?"🟢 BUY":"🔴 SELL"}  EURUSD
-Entry:  ${px}
-Stop:   ${side==="buy"?"1.08000":"1.09100"}
-Target: ${side==="buy"?"1.09900":"1.07800"}
+${I18N.T("tg.entry")}:  ${px}
+${I18N.T("tg.stop")}:   ${side==="buy"?"1.08000":"1.09100"}
+${I18N.T("tg.target")}: ${side==="buy"?"1.09900":"1.07800"}
 
-Risk 1% max. Not financial advice.`;
+${I18N.T("tg.riskLine")}`;
 
 let running=false;
 
 /* ---- REAL execution against the demo desk ---- */
 const LIVE={ steps:[...document.querySelectorAll(".step")] };
+/* Lifecycle badge vocabulary. The wire value never changes; only the badge
+   a prospect reads is localised. A lot size ("0.50 lot") is broker data and
+   passes through untouched. */
+const MARK_KEY = {
+  "refused":"mark.refused", "accepted":"mark.accepted", "error":"mark.error",
+  "dispatched":"mark.dispatched", "filled":"mark.filled",
+  "confirmed":"mark.confirmed", "sent":"mark.sent", "not sent":"mark.notSent",
+  "skipped":"mark.skipped", "scheduled":"mark.scheduled",
+  "timed out":"mark.timedOut"
+};
+function markText(m){
+  const k = MARK_KEY[m];
+  return k ? I18N.T(k) : m;          /* lot sizes and anything else: verbatim */
+}
 function lset(i,mark,detailId,detail){
   const s=LIVE.steps[i]; if(!s) return;
   s.classList.add("on");
-  s.querySelector("[data-k]").textContent=mark;
+  s.querySelector("[data-k]").textContent=markText(mark);
   if(detailId){ const d=document.getElementById(detailId);
                 if(d&&detail) d.textContent=detail; }
 }
@@ -912,10 +977,10 @@ async function runLive(side){
     }
     lset(0,"accepted","s1d",
          `${side.toUpperCase()} ${(document.getElementById("symSel")||{}).value}`+
-         ` · queued on the demo desk`);
+         ` · ${I18N.T("desk.queuedOnDesk")}`);
     await poll(d.command_id);
   }catch(e){
-    lset(0,"error","s1d","could not reach the demo desk");
+    lset(0,"error","s1d",I18N.T("desk.cannotReachDesk"));
   }
   btn.disabled=false; btn.textContent=label; running=false;
 }
@@ -953,12 +1018,12 @@ function busy(on){
 /* every button waits for the BROKER before the panel changes */
 async function ctl(action,extra){
   if(!LIVE_TICKET) return;
-  busy(true); msg(`${action}: sent to the demo desk…`);
+  busy(true); msg(I18N.T("desk.sentToDesk",{action:action}));
   try{
     const q=await control(Object.assign({action,ticket:LIVE_TICKET},extra||{}));
     const s=await awaitCmd(q.command_id);
     if(s.state==="succeeded"){
-      msg(`${action}: confirmed by the broker`,true);
+      msg(I18N.T("desk.confirmedByBroker",{action:action}),true);
       if(action==="close"){
         LIVE_TICKET=null;
         document.getElementById("posState").textContent="closed";
@@ -981,7 +1046,7 @@ async function ctlModify(){
   if(sl.trim() && !isNaN(+sl)) body.sl=+sl;
   if(tp.trim() && !isNaN(+tp)) body.tp=+tp;
   if(!("sl" in body) && !("tp" in body)){
-    msg("enter a stop or a target first"); return; }
+    msg(I18N.T("desk.enterStopFirst")); return; }
   await ctl("modify",body);
 }
 
@@ -1017,23 +1082,29 @@ async function refreshPositions(){
       document.getElementById("posState").textContent="";
       document.getElementById("posBody").innerHTML=
         '<div style="color:var(--dim2);font-size:12px">'+
-        'No active demo trade for this private link.</div>';
+        I18N.T('desk.noDemoTrade')+'</div>';
       document.getElementById("trailBox").textContent="";
       POLLING=false; return;
     }
     LIVE_TICKET=mine.ticket;
     setPosControls(true);
     panel.style.display="block";
-    document.getElementById("posState").textContent="live on the demo account";
+    document.getElementById("posState").textContent=I18N.T("desk.liveOnDemoAccount");
     const cell=(l,v)=>`<div><div style="font-size:10px;color:var(--dim2);
       text-transform:uppercase;letter-spacing:.07em">${l}</div>
       <div style="font-size:14px">${v}</div></div>`;
     document.getElementById("posBody").innerHTML=
-      cell("Ticket",mine.ticket)+cell("Symbol",mine.symbol)+
-      cell("Side",(mine.side||"").toUpperCase())+cell("Lots",mine.volume)+
-      cell("Entry",mine.entry)+
-      cell("Stop",mine.sl||"—")+cell("Target",mine.tp||"—")+
-      cell("P/L",(mine.profit>=0?"+":"")+mine.profit);
+      /* Labels follow the reader. Every VALUE below is broker data —
+         ticket, symbol, side token, lots, price levels, P/L — and is
+         printed exactly as the broker reported it. */
+      cell(I18N.T("desk.pos.ticket"),mine.ticket)+
+      cell(I18N.T("desk.pos.symbol"),mine.symbol)+
+      cell(I18N.T("desk.pos.side"),(mine.side||"").toUpperCase())+
+      cell(I18N.T("desk.pos.lots"),mine.volume)+
+      cell(I18N.T("desk.pos.entry"),mine.entry)+
+      cell(I18N.T("desk.pos.stop"),mine.sl||"—")+
+      cell(I18N.T("desk.pos.target"),mine.tp||"—")+
+      cell(I18N.T("desk.pos.pl"),(mine.profit>=0?"+":"")+mine.profit);
     // show the live values in the inputs so a change starts from truth,
     // not from an empty box the trader has to fill from memory
     const si=document.getElementById("inSL"), ti=document.getElementById("inTP");
@@ -1041,33 +1112,56 @@ async function refreshPositions(){
     if(ti && document.activeElement!==ti) ti.value = mine.tp || "";
     try{
       const tr=await (await fetch(`${API}/api/demo-links/${TOKEN}/trailing`)).json();
-      if(tr&&tr.ok) document.getElementById("trailBox").innerHTML=
-        `<b style="color:var(--gold2)">Trailing stop active</b> — starts after `+
-        `${tr.trigger_pips} pips, trails by ${tr.distance_pips}. `+
-        `Current stop <b>${mine.sl||"not set"}</b>.<br>${tr.note}`;
+      if(tr&&tr.ok){
+        /* Numbers stay exactly as the API supplied them; only the sentence
+           around them is localised. tr.note is free server-originated prose:
+           English readers see it verbatim, and in another locale it goes
+           through the closed server vocabulary — an unmapped string becomes
+           a neutral localised line rather than an English sentence in the
+           middle of an Arabic or Russian demo. No broker fact is touched. */
+        const line = I18N.T("desk.trailingState", {
+          trigger: tr.trigger_pips,
+          distance: tr.distance_pips,
+          stop: mine.sl || I18N.T("desk.notSet")
+        });
+        document.getElementById("trailBox").innerHTML =
+          `<b style="color:var(--gold2)">${line}</b>` +
+          (function(){
+            const note = I18N.SRVNOTE(tr.note);
+            return note ? `<br><span class="srv-note">${note}</span>` : "";
+          })();
+      }
     }catch(e){}
-  }catch(e){ msg(e.message,false); }
+  }catch(e){ msg(I18N.T("desk.cannotReachDesk"),false); }
   POLLING=false;
 }
 
 const AI_PRESETS=[
-  ["Explain this trade","explain","Explain this open trade to subscribers."],
-  ["Moved to breakeven","breakeven","Tell subscribers I moved this trade to breakeven."],
-  ["Stop changed","modified","Tell subscribers the stop loss changed."],
-  ["Trade closed","closed","Tell subscribers this trade is closed."],
-  ["Today's summary","summary","Summarise today's trades."],
-  ["Market update","update","Write a professional update for subscribers."]];
+  ["desk.ai.explain","explain","Explain this open trade to subscribers."],
+  ["desk.ai.breakeven","breakeven","Tell subscribers I moved this trade to breakeven."],
+  ["desk.ai.stopChanged","modified","Tell subscribers the stop loss changed."],
+  ["desk.ai.closed","closed","Tell subscribers this trade is closed."],
+  ["desk.ai.summary","summary","Summarise today's trades."],
+  ["desk.ai.marketUpdate","update","Write a professional update for subscribers."]];
 let AI_INTENT="update";
+/* Output-language directive for AI drafting lives in the localisation
+   runtime (I18N.aiDirective) so the desk and the Pro Trader OS assistant
+   ask for the same thing. Presentation language only: prices, ticket
+   numbers, symbols, lot sizes and SL/TP values must be reproduced exactly
+   as the verified trade record holds them. */
+function withLocale(instruction){ return I18N.aiDirective(instruction); }
 (function(){
   const box=document.getElementById("aiPresets"); if(!box) return;
-  box.innerHTML=AI_PRESETS.map((p,i)=>
+  const paint=()=>{ box.innerHTML=AI_PRESETS.map((p,i)=>
     `<button class="btn btn-ghost" onclick="aiPick(${i})"
-      style="padding:7px 11px;font-size:11.5px">${p[0]}</button>`).join("");
+      style="padding:7px 11px;font-size:11.5px">${I18N.T(p[0])}</button>`).join(""); };
+  paint();
+  if (window.I18N) I18N.onChange(paint);   /* re-render on a language switch */
 })();
 function aiPick(i){
   const p=AI_PRESETS[i]; AI_INTENT=p[1];
   document.getElementById("aiText").dataset.instruction=p[2];
-  aiSay(`"${p[0]}" selected — press Draft with AI`);
+  aiSay(I18N.T("desk.ai.selected", { name: I18N.T(p[0]) }));
   aiDraft();
 }
 function aiSay(t,good){
@@ -1079,51 +1173,56 @@ function aiSay(t,good){
 async function aiDraft(){
   const b=document.getElementById("aiDraftBtn");
   const ta=document.getElementById("aiText");
-  b.disabled=true; b.textContent="Drafting…"; aiSay("asking the AI…");
+  b.disabled=true; b.textContent=I18N.T("desk.ai.drafting"); aiSay(I18N.T("desk.ai.asking"));
   try{
+    /* The instruction is what the model is asked to write. In a non-English
+       locale it carries an explicit output-language directive; the verified
+       trade facts the endpoint supplies (prices, tickets, symbols, lots,
+       SL/TP) are never touched by it. */
     const body={intent:AI_INTENT,
-                instruction:ta.dataset.instruction||""};
+                instruction:withLocale(ta.dataset.instruction||"")};
     if(LIVE_TICKET) body.ticket=LIVE_TICKET;
     const r=await fetch(`${API}/api/demo-links/${TOKEN}/ai-draft`,
       {method:"POST",headers:{"Content-Type":"application/json"},
        body:JSON.stringify(body)});
     const d=await r.json();
-    if(!d.ok){ aiSay(d.reason||"could not draft",false); }
+    if(!d.ok){ aiSay(d.reason||I18N.T("desk.ai.couldNotDraft"),false); }
     else{
       ta.value=d.draft;
-      aiSay(d.policy_ok ? "draft ready — edit it if you like, then Send"
-                        : `draft ready, but the claim check flagged: `+
-                          `${d.policy_reason}`, d.policy_ok);
+      aiSay(d.policy_ok ? I18N.T("desk.ai.ready")
+                        : I18N.T("desk.ai.flagged",
+                            { reason: d.policy_reason || I18N.T("ai.unknownReason") }),
+            d.policy_ok);
     }
-  }catch(e){ aiSay("could not reach the AI",false); }
-  b.disabled=false; b.textContent="Draft with AI";
+  }catch(e){ aiSay(I18N.T("desk.ai.noAI"),false); }
+  b.disabled=false; b.textContent=I18N.T("desk.draftWithAI");
 }
 async function aiSend(){
   const ta=document.getElementById("aiText");
   const text=(ta.value||"").trim();
-  if(text.length<10){ aiSay("write or draft a message first",false); return; }
+  if(text.length<10){ aiSay(I18N.T("desk.ai.writeFirst"),false); return; }
   const b=document.getElementById("aiSendBtn");
-  b.disabled=true; b.textContent="Sending…";
+  b.disabled=true; b.textContent=I18N.T("desk.ai.sending");
   try{
     const r=await fetch(`${API}/api/demo-links/${TOKEN}/ai-send`,
       {method:"POST",headers:{"Content-Type":"application/json"},
        body:JSON.stringify({text})});
     const d=await r.json();
     if(d.ok && d.message_id){
-      aiSay("sent to the demo channel",true);
+      aiSay(I18N.T("desk.ai.sentToChannel"),true);
       if(d.url){
         const a=document.createElement("a");
         a.href=d.url; a.target="_blank"; a.style.cssText=
           "display:inline-block;margin-left:8px;color:var(--gold2)";
-        a.textContent="open it →";
+        a.textContent=I18N.T("desk.ai.openIt");
         document.getElementById("aiMsg").appendChild(a);
       }
     } else {
       const why=(d.detail&&d.detail.detail)||d.error||d.detail||"refused";
       aiSay(String(why),false);
     }
-  }catch(e){ aiSay("could not send",false); }
-  b.disabled=false; b.textContent="Send to channel";
+  }catch(e){ aiSay(I18N.T("desk.ai.couldNotSend"),false); }
+  b.disabled=false; b.textContent=I18N.T("desk.sendToChannel");
 }
 
 async function poll(cid){
@@ -1137,33 +1236,36 @@ async function poll(cid){
     }catch(e){ continue; }
     if(!dispatched && s.timings && s.timings.runner_received){
       dispatched=true;
-      lset(1,"dispatched","s2d","command collected by the demo Runner");
+      lset(1,"dispatched","s2d",I18N.T("desk.collectedByRunner"));
     }
     if(s.state==="failed"){
-      lset(2,"refused","s3d", s.broker_comment||"the order did not fill");
+      lset(2,"refused","s3d", s.broker_comment||I18N.T("desk.didNotFill"));
       return;
     }
     if(s.state==="succeeded" && s.ticket){
       // FILLED is only ever shown once the broker has confirmed it
+      /* Broker facts verbatim; only the words around them are localised. */
       lset(2,"filled","s3d",
-        `${s.symbol} @ ${s.fill_price} · ticket ${s.ticket} · rc ${s.retcode}`
+        `${s.symbol} @ ${s.fill_price} · ${I18N.T("desk.ticket")} ${s.ticket}`
+        + ` · rc ${s.retcode}`
         + (s.broker_comment?` · ${s.broker_comment}`:""));
       lset(3,"confirmed","s2d",
-        `account ${s.account} · ${s.latency_ms} ms click→broker`);
+        I18N.T("desk.accountLatency", { account: s.account, ms: s.latency_ms }));
       const tg=s.telegram||{};
       if(tg.message_id){
-        lset(4,"sent","tgDest","SKLZ demo channel");
+        lset(4,"sent","tgDest",I18N.T("desk.demoChannel"));
         document.getElementById("tgtext").textContent=
           `${BRAND.name} — ${s.symbol}\n\n${s.side.toUpperCase()}  ${s.symbol}\n`+
-          `Entry: ${s.fill_price}\nTicket: ${s.ticket}\n\n`+
-          `Executed on an MT5 broker DEMO account.\nAutomation is live; funds are virtual.`;
+          `${I18N.T("tg.entry")}: ${s.fill_price}\n`+
+          `${I18N.T("desk.ticket")}: ${s.ticket}\n\n`+
+          I18N.T("cmp.brokerDemo");
         document.getElementById("tg").classList.add("on");
         if(tg.url){
           const a=document.createElement("a");
           a.id="tgLink"; a.href=tg.url; a.target="_blank";
           a.className="btn btn-gold";
           a.style.cssText="display:block;text-align:center;margin-top:12px";
-          a.textContent="OPEN LIVE TELEGRAM SIGNAL →";
+          a.textContent=I18N.T("desk.openLiveSignal");
           document.getElementById("tg").appendChild(a);
         }
       } else if(tg.error){
@@ -1173,31 +1275,35 @@ async function poll(cid){
       lset(5,"0.50 lot"); lset(6,"0.36 lot"); lset(7,"skipped");
       const ac=s.auto_close||{};
       lset(8,"scheduled","s8d",
-        `closes automatically after ~${Math.round((ac.after_seconds||600)/60)}`+
-        ` minutes if you leave it open`);
+        I18N.T("desk.closesAfter",
+          { n: Math.round((ac.after_seconds||600)/60) }));
       LIVE_TICKET=s.ticket;
       // Show the panel at once using the broker's own fill data. The
       // positions read then replaces it with live values — waiting for
       // that read meant nothing appeared for up to half a minute.
       const panel=document.getElementById("posPanel");
       panel.style.display="block";
-      document.getElementById("posState").textContent="live on the demo account";
+      document.getElementById("posState").textContent=I18N.T("desk.liveOnDemoAccount");
       const c=(l,v)=>`<div><div style="font-size:10px;color:var(--dim2);
         text-transform:uppercase;letter-spacing:.07em">${l}</div>
         <div style="font-size:14px">${v}</div></div>`;
       document.getElementById("posBody").innerHTML=
-        c("Ticket",s.ticket)+c("Symbol",s.symbol)+
-        c("Side",(s.side||"").toUpperCase())+c("Lots",s.volume)+
-        c("Entry",s.fill_price)+c("Stop","reading…")+
-        c("Target","reading…")+c("P/L","—");
+        c(I18N.T("desk.pos.ticket"),s.ticket)+
+        c(I18N.T("desk.pos.symbol"),s.symbol)+
+        c(I18N.T("desk.pos.side"),(s.side||"").toUpperCase())+
+        c(I18N.T("desk.pos.lots"),s.volume)+
+        c(I18N.T("desk.pos.entry"),s.fill_price)+
+        c(I18N.T("desk.pos.stop"),I18N.T("desk.pos.reading"))+
+        c(I18N.T("desk.pos.target"),I18N.T("desk.pos.reading"))+
+        c(I18N.T("desk.pos.pl"),"—");
       document.getElementById("trailBox").textContent=
-        "reading live position state from the broker…";
+        I18N.T("desk.readingPosition");
       refreshPositions();
       setInterval(()=>{ if(LIVE_TICKET) refreshPositions(); }, 20000);
       return;
     }
   }
-  lset(2,"timed out","s3d","no confirmation within a minute");
+  lset(2,"timed out","s3d",I18N.T("desk.noConfirmation"));
 }
 async function runFlow(side){
   if(running) return; running=true;
@@ -1213,12 +1319,31 @@ async function runFlow(side){
     await new Promise(r=>setTimeout(r,waits[i]));
     steps[i].classList.add("on");
     steps[i].querySelector("[data-k]").textContent=marks[i];
-    if(i===3){ document.getElementById("tgtext").textContent=TG_TEXT(side,px);
+    if(i===3){ LAST_SIDE=side; LAST_PX=px;
+        document.getElementById("tgtext").textContent=TG_TEXT(side,px);
                document.getElementById("tg").classList.add("on"); }
   }
   const k=document.getElementById("kSig");
   k.textContent=(+k.textContent+1);
   btn.disabled=false; running=false;
 }
+</script>
+<script>
+/* Language switcher — isolated on purpose: it survives a failure in the desk
+   script, and remounts if the page swaps its body for the expired screen, so
+   a prospect can always change language. */
+window.mountLangSwitch = function () {
+  if (!window.I18N) return;
+  var host = document.getElementById("langHost");
+  if (!host) {
+    host = document.createElement("div");
+    host.id = "langHost";
+    host.style.cssText = "position:fixed;top:14px;inset-inline-end:14px;z-index:60";
+    document.body.appendChild(host);
+  }
+  if (host.querySelector(".i18n-switch")) return;
+  I18N.mountSwitcher(host);
+};
+mountLangSwitch();
 </script>
 </body></html>

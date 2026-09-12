@@ -3,8 +3,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Command Your Trading World</title>
+<title data-i18n="site.meta.title">Command Your Trading World</title>
+<meta name="description" data-i18n="site.meta.desc" content="One operating system for your signals, community, academy and trading business.">
 <script>document.documentElement.className="js"</script>
+<!-- localisation: bundled, synchronous, no network. The first paint is
+     already in the right language; only brand/token data hydrates late. -->
+<script src="sklz-i18n-dict.js"></script>
+<script src="sklz-i18n.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════════════════
    SKLZ PRO TRADER — public trader site.
@@ -320,6 +325,47 @@ svg{display:block}
   html{scroll-behavior:auto}
   .js .rv,.js .rvw>*{opacity:1;transform:none;clip-path:none;transition:none}
 }
+/* ═══ LOCALISATION ═══════════════════════════════════════════════════
+   One rule set for three languages. Logical properties do the mirroring,
+   so there is no second "RTL stylesheet" to keep in sync.                */
+
+.i18n-switch{display:inline-flex;gap:2px;padding:3px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.6)}
+.i18n-opt{appearance:none;border:0;background:none;cursor:pointer;
+  font:inherit;font-size:11.5px;font-weight:700;letter-spacing:.04em;
+  color:var(--dim);padding:5px 9px;border-radius:999px;line-height:1.1}
+.i18n-opt:hover{color:var(--navy)}
+.i18n-opt.on{background:var(--navy);color:#fff}
+.i18n-opt:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* Directional glyphs are the one thing that must mirror: an arrow that
+   still points right in Arabic points backwards. */
+.rtl .arrow{display:inline-block;transform:scaleX(-1)}
+
+/* Trading data, symbols and the Telegram preview stay left-to-right in
+   every locale — that is how a trader reads a price, and how the broker
+   prints it. Digits stay Latin for the same reason. */
+.rtl .msg,.rtl .p,.rtl .n,.rtl .ix,.rtl .sk,.rtl svg{direction:ltr}
+.rtl .msg,.rtl .p{text-align:left}
+
+/* Arabic letterforms need air: the display face is tracked tight and set
+   on a short leading for Latin caps, which crushes Arabic. */
+.lang-ar .display,.lang-ar .h2,.lang-ar .big{letter-spacing:0;line-height:1.24}
+.lang-ar .display{font-size:clamp(36px,5.4vw,68px)}
+.lang-ar .h2{line-height:1.3}
+.lang-ar .kicker,.lang-ar .caps{letter-spacing:.08em}
+.lang-ar .tag{letter-spacing:0}
+
+/* Russian words are long; let them break rather than overflow a button. */
+.lang-ru .display,.lang-ru .h2,.lang-ru .big{letter-spacing:-.02em;
+  overflow-wrap:break-word;hyphens:auto}
+.lang-ru .display{font-size:clamp(34px,5.1vw,64px)}
+.lang-ru .btn,.lang-ru .caps span{letter-spacing:.02em}
+.lang-ru .btn{white-space:normal;text-align:center}
+@media(max-width:980px){
+  .lang-ar .display{font-size:clamp(30px,8.4vw,64px)}
+  .lang-ru .display{font-size:clamp(28px,7.8vw,60px)}
+}
 </style>
 </head><body>
 
@@ -330,14 +376,14 @@ svg{display:block}
     <b data-brand>SKLZ Pro Trader</b>
   </a>
   <div class="lk">
-    <a href="#ecosystem">Ecosystem</a>
-    <a href="#distribute">Distribution</a>
-    <a href="#beyond">Beyond signals</a>
-    <a href="#os">The OS</a>
+    <a href="#ecosystem" data-i18n="site.nav.ecosystem">Ecosystem</a>
+    <a href="#distribute" data-i18n="site.nav.distribution">Distribution</a>
+    <a href="#beyond" data-i18n="site.beyond.kicker">Beyond signals</a>
+    <a href="#os" data-i18n="site.nav.os">The OS</a>
   </div>
-  <div style="display:flex;gap:10px;align-items:center">
-    <a class="btn line sm" id="navPortal">Member login</a>
-    <a class="btn sm" id="navDemo">Book a demo</a>
+  <div style="display:flex;gap:10px;align-items:center" id="navRight">
+    <a class="btn line sm" id="navPortal" data-i18n="nav.memberLogin">Member login</a>
+    <a class="btn sm" id="navDemo" data-i18n="nav.bookDemo">Book a demo</a>
   </div>
 </div></div>
 
@@ -346,21 +392,21 @@ svg{display:block}
   <div class="wrap hgrid">
 
     <div class="htext">
-      <div class="kicker rv">Professional trading operation</div>
+      <div class="kicker rv" data-i18n="site.kicker">Professional trading operation</div>
       <h1 class="display rv" style="--d:.08s;margin-top:20px">
-        COMMAND YOUR<br><span class="grad">TRADING WORLD.</span></h1>
-      <p class="sub rv" style="--d:.18s;margin-top:26px">One operating system
+        <span data-i18n="site.hero.l1">COMMAND YOUR</span><br><span class="grad" data-i18n="site.hero.l2">TRADING WORLD.</span></h1>
+      <p class="sub rv" style="--d:.18s;margin-top:26px" data-i18n="site.hero.sub">One operating system
         for your signals, community, academy and trading business.</p>
       <div class="cta rv" style="--d:.26s">
-        <a class="btn glow" id="heroOS">Explore the OS
+        <a class="btn glow" id="heroOS"><span data-i18n="site.hero.cta">Explore the OS</span>
           <span class="arrow">→</span></a>
-        <a class="btn line" id="heroDemo">Book a demo</a>
+        <a class="btn line" id="heroDemo" data-i18n="nav.bookDemo">Book a demo</a>
       </div>
       <div class="caps rv" style="--d:.34s;margin-top:40px">
-        <span>Trade</span><i></i><span>Distribute</span><i></i>
-        <span>Teach</span><i></i><span>Engage</span><i></i><span>Grow</span>
+        <span data-i18n="site.caps.trade">Trade</span><i></i><span data-i18n="site.caps.distribute">Distribute</span><i></i>
+        <span data-i18n="site.caps.teach">Teach</span><i></i><span data-i18n="site.caps.engage">Engage</span><i></i><span data-i18n="site.caps.grow">Grow</span>
       </div>
-      <div class="micro rv" style="--d:.4s;margin-top:22px;max-width:44ch">
+      <div class="micro rv" style="--d:.4s;margin-top:22px;max-width:44ch" data-i18n="cmp.risk">
         Trading involves risk of loss. Nothing here is financial advice, and
         no result is promised.</div>
     </div>
@@ -411,27 +457,27 @@ svg{display:block}
         <g class="nd">
           <circle cx="300" cy="115" r="9" fill="#fff" stroke="url(#g1)"
             stroke-width="2.2"/>
-          <text class="lbl" x="300" y="88" text-anchor="middle">Signals</text>
+          <text class="lbl" x="300" y="88" text-anchor="middle" data-i18n="nav.signals">Signals</text>
         </g>
         <g class="nd" style="animation-delay:.6s">
           <circle cx="476" cy="243" r="9" fill="#fff" stroke="url(#g1)"
             stroke-width="2.2"/>
-          <text class="lbl" x="476" y="218" text-anchor="middle">Community</text>
+          <text class="lbl" x="476" y="218" text-anchor="middle" data-i18n="site.eco.community">Community</text>
         </g>
         <g class="nd" style="animation-delay:1.2s">
           <circle cx="409" cy="450" r="9" fill="#fff" stroke="url(#g1)"
             stroke-width="2.2"/>
-          <text class="lbl" x="409" y="478" text-anchor="middle">Academy</text>
+          <text class="lbl" x="409" y="478" text-anchor="middle" data-i18n="site.beyond.courses">Academy</text>
         </g>
         <g class="nd" style="animation-delay:1.8s">
           <circle cx="191" cy="450" r="9" fill="#fff" stroke="url(#g1)"
             stroke-width="2.2"/>
-          <text class="lbl" x="191" y="478" text-anchor="middle">Live</text>
+          <text class="lbl" x="191" y="478" text-anchor="middle" data-i18n="site.eco.live">Live</text>
         </g>
         <g class="nd" style="animation-delay:2.4s">
           <circle cx="124" cy="243" r="9" fill="#fff" stroke="url(#g1)"
             stroke-width="2.2"/>
-          <text class="lbl" x="124" y="218" text-anchor="middle">Clients</text>
+          <text class="lbl" x="124" y="218" text-anchor="middle" data-i18n="site.eco.clients">Clients</text>
         </g>
 
         <!-- the desk -->
@@ -462,11 +508,11 @@ svg{display:block}
 <section class="sec" id="ecosystem"><div class="wrap">
   <div class="lead">
     <div>
-      <div class="kicker rv">The ecosystem</div>
-      <h2 class="h2 rv" style="--d:.06s;margin-top:16px">ONE TRADER.<br>
-        ONE ECOSYSTEM.</h2>
+      <div class="kicker rv" data-i18n="site.eco.kicker">The ecosystem</div>
+      <h2 class="h2 rv" style="--d:.06s;margin-top:16px"><span data-i18n="site.eco.l1">ONE TRADER.</span><br>
+        <span data-i18n="site.eco.l2">ONE ECOSYSTEM.</span></h2>
     </div>
-    <div class="sub rv" style="--d:.14s">Five surfaces. One desk behind
+    <div class="sub rv" style="--d:.14s" data-i18n="site.os.sub">Five surfaces. One desk behind
       all of them.</div>
   </div>
 
@@ -478,8 +524,8 @@ svg{display:block}
         <path class="s2 dash" d="M16 34h9l5-12 7 22 5-10h8"
 />
         <circle class="f" cx="33" cy="57" r="3"/></svg></div>
-      <div class="t">Trade</div>
-      <div class="d">Your execution, on your platform.</div>
+      <div class="t" data-i18n="site.caps.trade">Trade</div>
+      <div class="d" data-i18n="site.eco.signalsD">Your execution, on your platform.</div>
     </div>
     <div class="ob rv" style="--d:.1s">
       <div class="n">02</div>
@@ -490,8 +536,8 @@ svg{display:block}
         <circle class="s2" cx="52" cy="52" r="6"/>
         <path class="s dash" d="M21 33h14M35 33l11-17M35 33l11 17"
 /></svg></div>
-      <div class="t">Distribute</div>
-      <div class="d">One fill reaches every channel.</div>
+      <div class="t" data-i18n="site.caps.distribute">Distribute</div>
+      <div class="d" data-i18n="site.dist.oneD">One fill reaches every channel.</div>
     </div>
     <div class="ob rv" style="--d:.16s">
       <div class="n">03</div>
@@ -499,8 +545,8 @@ svg{display:block}
         <path class="s" d="M8 20l25-11 25 11-25 11z"/>
         <path class="s2" d="M18 28v16c0 5 30 5 30 0V28"/>
         <path class="s2 dash" d="M58 22v16"/></svg></div>
-      <div class="t">Teach</div>
-      <div class="d">A curriculum, in order, tracked.</div>
+      <div class="t" data-i18n="site.caps.teach">Teach</div>
+      <div class="d" data-i18n="site.eco.academyD">A curriculum, in order, tracked.</div>
     </div>
     <div class="ob rv" style="--d:.22s">
       <div class="n">04</div>
@@ -510,8 +556,8 @@ svg{display:block}
         <circle class="f" cx="24" cy="28" r="2.6"/>
         <circle class="f" cx="33" cy="28" r="2.6"/>
         <circle class="f" cx="42" cy="28" r="2.6"/></svg></div>
-      <div class="t">Engage</div>
-      <div class="d">A private space, not a feed.</div>
+      <div class="t" data-i18n="site.caps.engage">Engage</div>
+      <div class="d" data-i18n="site.eco.communityD">A private space, not a feed.</div>
     </div>
     <div class="ob rv" style="--d:.28s">
       <div class="n">05</div>
@@ -520,8 +566,8 @@ svg{display:block}
         <rect class="s" x="14" y="34" width="10" height="18" rx="3"/>
         <rect class="s" x="28" y="24" width="10" height="28" rx="3"/>
         <rect class="s" x="42" y="14" width="10" height="38" rx="3"/></svg></div>
-      <div class="t">Grow</div>
-      <div class="d">Members, courses, clients — one place.</div>
+      <div class="t" data-i18n="site.caps.grow">Grow</div>
+      <div class="d" data-i18n="site.beyond.portalD">Members, courses, clients — one place.</div>
     </div>
   </div>
 </div></section>
@@ -532,67 +578,66 @@ svg{display:block}
     <div>
       <div class="rv" style="display:flex;gap:14px;align-items:center;
         flex-wrap:wrap">
-        <span class="kicker">Distribution</span>
-        <span class="tag demo">demo walkthrough</span>
+        <span class="kicker" data-i18n="site.nav.distribution">Distribution</span>
+        <span class="tag demo" data-i18n="demo.walkthrough">demo walkthrough</span>
       </div>
-      <h2 class="h2 rv" style="--d:.06s;margin-top:16px">TRADE ONCE.<br>
-        DISTRIBUTE EVERYWHERE.</h2>
+      <h2 class="h2 rv" style="--d:.06s;margin-top:16px"><span data-i18n="site.dist.l1">TRADE ONCE.</span><br>
+        <span data-i18n="site.dist.l2">DISTRIBUTE EVERYWHERE.</span></h2>
     </div>
   </div>
 
   <div class="dist">
     <div class="src rv">
-      <div class="kicker">One execution</div>
+      <div class="kicker" data-i18n="site.dist.one">One execution</div>
       <div class="p">MT5</div>
-      <div class="small" style="margin-top:14px">The order fills once. Nothing
+      <div class="small" style="margin-top:14px" data-i18n="site.dist.sub">The order fills once. Nothing
         after that is typed by hand.</div>
-      <div class="micro" style="margin-top:14px">Executed on an MT5 broker
-        <b>DEMO</b> account. Automation is live; funds are virtual.</div>
+      <div class="micro" style="margin-top:14px" data-i18n="cmp.brokerDemo">Executed on an MT5 broker DEMO account. Automation is live; funds are virtual.</div>
     </div>
 
     <div class="rails">
       <div class="rail rv" style="--d:.06s"><span class="bar"></span>
-        <span class="ix">01</span><span class="nm">Signal channel</span>
-        <span class="st">Published on fill</span></div>
+        <span class="ix">01</span><span class="nm" data-i18n="site.eco.signals">Signal channel</span>
+        <span class="st" data-i18n="site.dist.published">Published on fill</span></div>
       <div class="rail rv" style="--d:.12s"><span class="bar"></span>
-        <span class="ix">02</span><span class="nm">Lifecycle updates</span>
-        <span class="st">Edited in place</span></div>
+        <span class="ix">02</span><span class="nm" data-i18n="site.dist.lifecycle">Lifecycle updates</span>
+        <span class="st" data-i18n="site.dist.edited">Edited in place</span></div>
       <div class="rail rv" style="--d:.18s"><span class="bar"></span>
-        <span class="ix">03</span><span class="nm">Community rooms</span>
-        <span class="st">Discussion</span></div>
+        <span class="ix">03</span><span class="nm" data-i18n="site.beyond.rooms">Community rooms</span>
+        <span class="st" data-i18n="site.os.discussion">Discussion</span></div>
       <div class="rail rv" style="--d:.24s"><span class="bar"></span>
-        <span class="ix">04</span><span class="nm">Member portal</span>
-        <span class="st">On the record</span></div>
+        <span class="ix">04</span><span class="nm" data-i18n="site.beyond.portal">Member portal</span>
+        <span class="st" data-i18n="site.dist.record">On the record</span></div>
       <div class="rail rv" style="--d:.3s"><span class="bar"></span>
-        <span class="ix">05</span><span class="nm">Client accounts</span>
-        <span class="st">Signal Desk implementation</span></div>
+        <span class="ix">05</span><span class="nm" data-i18n="site.os.clientAccounts">Client accounts</span>
+        <span class="st" data-i18n="site.deskImplementation">Signal Desk implementation</span></div>
     </div>
   </div>
 
-  <div class="micro rv" style="margin-top:24px;max-width:70ch">
+  <div class="micro rv" style="margin-top:24px;max-width:70ch" data-i18n="cmp.copying">
     Multi-account copying available with Signal Desk implementation. This
     public demo does not prove follower-account copying.</div>
 </div></section>
 
 <!-- ── 4 · cinematic ───────────────────────────────────────────── -->
 <section class="cine" id="beyond"><div class="wrap">
-  <div class="kicker rv" style="letter-spacing:.3em">The difference</div>
-  <div class="rvw" style="--d:.08s;margin-top:26px"><div class="big">
+  <div class="kicker rv" style="letter-spacing:.3em" data-i18n="site.dist.kicker">The difference</div>
+  <div class="rvw" style="--d:.08s;margin-top:26px"><div class="big" data-i18n="site.beyond.l1">
     MORE THAN</div></div>
-  <div class="rvw" style="--d:.22s"><div class="big grad">SIGNALS.</div></div>
+  <div class="rvw" style="--d:.22s"><div class="big grad" data-i18n="site.beyond.l2">SIGNALS.</div></div>
 
   <div class="three">
     <div class="rv" style="--d:.06s">
-      <div class="w">Live</div>
-      <div class="l">Sessions where the decisions get made, not replayed.</div>
+      <div class="w" data-i18n="site.eco.live">Live</div>
+      <div class="l" data-i18n="site.eco.liveD">Sessions where the decisions get made, not replayed.</div>
     </div>
     <div class="rv" style="--d:.14s">
-      <div class="w">Academy</div>
-      <div class="l">Programs in sequence. Members keep their progress.</div>
+      <div class="w" data-i18n="site.beyond.courses">Academy</div>
+      <div class="l" data-i18n="site.beyond.coursesD">Programs in sequence. Members keep their progress.</div>
     </div>
     <div class="rv" style="--d:.22s">
-      <div class="w">Community</div>
-      <div class="l">Rooms by purpose. A place, rather than a scroll.</div>
+      <div class="w" data-i18n="site.eco.community">Community</div>
+      <div class="l" data-i18n="site.beyond.roomsD">Rooms by purpose. A place, rather than a scroll.</div>
     </div>
   </div>
 </div></section>
@@ -600,46 +645,46 @@ svg{display:block}
 <!-- ── 5 · the OS reveal ───────────────────────────────────────── -->
 <section class="sec mist" id="os"><div class="wrap osgrid">
   <div>
-    <div class="kicker rv">The control centre</div>
-    <h2 class="h2 rv" style="--d:.06s;margin-top:16px">YOUR TRADING
-      BUSINESS.<br>ONE CONTROL CENTER.</h2>
-    <p class="sub rv" style="--d:.14s;margin-top:24px;max-width:36ch">
+    <div class="kicker rv" data-i18n="site.os.kicker">The control centre</div>
+    <h2 class="h2 rv" style="--d:.06s;margin-top:16px"><span data-i18n="site.os.l1">YOUR TRADING BUSINESS.</span><br><span data-i18n="site.os.l2">ONE CONTROL CENTER.</span></h2>
+    <p class="sub rv" style="--d:.14s;margin-top:24px;max-width:36ch" data-i18n="site.beyond.sub">
       Execution, distribution, members, education and communication — run from
       a single desk.</p>
     <div class="cta rv" style="--d:.2s">
-      <a class="btn glow" id="osEnter">Enter the OS <span class="arrow">→</span></a>
-      <a class="btn line" id="osPortal">Member portal</a>
+      <a class="btn glow" id="osEnter"><span data-i18n="nav.enterOS">Enter the OS</span> <span class="arrow">→</span></a>
+      <a class="btn line" id="osPortal" data-i18n="site.beyond.portal">Member portal</a>
     </div>
   </div>
 
   <div class="win rv" style="--d:.1s">
     <div class="tb"><i></i><i></i><i></i>
       <span data-brand>SKLZ Pro Trader</span>
-      <span class="tag demo" style="margin-left:auto">demo view</span></div>
+      <span class="tag demo" style="margin-left:auto" data-i18n="demo.view">demo view</span></div>
     <div class="bd">
       <!-- a picture of the OS, not a menu: spans, so nothing here invites
            a click it cannot answer -->
       <div class="sd">
-        <span class="on">Overview</span><span>Signals</span><span>Positions</span>
-        <span>Live</span><span>Academy</span><span>Community</span>
-        <span>Clients</span><span>AI centre</span>
+        <span class="on" data-i18n="nav.overview">Overview</span><span data-i18n="nav.signals">Signals</span><span data-i18n="site.os.positions">Positions</span>
+        <span data-i18n="site.eco.live">Live</span><span data-i18n="site.beyond.courses">Academy</span><span data-i18n="site.eco.community">Community</span>
+        <span data-i18n="site.eco.clients">Clients</span><span data-i18n="site.os.aiCentre">AI centre</span>
       </div>
       <div class="ct">
         <div class="mini">
-          <div class="h">Signal · demo example</div>
-          <div class="msg">BTCUSD SELL · STATUS: OPEN
-Executed on an MT5 broker DEMO account.
-Automation is live; funds are virtual.</div>
+          <div class="h" data-i18n="demo.example">Signal · demo example</div>
+          <div class="msg">BTCUSD <span data-i18n="desk.sellSide">SELL</span> · <span
+data-i18n="tg.previewLine">STATUS: OPEN</span>
+<span data-i18n="cmp.brokerDemo">Executed on an MT5 broker DEMO account.
+Automation is live; funds are virtual.</span></div>
         </div>
         <div class="blocks">
-          <div class="mini"><div class="h">Members</div>
+          <div class="mini"><div class="h" data-i18n="os.members">Members</div>
             <div class="sk acc w80"></div><div class="sk w60"></div></div>
-          <div class="mini"><div class="h">Academy</div>
+          <div class="mini"><div class="h" data-i18n="site.beyond.courses">Academy</div>
             <div class="sk w60"></div><div class="sk acc w40"></div></div>
-          <div class="mini"><div class="h">Rooms</div>
+          <div class="mini"><div class="h" data-i18n="site.os.rooms">Rooms</div>
             <div class="sk w80"></div><div class="sk w40"></div></div>
         </div>
-        <div class="mini"><div class="h">Communication centre</div>
+        <div class="mini"><div class="h" data-i18n="site.os.commsCentre">Communication centre</div>
           <div class="sk w80"></div><div class="sk acc w60"></div>
           <div class="sk w40"></div></div>
       </div>
@@ -649,28 +694,24 @@ Automation is live; funds are virtual.</div>
 
 <!-- ── 6 · final CTA ───────────────────────────────────────────── -->
 <section class="final"><div class="wrap">
-  <div class="kicker rv">Powered by SKLZ Pro Trader OS</div>
-  <h2 class="h2 rv" style="--d:.08s;margin-top:20px">BUILD YOUR<br>
-    <span class="grad">TRADING EMPIRE.</span></h2>
-  <p class="sub rv" style="--d:.16s">Signals, live sessions, academy,
+  <div class="kicker rv"><span data-i18n="site.poweredBy">Powered by</span> SKLZ Pro Trader OS</div>
+  <h2 class="h2 rv" style="--d:.08s;margin-top:20px"><span data-i18n="site.final.l1">BUILD YOUR</span><br>
+    <span class="grad" data-i18n="site.final.l2">TRADING EMPIRE.</span></h2>
+  <p class="sub rv" style="--d:.16s" data-i18n="site.eco.sub">Signals, live sessions, academy,
     community and clients — running from one system.</p>
   <div class="cta rv" style="--d:.24s;justify-content:center">
-    <a class="btn inv" id="endDemo">Book a demo</a>
-    <a class="btn inv line" id="endOS">Explore the OS
+    <a class="btn inv" id="endDemo" data-i18n="nav.bookDemo">Book a demo</a>
+    <a class="btn inv line" id="endOS"><span data-i18n="site.hero.cta">Explore the OS</span>
       <span class="arrow">→</span></a>
   </div>
 </div></section>
 
 <div class="foot"><div class="wrap">
   <div class="fr">
-    <div><b data-brand>SKLZ Pro Trader</b> · Trading involves risk of loss ·
-      Not financial advice · No result is promised</div>
-    <div>Powered by <b>SKLZ Pro Trader OS</b></div>
+    <div><b data-brand>SKLZ Pro Trader</b> · <span data-i18n="cmp.riskShort">Trading involves risk of loss · Not financial advice · No result is promised</span></div>
+    <div><span data-i18n="site.poweredBy">Powered by</span> <b>SKLZ Pro Trader OS</b></div>
   </div>
-  <div style="margin-top:12px">Demonstration site. Anything marked
-    <b>demo</b> is presentation content for the walkthrough. Trade execution
-    shown runs on an MT5 broker <b>DEMO</b> account — automation is live and
-    funds are virtual.</div>
+  <div style="margin-top:12px"><span data-i18n="cmp.demoNotice">Demonstration site. Anything marked</span> <b data-i18n="demo.demo">DEMO</b> <span data-i18n="cmp.demoNotice2">is presentation content for the walkthrough. Trade execution shown runs on an MT5 broker DEMO account — automation is live and funds are virtual.</span></div>
 </div></div>
 
 <script src="sklz-os.js"></script>
@@ -709,7 +750,11 @@ Automation is live; funds are virtual.</div>
     ".hero .rv").forEach(el => el.classList.add("in")));
 })();
 
-/* ── HYDRATE SECOND ── personalisation, on its own time. */
-hydrateBrand();
+/* language switcher — manual choice wins and persists for this browser */
+I18N.mountSwitcher(document.getElementById("navRight"));
+
+/* ── HYDRATE SECOND ── personalisation, on its own time.
+   The demo token carries a language; adopting it re-renders in place. */
+hydrateBrand();   /* sklz-os.js adopts the token language centrally */
 </script>
 </body></html>

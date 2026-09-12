@@ -241,3 +241,43 @@ label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;
 .toast.on{opacity:1;transform:none}
 .foot{border-top:1px solid var(--line);padding:26px 0 46px;
   color:var(--dim2);font-size:12px}
+
+/* ═══ LOCALISATION ══════════════════════════════════════════════════════
+   Shared by the OS shell, the desk and the portal. Logical properties do
+   the mirroring, so there is no parallel RTL stylesheet to keep in sync. */
+
+.i18n-switch{display:inline-flex;gap:2px;padding:3px;border-radius:999px;
+  border:1px solid var(--line2,#242C3A);background:rgba(255,255,255,.04)}
+.i18n-opt{appearance:none;border:0;background:none;cursor:pointer;font:inherit;
+  font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--dim,#7C8798);
+  padding:4px 8px;border-radius:999px;line-height:1.1}
+.i18n-opt:hover{color:var(--ink,#EEF2F8)}
+.i18n-opt.on{background:var(--gold,#F5A623);color:#12161F}
+.i18n-opt:focus-visible{outline:2px solid var(--gold,#F5A623);outline-offset:2px}
+
+/* Directional glyphs mirror; everything a trader reads as data does not. */
+.rtl .arrow,.rtl .chev{display:inline-block;transform:scaleX(-1)}
+
+/* Prices, symbols, tickets, lot sizes, charts and the Telegram preview stay
+   left-to-right in Arabic. That is how the broker prints them and how a
+   trader reads them — mirroring here would be a support incident. */
+.rtl .tnum,.rtl .px,.rtl .lv,.rtl .levels,.rtl .mono,.rtl code,
+.rtl .tg,.rtl .tgmsg,.rtl .sig,.rtl table,.rtl svg,.rtl input[type="number"]
+  {direction:ltr}
+.rtl .tnum,.rtl .px,.rtl .mono,.rtl .tg,.rtl .tgmsg{text-align:left}
+.rtl th,.rtl td{text-align:start}
+
+/* Arabic letterforms need more leading and no negative tracking. */
+.lang-ar{letter-spacing:0}
+.lang-ar h1,.lang-ar h2,.lang-ar h3,.lang-ar .h1,.lang-ar .h2
+  {letter-spacing:0;line-height:1.35}
+.lang-ar .tag,.lang-ar .kicker,.lang-ar .eyebrow{letter-spacing:0}
+
+/* Russian is long: let labels wrap instead of clipping a button or a chip. */
+.lang-ru .btn,.lang-ru .chip,.lang-ru .tab,.lang-ru .nav-item
+  {white-space:normal;overflow-wrap:break-word}
+.lang-ru .tag,.lang-ru .kicker{letter-spacing:.02em}
+
+/* A long Russian or Arabic label must wrap, not push the row off-screen. */
+.lang-ru .spread,.lang-ar .spread{flex-wrap:wrap;row-gap:6px}
+.lang-ru .tag,.lang-ar .tag{max-width:100%;white-space:normal}
