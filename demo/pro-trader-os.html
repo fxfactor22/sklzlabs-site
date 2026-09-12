@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>SKLZ Pro Trader OS</title>
+<link rel="stylesheet" href="sklz-os.css">
+</head><body>
+
+<div class="shell">
+
+  <!-- ── navigation ─────────────────────────────────────────── -->
+  <aside class="side">
+    <div class="brandmark">
+      <div class="m" data-initials>SK</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:-.01em"
+             data-brand>SKLZ Pro Trader</div>
+        <div style="font-size:10px;color:var(--dim2);letter-spacing:.1em;
+             text-transform:uppercase">Pro Trader OS</div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <div class="navgrp">Operate</div>
+      <a data-pane="overview"><span class="ic">◆</span>Overview</a>
+      <a data-pane="desk"><span class="ic">⌁</span>Signal Desk</a>
+      <a data-pane="telegram"><span class="ic">✈</span>Telegram Studio</a>
+      <a data-pane="ai"><span class="ic">✦</span>AI Assistant</a>
+
+      <div class="navgrp">Deliver</div>
+      <a data-pane="live"><span class="ic">●</span>Live Sessions</a>
+      <a data-pane="academy"><span class="ic">▤</span>Academy</a>
+      <a data-pane="community"><span class="ic">◍</span>Community</a>
+
+      <div class="navgrp">Grow</div>
+      <a data-pane="audience"><span class="ic">◉</span>Audience &amp; Leads</a>
+      <a data-pane="brand"><span class="ic">◈</span>Brand &amp; Channel</a>
+      <a data-pane="sell"><span class="ic">▲</span>Sell</a>
+      <a data-pane="pricing"><span class="ic">$</span>Pricing</a>
+    </div>
+
+    <div class="sep"></div>
+    <a class="btn ghost sm full" id="linkSite" href="trader-site.html">
+      View public website →</a>
+    <a class="btn ghost sm full" id="linkPortal" style="margin-top:8px"
+       href="client-portal.html">View client portal →</a>
+  </aside>
+
+  <!-- ── main ───────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <section class="pane" id="pane-overview">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">Operating system</div>
+          <h1 class="h-lg" style="margin-top:5px">Overview</h1>
+        </div>
+        <div class="row wrap-r">
+          <span class="tag gold">Trade Once. Distribute Everywhere.</span>
+        </div>
+      </div>
+
+      <div class="flow" style="margin-bottom:22px">
+        <div class="step"><div class="n">01</div><div class="t">Trade</div>
+          <div class="s">One order on your master account.</div></div>
+        <div class="step"><div class="n">02</div><div class="t">Manage</div>
+          <div class="s">Stops, breakeven and trailing at the broker.</div></div>
+        <div class="step"><div class="n">03</div><div class="t">Distribute</div>
+          <div class="s">Telegram, updated in place as it moves.</div></div>
+        <div class="step"><div class="n">04</div><div class="t">Communicate</div>
+          <div class="s">AI drafts from verified facts. You approve.</div></div>
+        <div class="step"><div class="n">05</div><div class="t">Sell</div>
+          <div class="s">Qualify, recommend, convert.</div></div>
+      </div>
+
+      <div class="grid g4" style="margin-bottom:16px">
+        <div class="kpi"><div class="l">Active signals</div>
+          <div class="v" id="kActive">—</div>
+          <div class="d" id="kActiveD">reading your desk…</div></div>
+        <div class="kpi"><div class="l">Signals today
+            <span class="tag demo">demo</span></div>
+          <div class="v">14</div><div class="d">across 3 instruments</div></div>
+        <div class="kpi"><div class="l">Telegram subscribers
+            <span class="tag demo">demo</span></div>
+          <div class="v">1,240</div><div class="d">+38 this week</div></div>
+        <div class="kpi"><div class="l">Leads <span class="tag demo">demo</span></div>
+          <div class="v gold">27</div><div class="d">9 awaiting a reply</div></div>
+      </div>
+
+      <div class="grid g3" style="margin-bottom:16px">
+        <div class="card"><div class="spread">
+          <div><div class="eyebrow">Telegram</div>
+            <div class="h-sm" style="margin-top:6px" data-channel>SKLZ Signals</div></div>
+          <span class="dot on"></span></div>
+          <div class="tiny" style="margin-top:9px">Lifecycle delivery connected.
+            Signals post and edit in place.</div></div>
+        <div class="card"><div class="spread">
+          <div><div class="eyebrow">AI assistant</div>
+            <div class="h-sm" style="margin-top:6px">Ready</div></div>
+          <span class="dot on"></span></div>
+          <div class="tiny" style="margin-top:9px">Drafts from verified trade
+            facts only. Never invents a number.</div></div>
+        <div class="card"><div class="spread">
+          <div><div class="eyebrow">MT5 execution</div>
+            <div class="h-sm" style="margin-top:6px">Broker DEMO account</div></div>
+          <span class="dot on" id="dotMt5"></span></div>
+          <div class="tiny" style="margin-top:9px">Automation is live;
+            funds are virtual.</div></div>
+      </div>
+
+      <div class="grid g2">
+        <div class="card">
+          <div class="spread" style="margin-bottom:6px">
+            <div class="h-md">Today's activity</div>
+            <span class="tag demo">illustrative sequence</span></div>
+          <div class="tl" style="margin-top:12px">
+            <div class="tl-i done"><div class="t">Trade opened</div>
+              <div class="s">BTCUSD SELL 0.01 · filled at the broker</div></div>
+            <div class="tl-i done"><div class="t">Telegram signal published</div>
+              <div class="s">Posted to your channel with entry and ticket</div></div>
+            <div class="tl-i done"><div class="t">Stop updated</div>
+              <div class="s">Same message edited — no second post</div></div>
+            <div class="tl-i now"><div class="t">AI community update</div>
+              <div class="s">Draft ready for your approval</div></div>
+            <div class="tl-i"><div class="t">Signal closed</div>
+              <div class="s">Message becomes CLOSED when the trade ends</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="h-md" style="margin-bottom:12px">What runs where</div>
+          <div class="stack" style="gap:10px">
+            <div class="spread"><span>MT5 execution &amp; tickets</span>
+              <span class="tag green">real, broker demo</span></div>
+            <div class="spread"><span>Telegram signal lifecycle</span>
+              <span class="tag green">real</span></div>
+            <div class="spread"><span>AI drafting from trade facts</span>
+              <span class="tag green">real</span></div>
+            <div class="spread"><span>Subscriber &amp; revenue figures</span>
+              <span class="tag demo">demo</span></div>
+            <div class="spread"><span>Live sessions, Academy, Community</span>
+              <span class="tag demo">demo</span></div>
+          </div>
+          <div class="note" style="margin-top:14px">Execution, the Runner, the
+            signal and its Telegram lifecycle are real on an MT5 broker DEMO
+            account. Automation is live; funds are virtual. Everything marked
+            <b>demo</b> is presentation content for this walkthrough.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNAL DESK -->
+    <section class="pane" id="pane-desk">
+      <div class="topbar">
+        <div><div class="eyebrow">Operate</div>
+          <h1 class="h-lg" style="margin-top:5px">Signal Desk</h1></div>
+        <a class="btn sm" id="deskNew" target="_blank">Open full desk ↗</a>
+      </div>
+      <div class="ribbon" style="margin-bottom:16px">This is the live Signal
+        Desk, embedded unchanged. Orders placed here reach a real MT5 broker
+        demo account and publish a real Telegram signal.</div>
+      <div class="card tight" style="padding:0;overflow:hidden">
+        <iframe id="deskFrame" title="SKLZ Signal Desk" style="width:100%;
+          height:1400px;border:0;display:block;background:var(--bg)"></iframe>
+      </div>
+    </section>
+
+    <!-- TELEGRAM STUDIO -->
+    <section class="pane" id="pane-telegram">
+      <div class="topbar">
+        <div><div class="eyebrow">Distribute</div>
+          <h1 class="h-lg" style="margin-top:5px">Telegram Studio</h1></div>
+        <div class="row"><span class="dot on"></span>
+          <span class="tiny">Channel connected</span></div>
+      </div>
+
+      <div class="grid g3" style="margin-bottom:18px">
+        <div class="card"><div class="eyebrow">Channel</div>
+          <div class="h-md" style="margin-top:7px" data-channel>SKLZ Signals</div>
+          <div class="tiny" style="margin-top:6px">Signals post once and are
+            edited in place through the trade's life.</div></div>
+        <div class="card"><div class="eyebrow">Lifecycle states</div>
+          <div class="row wrap-r" style="margin-top:10px">
+            <span class="tag green">OPEN</span><span class="tag blue">UPDATED</span>
+            <span class="tag violet">BREAKEVEN</span>
+            <span class="tag gold">TRAILING</span><span class="tag">CLOSED</span>
+          </div>
+          <div class="tiny" style="margin-top:9px">One message per trade.
+            Never a second post.</div></div>
+        <div class="card"><div class="eyebrow">Recent signals
+            <span class="tag demo">demo</span></div>
+          <div class="stack" style="gap:8px;margin-top:10px;font-size:13px">
+            <div class="spread"><span class="mono">BTCUSD SELL</span>
+              <span class="tag">CLOSED</span></div>
+            <div class="spread"><span class="mono">XAUUSD BUY</span>
+              <span class="tag violet">BREAKEVEN</span></div>
+            <div class="spread"><span class="mono">EURUSD SELL</span>
+              <span class="tag blue">UPDATED</span></div>
+          </div></div>
+      </div>
+
+      <div class="grid g2">
+        <div class="card">
+          <div class="spread"><div class="h-md">Message preview</div>
+            <span class="tag demo">example content</span></div>
+          <div class="chips" style="margin:14px 0">
+            <div class="chip on" data-prev="open">Preview signal</div>
+            <div class="chip" data-prev="updated">Preview update</div>
+            <div class="chip" data-prev="be">Preview breakeven</div>
+            <div class="chip" data-prev="closed">Preview closed</div>
+          </div>
+          <div class="tg">
+            <div class="hd"><div class="av" data-initials>SK</div>
+              <div><div style="font-size:13px;font-weight:650" data-channel>
+                SKLZ Signals</div>
+                <div style="font-size:10.5px;color:var(--dim2)">channel</div></div></div>
+            <pre id="tgPrev"></pre>
+            <div class="ft">Same message, edited in place · demo example</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="h-md">Follower-facing formatting</div>
+          <div class="stack" style="gap:12px;margin-top:14px">
+            <div><div class="eyebrow">What every signal carries</div>
+              <div class="tiny" style="margin-top:7px">Instrument and direction ·
+                entry · volume · stop · target · ticket · current status ·
+                your disclaimer.</div></div>
+            <div><div class="eyebrow">What it never carries</div>
+              <div class="tiny" style="margin-top:7px">An invented exit price, a
+                cause the broker did not report, a profit figure, or a win rate.
+                If a number is not in the trade record, it is not printed.</div></div>
+            <div class="note">Real signals are published by your signal bot.
+              This studio previews the format; it does not post on its own.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI ASSISTANT -->
+    <section class="pane" id="pane-ai">
+      <div class="topbar">
+        <div><div class="eyebrow">Communicate</div>
+          <h1 class="h-lg" style="margin-top:5px">AI Assistant</h1></div>
+        <span class="tag green">drafts from verified trades</span>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1.35fr .9fr;gap:16px">
+        <div class="card">
+          <div class="chips" style="margin-bottom:14px">
+            <div class="chip" data-ask="update">Update my followers about the current trade</div>
+            <div class="chip" data-ask="summary">Write today's market outlook</div>
+            <div class="chip" data-ask="breakeven">Explain why the stop was moved</div>
+            <div class="chip" data-ask="explain">Create a post from my positions</div>
+            <div class="chip" data-ask="risk">Write a professional risk reminder</div>
+            <div class="chip" data-ask="vip">Promote my VIP channel</div>
+          </div>
+
+          <div class="chat" id="chat">
+            <div class="msg ai">I draft from your verified trade record — the
+fills, tickets and stops your broker actually reported.
+
+I will not invent a price, a profit or a result. Pick a prompt, or write
+your own, and I'll prepare something for your approval.</div>
+          </div>
+
+          <div class="sep"></div>
+          <label for="aiInput">Your instruction</label>
+          <textarea id="aiInput" style="min-height:80px"
+            placeholder="e.g. keep it short, mention that the stop is now at entry"></textarea>
+          <div class="row" style="margin-top:12px;flex-wrap:wrap">
+            <button class="btn gold" id="aiGo">Draft with AI</button>
+            <span class="tiny" id="aiState"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="h-md">Preview &amp; send</div>
+          <div class="tiny" style="margin-top:6px">Edit freely. It is checked
+            again before anything leaves.</div>
+          <textarea id="aiDraftBox" style="margin-top:12px;min-height:210px"
+            placeholder="Your approved draft appears here."></textarea>
+
+          <label style="margin-top:14px">Destination</label>
+          <div class="chips">
+            <div class="chip on" data-dest="telegram">Telegram</div>
+            <div class="chip" data-dest="community">Community</div>
+            <div class="chip" data-dest="announce">Announcement</div>
+            <div class="chip" data-dest="academy">Academy draft</div>
+            <div class="chip" data-dest="website">Website draft</div>
+          </div>
+
+          <button class="btn gold full" id="aiSend" style="margin-top:14px"
+            disabled>Send</button>
+          <div class="tiny" id="sendState" style="margin-top:9px"></div>
+          <div class="note" style="margin-top:12px">Telegram is a real send to
+            your demo channel and needs your explicit click. The other
+            destinations are demonstration surfaces in this walkthrough.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE -->
+    <section class="pane" id="pane-live">
+      <div class="topbar">
+        <div><div class="eyebrow">Deliver</div>
+          <h1 class="h-lg" style="margin-top:5px">Live Sessions</h1></div>
+        <button class="btn gold" onclick="toast('Session composer — demo surface')">
+          Create session</button>
+      </div>
+
+      <div class="card glow raise" style="margin-bottom:18px">
+        <div class="spread" style="flex-wrap:wrap">
+          <div>
+            <div class="row"><span class="dot live"></span>
+              <span class="eyebrow" style="color:var(--red)">Next session</span>
+              <span class="tag demo">demo schedule</span></div>
+            <div class="h-lg" style="margin-top:9px">London Session — Live Trade
+              Management</div>
+            <div class="tiny" style="margin-top:7px">Forex &amp; Gold ·
+              hosted by <span data-brand>SKLZ Pro Trader</span> · VIP + Pro Academy</div>
+          </div>
+          <div style="text-align:right">
+            <div class="eyebrow">Starts in</div>
+            <div class="mono" id="cd" style="font-size:30px;font-weight:650;
+              letter-spacing:-.02em;margin-top:6px">—</div>
+            <button class="btn gold" style="margin-top:12px"
+              onclick="toast('Live room — demo surface')">Join live</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid g3" style="margin-bottom:18px">
+        <div class="card"><div class="eyebrow">Upcoming</div>
+          <div class="v" style="font-size:28px;font-weight:650;margin-top:7px">4</div>
+          <div class="tiny">this week</div></div>
+        <div class="card"><div class="eyebrow">Live now</div>
+          <div class="v" style="font-size:28px;font-weight:650;margin-top:7px">0</div>
+          <div class="tiny">next starts shortly</div></div>
+        <div class="card"><div class="eyebrow">Replays</div>
+          <div class="v" style="font-size:28px;font-weight:650;margin-top:7px">36</div>
+          <div class="tiny">available to members</div></div>
+      </div>
+
+      <div class="grid g2">
+        <div class="card">
+          <div class="spread"><div class="h-md">Schedule</div>
+            <span class="tag demo">demo</span></div>
+          <div class="scroll-x" style="margin-top:12px"><table>
+            <tr><th>Session</th><th>Market</th><th>Access</th><th>When</th><th>State</th></tr>
+            <tr><td>London Session</td><td>FX · Gold</td><td>VIP</td>
+              <td>Today 08:00</td><td><span class="tag red">soon</span></td></tr>
+            <tr><td>New York Session</td><td>Indices</td><td>VIP</td>
+              <td>Today 14:30</td><td><span class="tag">scheduled</span></td></tr>
+            <tr><td>Weekly Market Outlook</td><td>All</td><td>Members</td>
+              <td>Sunday 18:00</td><td><span class="tag">scheduled</span></td></tr>
+            <tr><td>Live Trade Management</td><td>FX</td><td>All Access</td>
+              <td>Wed 11:00</td><td><span class="tag">scheduled</span></td></tr>
+            <tr><td>Sunday Market Preparation</td><td>All</td><td>Public</td>
+              <td>Sunday 16:00</td><td><span class="tag green">open</span></td></tr>
+          </table></div>
+        </div>
+
+        <div class="card">
+          <div class="spread"><div class="h-md">Live room</div>
+            <span class="tag demo">embed-ready shell</span></div>
+          <div style="margin-top:12px;aspect-ratio:16/9;border-radius:12px;
+            border:1px solid var(--line2);background:
+            radial-gradient(70% 90% at 50% 0%,rgba(61,139,255,.16),transparent 60%),
+            var(--panel2);display:grid;place-items:center">
+            <div style="text-align:center">
+              <div class="tiny">Video provider slot</div>
+              <div class="tiny" style="margin-top:5px;color:var(--dim)">
+                YouTube Live · Zoom · Meet · RTMP</div>
+            </div>
+          </div>
+          <div class="grid g2" style="margin-top:12px;gap:10px">
+            <div class="note">Participants · <b>—</b> · live chat, pinned
+              message and shared charts attach to this room.</div>
+            <div class="note">After the session, the AI Assistant can draft a
+              recap from the session notes you keep.</div>
+          </div>
+          <div class="tiny" style="margin-top:10px">No streaming infrastructure
+            is included in this demo. The room is built so a provider can be
+            connected later without rework.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACADEMY -->
+    <section class="pane" id="pane-academy">
+      <div class="topbar">
+        <div><div class="eyebrow">Deliver</div>
+          <h1 class="h-lg" style="margin-top:5px">Academy</h1></div>
+        <div class="row"><span class="tag demo">demo curriculum</span>
+          <button class="btn sm" onclick="toast('Course builder — demo surface')">
+            New course</button></div>
+      </div>
+
+      <div class="grid g4" style="margin-bottom:18px">
+        <div class="kpi"><div class="l">Courses</div><div class="v">8</div></div>
+        <div class="kpi"><div class="l">Lessons</div><div class="v">96</div></div>
+        <div class="kpi"><div class="l">Students</div><div class="v">312</div></div>
+        <div class="kpi"><div class="l">Avg. completion</div>
+          <div class="v up">64%</div></div>
+      </div>
+
+      <div class="eyebrow" style="margin-bottom:12px">SKLZ Trading Academy</div>
+      <div class="grid g4" id="courses"></div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="h-md">What the provider manages</div>
+        <div class="grid g4" style="margin-top:14px;gap:12px">
+          <div class="note">Courses, modules and lessons</div>
+          <div class="note">Video, documents and quizzes</div>
+          <div class="note">Student access by membership tier</div>
+          <div class="note">Progress, completion and certificates</div>
+        </div>
+        <div class="tiny" style="margin-top:12px">The point of the Academy is
+          that a provider sells expertise from the same system that already
+          sells signals — one audience, one checkout, one login.</div>
+      </div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section class="pane" id="pane-community">
+      <div class="topbar">
+        <div><div class="eyebrow">Engage</div>
+          <h1 class="h-lg" style="margin-top:5px">Community</h1></div>
+        <div class="row"><span class="tag demo">demo community</span>
+          <button class="btn sm" onclick="toast('Channel composer — demo surface')">
+            New channel</button></div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:230px 1fr 250px;gap:16px">
+        <div class="card tight">
+          <div class="eyebrow" style="padding:4px 8px 8px" data-brand>Community</div>
+          <div id="chans"></div>
+        </div>
+
+        <div class="card">
+          <div class="spread" style="border-bottom:1px solid var(--line);
+            padding-bottom:12px;margin-bottom:6px">
+            <div class="row"><span class="hash" style="color:var(--dim2);
+              font-weight:700">#</span>
+              <span class="h-sm" id="chanName">signal-discussion</span></div>
+            <span class="tag">42 online</span>
+          </div>
+          <div id="posts"></div>
+          <div class="sep"></div>
+          <div class="row">
+            <input type="text" placeholder="Message #signal-discussion"
+              onkeydown="if(event.key==='Enter'){toast('Posting — demo surface');this.value=''}">
+            <button class="btn sm" onclick="toast('Posting — demo surface')">Send</button>
+          </div>
+        </div>
+
+        <div class="card tight">
+          <div class="eyebrow" style="padding:4px 4px 10px">Members</div>
+          <div class="stack" style="gap:9px">
+            <div class="row"><span class="ava gold" style="width:26px;height:26px"
+              data-initials>SK</span><div><div style="font-size:13px" data-brand>
+              Provider</div><div class="tiny">Trader · Admin</div></div></div>
+            <div class="row"><span class="ava violet" style="width:26px;height:26px">MO</span>
+              <div><div style="font-size:13px">Moderator</div>
+              <div class="tiny">Moderator</div></div></div>
+            <div class="row"><span class="ava green" style="width:26px;height:26px">VP</span>
+              <div><div style="font-size:13px">VIP member</div>
+              <div class="tiny">VIP</div></div></div>
+            <div class="row"><span class="ava" style="width:26px;height:26px">ST</span>
+              <div><div style="font-size:13px">Student</div>
+              <div class="tiny">Academy</div></div></div>
+          </div>
+          <div class="sep"></div>
+          <div class="eyebrow">Roles</div>
+          <div class="row wrap-r" style="margin-top:9px">
+            <span class="tag gold">Admin</span><span class="tag">Trader</span>
+            <span class="tag violet">Moderator</span><span class="tag green">VIP</span>
+            <span class="tag">Member</span><span class="tag">Student</span>
+          </div>
+          <div class="note" style="margin-top:12px">Presence and counts are
+            demonstration UI. No presence backend is included.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDIENCE -->
+    <section class="pane" id="pane-audience">
+      <div class="topbar">
+        <div><div class="eyebrow">Grow</div>
+          <h1 class="h-lg" style="margin-top:5px">Audience &amp; Leads</h1></div>
+        <span class="tag demo">demo records</span>
+      </div>
+
+      <div class="grid g4" style="margin-bottom:18px">
+        <div class="kpi"><div class="l">New leads</div><div class="v">27</div>
+          <div class="d">last 7 days</div></div>
+        <div class="kpi"><div class="l">Qualified</div><div class="v">12</div>
+          <div class="d">answered the funnel</div></div>
+        <div class="kpi"><div class="l">Conversion</div><div class="v up">18%</div>
+          <div class="d">qualified → customer</div></div>
+        <div class="kpi"><div class="l">VIP interest</div>
+          <div class="v gold">9</div><div class="d">asked about VIP</div></div>
+      </div>
+
+      <div class="card">
+        <div class="spread" style="margin-bottom:12px">
+          <div class="h-md">Leads</div>
+          <div class="row wrap-r">
+            <span class="tag">New</span><span class="tag blue">Qualified</span>
+            <span class="tag violet">Interested</span>
+            <span class="tag green">Customer</span><span class="tag gold">Follow up</span>
+          </div>
+        </div>
+        <div class="scroll-x"><table id="leads"></table></div>
+        <div class="note" style="margin-top:14px">Your live funnel already
+          captures these fields — type, workflow, audience, accounts, problem,
+          the recommended package and whether a human was requested. The rows
+          above are demonstration data; the real ones are admin-gated and are
+          not exposed through a prospect's demo link.</div>
+      </div>
+    </section>
+
+    <!-- BRAND -->
+    <section class="pane" id="pane-brand">
+      <div class="topbar">
+        <div><div class="eyebrow">Grow</div>
+          <h1 class="h-lg" style="margin-top:5px">Brand &amp; Channel</h1></div>
+        <button class="btn sm" onclick="toast('Saved to this preview only')">
+          Save preview</button>
+      </div>
+
+      <div class="grid g2">
+        <div class="card">
+          <div class="h-md" style="margin-bottom:14px">Provider identity</div>
+          <div class="stack" style="gap:14px">
+            <div><label for="bName">Provider name</label>
+              <input type="text" id="bName"></div>
+            <div><label for="bChan">Telegram channel</label>
+              <input type="text" id="bChan"></div>
+            <div class="grid g2" style="gap:12px">
+              <div><label for="bLang">Language</label>
+                <select id="bLang"><option value="en">English</option>
+                  <option value="ar">العربية</option>
+                  <option value="ru">Русский</option></select></div>
+              <div><label for="bStyle">Signal style</label>
+                <select id="bStyle"><option value="full">Full detail</option>
+                  <option value="compact">Compact</option></select></div>
+            </div>
+            <div><label for="bDisc">Signal disclaimer</label>
+              <input type="text" id="bDisc" value="Not financial advice."></div>
+            <div><label>Accent</label>
+              <div class="chips" id="accents">
+                <div class="chip on" data-accent="#F5A623">Gold</div>
+                <div class="chip" data-accent="#3D8BFF">Blue</div>
+                <div class="chip" data-accent="#12C48B">Green</div>
+                <div class="chip" data-accent="#8B7CFF">Violet</div>
+              </div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="spread"><div class="h-md">Live preview</div>
+            <span class="tag demo">example trade</span></div>
+          <div class="tg" style="margin-top:14px">
+            <div class="hd"><div class="av" id="pvAv">SK</div>
+              <div><div style="font-size:13px;font-weight:650" id="pvChan">
+                SKLZ Signals</div>
+                <div style="font-size:10.5px;color:var(--dim2)">channel</div></div></div>
+            <pre id="pvText"></pre>
+            <div class="ft">This is how your followers see a signal</div>
+          </div>
+          <div class="note" style="margin-top:14px">Presentation only. Changing
+            these fields here does not reconfigure your live channel — that is
+            part of implementation.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SELL -->
+    <section class="pane" id="pane-sell">
+      <div class="topbar">
+        <div><div class="eyebrow">Monetize</div>
+          <h1 class="h-lg" style="margin-top:5px">Sell</h1></div>
+        <a class="btn sm" id="sellDeep" target="_blank">Open sales funnel ↗</a>
+      </div>
+
+      <div class="flow" style="margin-bottom:18px">
+        <div class="step"><div class="n">Attract</div><div class="t">Content</div>
+          <div class="s">Website, channel and live sessions.</div></div>
+        <div class="step"><div class="n">Capture</div><div class="t">Telegram</div>
+          <div class="s">One deep link into your funnel.</div></div>
+        <div class="step"><div class="n">Qualify</div><div class="t">AI</div>
+          <div class="s">Five questions, then a recommendation.</div></div>
+        <div class="step"><div class="n">Offer</div><div class="t">VIP</div>
+          <div class="s">The right tier, not the biggest one.</div></div>
+        <div class="step"><div class="n">Convert</div><div class="t">Checkout</div>
+          <div class="s">Card or crypto, on your own terms.</div></div>
+      </div>
+
+      <div class="grid g4">
+        <div class="card"><div class="eyebrow">Free</div>
+          <div class="h-md" style="margin-top:7px">Telegram Channel</div>
+          <div class="tiny" style="margin-top:7px">Public signals and market
+            notes. The top of your funnel.</div></div>
+        <div class="card"><div class="eyebrow">Paid</div>
+          <div class="h-md" style="margin-top:7px">VIP Channel</div>
+          <div class="tiny" style="margin-top:7px">Full signal lifecycle,
+            management updates and session access.</div></div>
+        <div class="card"><div class="eyebrow">Recurring</div>
+          <div class="h-md" style="margin-top:7px">Monthly Membership</div>
+          <div class="tiny" style="margin-top:7px">Signals, community and live
+            sessions, billed monthly.</div></div>
+        <div class="card glow"><div class="eyebrow">Best value</div>
+          <div class="h-md" style="margin-top:7px">Annual Membership</div>
+          <div class="tiny" style="margin-top:7px">Everything, plus the Academy
+            and the private community.</div></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="h-md">Your funnel already runs</div>
+        <div class="tiny" style="margin-top:8px">A prospect opens your deep
+          link, the sales bot qualifies them across five questions, and the
+          recommendation is drawn from your central package configuration —
+          so a price can never drift between the bot, the site and checkout.
+          A prospect who asks for a person is captured as a lead with the
+          recommendation attached.</div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pane" id="pane-pricing">
+      <div class="topbar">
+        <div><div class="eyebrow">Implementation</div>
+          <h1 class="h-lg" style="margin-top:5px">Pricing</h1></div>
+        <span class="tag green" id="priceSrc">from live package config</span>
+      </div>
+      <div class="grid g3" id="packs"></div>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="card"><div class="h-md">What implementation includes</div>
+          <div class="tiny" style="margin-top:9px">VPS · MT5 · SKLZ Runner ·
+            master account · Telegram channel wiring · copier configuration ·
+            testing · go-live. The monthly service covers the platform,
+            automation, hosting, maintenance and support.</div></div>
+        <div class="card"><div class="h-md">What we do not claim</div>
+          <div class="tiny" style="margin-top:9px">No profit figure, no win
+            rate, no return. Trading carries risk of loss, and these are
+            software and operations tools — not financial advice and not a
+            promise of results.</div></div>
+      </div>
+      <div class="row" style="margin-top:20px;flex-wrap:wrap">
+        <a class="btn gold lg" id="ctaBuy">GET MY TRADING DESK</a>
+        <a class="btn lg" id="ctaDemo">BOOK A DEMO</a>
+      </div>
+    </section>
+
+    <div class="foot">
+      SKLZ Labs · Software and operations tools — not financial advice ·
+      Trading involves risk of loss<br>
+      Execution shown in the Signal Desk is real on an MT5 broker DEMO account.
+      Automation is live; funds are virtual. Sections marked <b>demo</b> are
+      presentation content for this walkthrough.
+    </div>
+
+  </main>
+</div>
+
+<script src="sklz-os.js"></script>
+<script>
+/* ── Telegram previews. Example trades, plainly labelled. ── */
+const PREV = {
+  open:`📊 {CH} — LIVE DEMO SIGNAL
+
+BTCUSD SELL
+
+Entry: 77183.5
+Volume: 0.01
+SL: 77283.26
+
+🟢 STATUS: OPEN
+
+Ticket: 1928027035
+
+Executed on an MT5 broker DEMO account.
+Automation is live; funds are virtual.
+
+{DISC}`,
+  updated:`📊 {CH} — LIVE DEMO SIGNAL
+
+BTCUSD SELL
+
+Entry: 77183.5
+Volume: 0.01
+SL: 77483.26
+
+🔄 STATUS: UPDATED
+
+Ticket: 1928027035
+
+Executed on an MT5 broker DEMO account.
+Automation is live; funds are virtual.
+
+{DISC}`,
+  be:`📊 {CH} — LIVE DEMO SIGNAL
+
+BTCUSD SELL
+
+Entry: 77183.5
+Volume: 0.01
+SL: 77183.5
+
+🛡 STATUS: BREAKEVEN
+
+Ticket: 1928027035
+
+Executed on an MT5 broker DEMO account.
+Automation is live; funds are virtual.
+
+{DISC}`,
+  closed:`📊 {CH} — LIVE DEMO SIGNAL
+
+BTCUSD SELL
+
+Entry: 77183.5
+Volume: 0.01
+
+✅ STATUS: CLOSED
+Reason: Closed at broker
+
+Ticket: 1928027035
+
+Executed on an MT5 broker DEMO account.
+Automation is live; funds are virtual.
+
+{DISC}`};
+
+function fill(t){
+  return t.replace(/{CH}/g, BRAND.channel)
+          .replace(/{DISC}/g, (document.getElementById("bDisc")||{}).value
+                              || "Not financial advice.");
+}
+
+/* ── Academy ── */
+const COURSES = [
+  ["01","Market Foundations","How price, sessions and instruments actually work.",100],
+  ["02","Market Structure","Trend, range, and the levels that matter.",100],
+  ["03","Risk Management","Position size, exposure and the loss you plan for.",72],
+  ["04","Trade Execution","Entries, orders and the mechanics of getting filled.",48],
+  ["05","Signal Reading","How to read a signal and manage it after entry.",20],
+  ["06","Trading Psychology","Process over outcome, and staying with the plan.",0],
+  ["07","Strategy Development","Building and testing something repeatable.",0],
+  ["08","Professional Trading Operations","Running it like a business.",0],
+];
+
+/* ── Community ── */
+const CHANNELS = [
+  ["announcements","announcement"],["general","text"],["market-outlook","text"],
+  ["forex","text"],["gold","text"],["crypto","text"],
+  ["signal-discussion","signal"],["trade-reviews","signal"],
+  ["academy-questions","academy"],["vip-lounge","vip"],
+];
+const POSTS = [
+  ["gold","SK","Provider","Admin",
+   "BTCUSD SELL is live — ticket 1928027035. Stop sits above entry while we see how the London open behaves.",
+   "signal", 12],
+  ["violet","MO","Moderator","Moderator",
+   "Reminder: signal discussion belongs in this channel, not in announcements. Keeps the feed clean for everyone.",
+   "", 3],
+  ["green","VP","VIP member","VIP",
+   "Appreciated the stop move being explained rather than just appearing. That's the part most channels skip.",
+   "", 8],
+  ["","ST","Student","Academy",
+   "Working through Risk Management — is position size covered before or after the execution module?",
+   "", 2],
+];
+
+/* ── Leads (demonstration records) ── */
+const LEADS = [
+  ["Amir K.","@amirfx","demo_channel","Signal channel owner","VIP","Qualified","2h ago","blue"],
+  ["Dana R.","@danatrades","website","Own account automation","Signal Desk","Interested","5h ago","violet"],
+  ["Yusuf A.","@yusufmarkets","demo_channel","Several accounts","Pro","Customer","1d ago","green"],
+  ["Lina M.","—","live session","Starting a channel","—","New","1d ago",""],
+  ["Omar S.","@omar_s","ar_channel","Signal channel owner","Pro Trader OS","Follow up","2d ago","gold"],
+  ["Nadia H.","@nadiafx","academy","Education first","Academy","Qualified","3d ago","blue"],
+];
+
+(async function(){
+  await loadBrand();
+  paintBrand();
+  mountNav();
+
+  /* Signal Desk, embedded exactly as it is */
+  const deskURL = tokenLink("signal-desk.html");
+  document.getElementById("deskFrame").src = deskURL;
+  document.getElementById("deskNew").href = deskURL;
+  document.getElementById("linkSite").href = tokenLink("trader-site.html");
+  document.getElementById("linkPortal").href = tokenLink("client-portal.html");
+
+  /* Overview: the one figure we can state truthfully without a command */
+  const a = document.getElementById("kActive");
+  const ad = document.getElementById("kActiveD");
+  a.textContent = "—";
+  ad.textContent = TOKEN ? "open the Signal Desk to read your positions"
+                         : "open this page from your private demo link";
+
+  /* Telegram previews */
+  const pv = document.getElementById("tgPrev");
+  pv.textContent = fill(PREV.open);
+  document.querySelectorAll("[data-prev]").forEach(c =>
+    c.addEventListener("click", () => {
+      document.querySelectorAll("[data-prev]").forEach(x =>
+        x.classList.toggle("on", x === c));
+      pv.textContent = fill(PREV[c.dataset.prev]);
+    }));
+
+  /* Academy cards */
+  document.getElementById("courses").innerHTML = COURSES.map(
+    ([n, t, s, p]) => `<div class="card" style="display:flex;flex-direction:column;gap:10px">
+      <div class="spread"><span class="eyebrow">${n}</span>
+        ${p === 100 ? '<span class="tag green">complete</span>'
+          : p > 0 ? '<span class="tag gold">in progress</span>'
+          : '<span class="tag">not started</span>'}</div>
+      <div class="h-sm">${t}</div>
+      <div class="tiny" style="flex:1">${s}</div>
+      <div class="bar"><i style="width:${p}%"></i></div>
+      <div class="tiny">${p}% complete</div>
+    </div>`).join("");
+
+  /* Community */
+  const chans = document.getElementById("chans");
+  chans.innerHTML = CHANNELS.map(([c, kind], i) =>
+    `<div class="chan ${c === "signal-discussion" ? "on" : ""}" data-chan="${c}">
+      <span class="hash">#</span><span style="flex:1">${c}</span>
+      ${kind === "vip" ? '<span class="tag gold">VIP</span>'
+        : kind === "signal" ? '<span class="tag blue">signal</span>'
+        : kind === "announcement" ? '<span class="tag violet">ann</span>' : ""}
+    </div>`).join("");
+  chans.addEventListener("click", e => {
+    const el = e.target.closest("[data-chan]"); if (!el) return;
+    chans.querySelectorAll(".chan").forEach(x => x.classList.toggle("on", x === el));
+    document.getElementById("chanName").textContent = el.dataset.chan;
+  });
+  document.getElementById("posts").innerHTML = POSTS.map(
+    ([cls, ini, who, role, body, kind, react]) => `<div class="post">
+      <div class="ava ${cls}">${ini}</div>
+      <div style="flex:1;min-width:0">
+        <div class="row" style="gap:8px"><b style="font-size:13.5px">${who}</b>
+          <span class="tag">${role}</span>
+          <span class="tiny">just now</span></div>
+        <div style="font-size:14px;margin-top:4px">${body}</div>
+        ${kind === "signal" ? `<div class="row" style="gap:8px;margin-top:9px">
+          <span class="tag blue">BTCUSD SELL · 1928027035</span>
+          <button class="btn sm" onclick="go('desk')">View signal</button>
+          <button class="btn sm" onclick="toast('Thread — demo surface')">Discuss trade</button>
+        </div>` : ""}
+        <span class="react">👍 ${react}</span>
+      </div></div>`).join("");
+
+  /* Leads */
+  document.getElementById("leads").innerHTML =
+    `<tr><th>Name</th><th>Telegram</th><th>Source</th><th>Interest</th>
+       <th>Plan</th><th>Status</th><th>Last seen</th></tr>` +
+    LEADS.map(([n, tg, src, int, plan, st, seen, cls]) => `<tr>
+      <td><b>${n}</b></td><td class="mono">${tg}</td><td>${src}</td>
+      <td>${int}</td><td>${plan}</td>
+      <td><span class="tag ${cls}">${st}</span></td>
+      <td class="tiny">${seen}</td></tr>`).join("");
+
+  /* Brand editor */
+  const bn = document.getElementById("bName"), bc = document.getElementById("bChan");
+  bn.value = BRAND.name; bc.value = BRAND.channel;
+  document.getElementById("bLang").value = BRAND.language || "en";
+  function repaint() {
+    document.getElementById("pvChan").textContent = bc.value || BRAND.channel;
+    document.getElementById("pvAv").textContent = initials(bn.value);
+    const compact = document.getElementById("bStyle").value === "compact";
+    const base = compact
+      ? `📊 ${bc.value}\n\nBTCUSD SELL @ 77183.5\nSL 77283.26 · 0.01\n\n🟢 OPEN · 1928027035\n\n` +
+        `Executed on an MT5 broker DEMO account.\nAutomation is live; funds are virtual.\n\n` +
+        (document.getElementById("bDisc").value || "")
+      : fill(PREV.open).replace(BRAND.channel, bc.value || BRAND.channel);
+    document.getElementById("pvText").textContent = base;
+  }
+  ["bName","bChan","bDisc","bStyle","bLang"].forEach(id =>
+    document.getElementById(id).addEventListener("input", repaint));
+  document.getElementById("accents").addEventListener("click", e => {
+    const c = e.target.closest("[data-accent]"); if (!c) return;
+    document.querySelectorAll("#accents .chip").forEach(x =>
+      x.classList.toggle("on", x === c));
+    document.documentElement.style.setProperty("--gold", c.dataset.accent);
+    document.documentElement.style.setProperty("--gold2", c.dataset.accent);
+  });
+  repaint();
+
+  /* Live countdown — a demo schedule, labelled as one */
+  countdown(document.getElementById("cd"), Date.now() + 3 * 3600000 + 42 * 60000);
+
+  /* Sell deep link */
+  document.getElementById("sellDeep").href =
+    "https://t.me/sklzlabsnew_bot?start=demo_channel";
+
+  /* Pricing from the platform's central config */
+  const pk = await loadPackages();
+  const ok = renderPackages(pk, document.getElementById("packs"));
+  if (!ok) {
+    document.getElementById("priceSrc").textContent = "package config unavailable";
+    document.getElementById("priceSrc").className = "tag";
+    document.getElementById("packs").innerHTML =
+      '<div class="note">Pricing could not be loaded from the platform just ' +
+      'now. Rather than print figures that might be stale, this page shows ' +
+      'none — ask us and we will quote from the same configuration.</div>';
+  }
+  document.getElementById("ctaBuy").href = deskURL + "#buy";
+  document.getElementById("ctaDemo").href =
+    "https://t.me/sklzlabsnew_bot?start=demo_channel";
+
+  /* ── AI assistant ── */
+  const chat = document.getElementById("chat");
+  const box = document.getElementById("aiDraftBox");
+  const sendBtn = document.getElementById("aiSend");
+  let intent = "update", dest = "telegram";
+
+  function say(who, text) {
+    const d = document.createElement("div");
+    d.className = "msg " + who; d.textContent = text;
+    chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+  }
+
+  document.querySelectorAll("[data-ask]").forEach(c =>
+    c.addEventListener("click", () => {
+      document.querySelectorAll("[data-ask]").forEach(x =>
+        x.classList.toggle("on", x === c));
+      intent = c.dataset.ask;
+      document.getElementById("aiInput").value = c.textContent.trim();
+    }));
+
+  document.querySelectorAll("[data-dest]").forEach(c =>
+    c.addEventListener("click", () => {
+      document.querySelectorAll("[data-dest]").forEach(x =>
+        x.classList.toggle("on", x === c));
+      dest = c.dataset.dest;
+      sendBtn.textContent = dest === "telegram"
+        ? "Send to Telegram" : "Send to " + c.textContent.trim();
+    }));
+
+  document.getElementById("aiGo").addEventListener("click", async () => {
+    const instruction = document.getElementById("aiInput").value.trim();
+    const st = document.getElementById("aiState");
+    say("me", instruction || "Draft an update for my followers.");
+    st.textContent = "drafting from your verified trades…";
+    /* the API only knows a fixed set of intents; anything else is an update */
+    const known = ["explain", "breakeven", "modified", "closed", "summary", "update"];
+    const d = await aiDraft(known.includes(intent) ? intent : "update", instruction);
+    st.textContent = "";
+    if (!d.ok) {
+      say("ai", d.reason || "I could not draft anything from the record yet.");
+      box.value = ""; sendBtn.disabled = true; return;
+    }
+    say("ai", d.draft);
+    box.value = d.draft;
+    sendBtn.disabled = false;
+    if (d.policy_ok === false) {
+      document.getElementById("sendState").textContent =
+        "policy check flagged this draft — edit before sending";
+    }
+  });
+
+  sendBtn.addEventListener("click", async () => {
+    const text = box.value.trim();
+    const st = document.getElementById("sendState");
+    if (text.length < 10) { st.textContent = "nothing to send yet"; return; }
+    if (dest !== "telegram") {
+      st.textContent = `${dest} is a demonstration destination in this walkthrough — nothing was sent.`;
+      toast("Demo destination — nothing sent");
+      return;
+    }
+    sendBtn.disabled = true; st.textContent = "sending to your demo channel…";
+    const r = await aiSend(text);
+    sendBtn.disabled = false;
+    if (r.ok) { st.textContent = "sent to your demo channel."; toast("Sent"); }
+    else { st.textContent = "refused: " + (r.reason || "unknown"); }
+  });
+})();
+</script>
+</body></html>
