@@ -766,6 +766,16 @@ I18N.mountSwitcher(document.getElementById("navRight"));
 
 /* ── HYDRATE SECOND ── personalisation, on its own time.
    The demo token carries a language; adopting it re-renders in place. */
-hydrateBrand();   /* sklz-os.js adopts the token language centrally */
+hydrateBrand(() => {
+  /* The showcase token has a finite life (see sklz-showcase.js). If it has
+     expired or been revoked, the desk behind this button would greet a
+     visitor with "this private demo has ended" — so the button becomes a
+     request for a demo instead. A visitor arriving on their own private
+     link is unaffected: theirs is the token that just hydrated. */
+  const desk = document.getElementById("osDesk");
+  if (desk && !BRAND.loaded) {
+    desk.href = SALES_LINK; desk.target = "_blank"; desk.rel = "noopener";
+  }
+});   /* sklz-os.js adopts the token language centrally */
 </script>
 </body></html>

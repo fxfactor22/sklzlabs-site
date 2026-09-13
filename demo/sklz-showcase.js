@@ -28,4 +28,13 @@
  *
  * Empty means "not configured" everywhere it is read.
  */
-window.SKLZ_SHOWCASE_TOKEN = "";
+window.SKLZ_SHOWCASE_TOKEN = "6b6a955dab4b9086ad869620844750c0";
+
+/* Minted 2026-09-13. EXPIRES 2026-09-20T01:01:28Z.
+ *
+ * Not permanent: POST /api/demo-links clamps `hours` to 168 (7 days) — a
+ * request for 87600 came back as 168 — so this link dies in a week and the
+ * public CTAs quietly fall back to the sales bot (see trader-site.html).
+ * Making it genuinely permanent needs either a server-side change to that
+ * cap or a job that re-mints and re-deploys this value. Until one of those
+ * exists, re-mint and update this string. */
