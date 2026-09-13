@@ -83,6 +83,11 @@ async function loadBrand() {
       BRAND.secondsLeft = d.seconds_remaining;
       BRAND.purpose = d.purpose || "private_demo";
       BRAND.loaded = true;
+      /* The offer travels with the brand call, because it is one demo
+         link and one server answer. Adopting it here means every surface
+         that hydrates a brand also has the server's offer decision —
+         there is no second place for a page to get it wrong. */
+      if (window.SKLZOffer) SKLZOffer.adopt(d);
       return BRAND;
     }
     /* Only a timeout earns a second ask, and only once. */

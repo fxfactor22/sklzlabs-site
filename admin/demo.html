@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SKLZ — Private demo generator</title><meta name="robots" content="noindex">
+<title>SKLZ — Branded trader experience</title><meta name="robots" content="noindex">
 <style>
 :root{--bg:#07090E;--panel:#0D1119;--panel2:#111722;--line:#1B2431;--ink:#EEF2F8;
  --dim:#8A94A6;--dim2:#5B6675;--gold:#F5A623;--gold2:#FFC65C;--green:#12C48B;--red:#F0525B}
@@ -28,15 +28,49 @@ input:focus,select:focus{outline:0;border-color:var(--gold)}
 .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .msg{margin-top:10px;font-size:13px}
+.secl{font-size:11px;color:var(--dim2);text-transform:uppercase;
+ letter-spacing:.09em;margin:18px 0 8px}
+.incl{margin-top:16px;border:1px solid var(--line);border-radius:12px;
+ padding:14px 16px;font-size:13px;background:var(--panel)}
+.inclg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+ gap:5px 14px;margin-top:9px;color:var(--dim)}
+.fine{margin-top:10px;color:var(--dim2);font-size:12px;line-height:1.6}
+.deep{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+ gap:8px}
+.deep a{display:block;border:1px solid var(--line);border-radius:9px;
+ padding:9px 11px;font-size:12.5px;text-decoration:none;color:var(--ink)}
+.deep a b{display:block;color:var(--gold2);font-size:11px;
+ text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.offer{margin-top:18px;border:1px solid rgba(245,166,35,.42);border-radius:12px;
+ padding:14px 16px;background:rgba(245,166,35,.06);font-size:13px}
+.offer .oh{font-size:17px;font-weight:700}
+.offer .oc{font-family:ui-monospace,Menlo,monospace;font-size:15px;
+ border:1px dashed rgba(245,166,35,.5);border-radius:8px;padding:5px 10px;
+ display:inline-block;margin-top:8px}
 table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
 th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
 th{color:var(--dim2);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
 a{color:var(--gold2)}
 </style></head><body><div class="wrap">
 
-<h1>Demo generator</h1>
-<div class="sub">A private prospect link, or the one public showcase.
-  Signed in as an admin on sklzlabs.com — this page shares that session.</div>
+<h1>Create branded trader experience</h1>
+<div class="sub">One link that opens a miniature version of the prospect's own
+  trading business — or the one public showcase.
+  Signed in as an admin on sklzlabs.com; this page shares that session.</div>
+
+<div class="incl">
+  <b>What the generated environment contains</b>
+  <div class="inclg">
+    <span>✓ Branded website</span><span>✓ Pro Trader OS</span>
+    <span>✓ Live Signal Desk</span><span>✓ AI Assistant</span>
+    <span>✓ Telegram automation demo</span><span>✓ Academy</span>
+    <span>✓ Community</span><span>✓ Client experience</span>
+  </div>
+  <div class="fine">Signal Desk and the Telegram lifecycle run live against an
+    MT5 broker DEMO account. Academy, Community and the Client experience are
+    commercial previews of what implementation delivers — they are not
+    authenticated production services in the demo.</div>
+</div>
 
 <div class="card">
   <label>Demo type</label>
@@ -82,20 +116,39 @@ a{color:var(--gold2)}
   <label>Private note (not shown to the prospect)</label>
   <input id="p_note" placeholder="optional">
   <div class="row" style="margin-top:16px">
-    <button class="btn" id="go" onclick="make()">Generate private link</button>
+    <button class="btn" id="go" onclick="make()">Create branded trader experience</button>
     <button class="btn ghost" onclick="load()">Refresh list</button>
   </div>
   <div class="msg" id="msg"></div>
 
   <div class="out" id="out">
-    <label>Send this link to the prospect</label>
+    <div class="secl">Full branded experience</div>
     <div class="url mono" id="url"></div>
     <div class="row">
-      <button class="btn" onclick="cp()">Copy link</button>
-      <button class="btn ghost" onclick="window.open(document.getElementById('url').textContent,'_blank')">Open it</button>
+      <button class="btn" onclick="openExp()">Open experience</button>
+      <button class="btn ghost" onclick="cp()">Copy demo link</button>
     </div>
     <div class="msg" id="exp" style="color:var(--dim)"></div>
     <div class="msg" id="budget" style="color:var(--green)"></div>
+
+    <div class="offer" id="offerBox" style="display:none">
+      <div style="font-size:11px;color:var(--gold2);text-transform:uppercase;
+           letter-spacing:.1em;font-weight:700">Private 48-hour offer</div>
+      <div class="oh" id="offerHead">50% off setup</div>
+      <div style="color:var(--dim)">Monthly subscription unchanged.</div>
+      <div class="oc" id="offerCode">—</div>
+      <div style="color:var(--dim);margin-top:8px" id="offerUntil"></div>
+      <div class="fine">Sales-assisted: the prospect quotes this code when
+        activating with SKLZ and the setup discount is applied then. Checkout
+        does not accept promo codes, and nothing about Stripe or the crypto
+        amounts changed.</div>
+    </div>
+
+    <div class="secl">Direct links</div>
+    <div class="deep" id="deep"></div>
+    <div class="fine">Admin utility links. The prospect receives the one link
+      above — every surface carries the same token, so branding and the offer
+      follow them through the whole journey.</div>
   </div>
 </div>
 
@@ -126,7 +179,7 @@ function onType(){
   document.getElementById("showcaseNote").style.display = sc ? "block" : "none";
   document.getElementById("hoursBox").style.display = sc ? "none" : "";
   document.getElementById("go").textContent =
-    sc ? "Generate public showcase" : "Generate private link";
+    sc ? "Generate public showcase" : "Create branded trader experience";
 }
 
 function signedOut(m){
@@ -137,7 +190,8 @@ function signedOut(m){
 }
 async function make(){
   const b=document.getElementById("go"), m=document.getElementById("msg");
-  const label = isShowcase() ? "Generate public showcase" : "Generate private link";
+  const label = isShowcase()
+    ? "Generate public showcase" : "Create branded trader experience";
   if(!SKLZAuth.hasSession()){ signedOut(m); return; }
   if(!v("p_name")||!v("p_chan")){ m.style.color="var(--red)";
     m.textContent="Provider name and Telegram channel are required."; return; }
@@ -186,7 +240,12 @@ async function make(){
       b.disabled=false; b.textContent=label;
       return;
     }
+    /* The API is the one place that builds these URLs — this page never
+       assembles a link of its own, so the primary link can never disagree
+       with what the server considers the experience. */
     document.getElementById("url").textContent=d.url;
+    renderDeep(d.links||{});
+    renderOffer(d.offer);
     document.getElementById("exp").textContent = d.expires_at
       ? "Open until "+new Date(d.expires_at).toLocaleString()+" ("+d.hours+"h)."
       : "Public showcase — does not expire. Revoke it to close it.";
@@ -200,10 +259,34 @@ async function make(){
   }catch(e){ m.style.color="var(--red)"; m.textContent="Failed: "+e.message; }
   b.disabled=false; b.textContent=label;
 }
+const DEEP = [["experience","Website"],["os","Pro Trader OS"],
+               ["signal_desk","Signal Desk"],["portal","Client Portal"]];
+function renderDeep(links){
+  const host=document.getElementById("deep");
+  host.innerHTML = DEEP.filter(([k])=>links[k]).map(([k,label])=>
+    `<a href="${links[k]}" target="_blank" rel="noopener"><b>${label}</b>`+
+    `${links[k].replace(/^https?:\/\//,"").split("?")[0]}</a>`).join("");
+}
+function renderOffer(o){
+  const box=document.getElementById("offerBox");
+  /* The server decides. If it did not mark this link eligible there is no
+     offer to show, whatever kind of link the operator thinks they made. */
+  if(!o || o.eligible!==true){ box.style.display="none"; return; }
+  box.style.display="";
+  document.getElementById("offerHead").textContent =
+    o.setup_discount_percent + "% off setup";
+  document.getElementById("offerCode").textContent = o.promo_code || "—";
+  document.getElementById("offerUntil").textContent = o.expires_at
+    ? "Valid until " + new Date(o.expires_at).toLocaleString() : "";
+}
+function openExp(){
+  const u=document.getElementById("url").textContent;
+  if(u) window.open(u,"_blank","noopener");
+}
 function cp(){
   navigator.clipboard.writeText(document.getElementById("url").textContent);
   document.getElementById("msg").style.color="var(--green)";
-  document.getElementById("msg").textContent="Copied.";
+  document.getElementById("msg").textContent="Demo link copied.";
 }
 async function revoke(token, purpose){
   const what = purpose==="showcase"

@@ -7,6 +7,7 @@
 <script src="sklz-showcase.js"></script>
 <script src="sklz-i18n-dict.js"></script>
 <script src="sklz-i18n.js"></script>
+<script src="sklz-offer.js"></script>
 <meta name="robots" content="noindex,nofollow">
 <style>
 :root{
@@ -217,6 +218,37 @@ if (new URLSearchParams(location.search).get("embed") === "os")
   document.documentElement.className += " embed-os";
 </script>
 
+<style>
+.trylive{border:1px solid var(--line);border-radius:13px;padding:12px 14px;
+  margin-bottom:14px;background:rgba(245,166,35,.04)}
+.trylive .tl-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-size:12px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--gold2)}
+.trylive .tl-back{margin-inline-start:auto;color:var(--dim);font-size:11.5px;
+  text-decoration:none;border-bottom:1px solid var(--line)}
+.trylive .tl-s{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:9px;font-size:12.5px;color:var(--dim)}
+.trylive .tl-n{display:inline-flex;align-items:center;justify-content:center;
+  width:19px;height:19px;border-radius:50%;background:rgba(245,166,35,.16);
+  color:var(--gold2);font-size:11px;font-weight:700}
+.trylive .tl-s i{opacity:.45;font-style:normal}
+.dlogo{display:inline-block;max-height:22px;vertical-align:middle;
+  margin-inline-end:7px}
+.dlogo:empty{display:none}
+/* A grid item defaults to min-width:auto, so one wide child (the
+   instrument row) was forcing the single mobile column past the
+   viewport and giving the whole desk a horizontal scrollbar at phone
+   width. The track may shrink; the child scrolls if it must. */
+.grid > *{min-width:0}
+/* The instrument selector and the Buy/Sell/Replay buttons sat in one
+   unwrappable row that was wider than a phone. It wraps now, and the
+   select is allowed to shrink instead of setting the row's floor. */
+.ctlrow{flex-wrap:wrap}
+.ctlrow #symSel{min-width:0;flex:1 1 130px}
+@media(max-width:620px){.ctlrow{margin-inline-start:0!important;width:100%}}
+@media(max-width:620px){.trylive .tl-s i{display:none}}
+</style>
+
 <div class="top os-hide"><div class="wrap">
   <div class="brand"><span class="dot"></span>SKLZ<span style="color:var(--gold)">LABS</span></div>
   <span class="tag" id="brandTag" style="display:none"></span>
@@ -235,7 +267,8 @@ if (new URLSearchParams(location.search).get("embed") === "os")
        record — automatically, in seconds. Multi-account copying is available
        with Signal Desk implementation; this public demo does not prove
        follower-account copying.</p>
-    <div class="who"><span data-i18n="desk.preparedFor">Private demo prepared for</span> <b id="brandName">…</b></div>
+    <div class="who"><span class="dlogo" data-logo></span><span
+      data-i18n="desk.preparedFor">Private demo prepared for</span> <b id="brandName">…</b></div>
     <div id="langHost" style="margin-top:12px"></div>
     <div class="timer mono" id="timer2" style="display:inline-block;
       margin-top:12px"></div>
@@ -256,6 +289,21 @@ if (new URLSearchParams(location.search).get("embed") === "os")
         <div class="v mono" id="kOk" style="font-size:15px" data-i18n="desk.atImplementation">At implementation</div></div>
     </div>
 
+    <div class="trylive os-hide" id="tryLive">
+      <div class="tl-h"><b data-i18n="try.title">Try it live</b>
+        <a id="backOS" class="tl-back" data-i18n="desk.backToOS">Back to Pro Trader OS</a></div>
+      <div class="tl-s">
+        <span class="tl-n">1</span><span data-i18n="try.s1">Open BTC</span>
+        <i>→</i>
+        <span class="tl-n">2</span><span data-i18n="try.s2">Manage trade</span>
+        <i>→</i>
+        <span class="tl-n">3</span><span data-i18n="try.s3">Ask AI</span>
+        <i>→</i>
+        <span class="tl-n">4</span><span data-i18n="try.s4">Watch Telegram</span>
+      </div>
+      <div id="offerDesk" style="margin-top:10px" hidden></div>
+    </div>
+
     <div class="grid desk">
       <div class="flowbox">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -264,7 +312,7 @@ if (new URLSearchParams(location.search).get("embed") === "os")
             <div style="font-size:17px;font-weight:700">EURUSD <span class="mono"
               id="px">1.08522</span></div>
           </div>
-          <div style="margin-left:auto;display:flex;gap:8px">
+          <div class="ctlrow" style="margin-inline-start:auto;display:flex;gap:8px">
             <select id="symSel" style="background:var(--panel2);
               color:var(--ink);border:1px solid var(--line);border-radius:9px;
               padding:10px 11px;font:inherit;font-size:13px"></select>
@@ -393,6 +441,12 @@ if (new URLSearchParams(location.search).get("embed") === "os")
 
         <div class="tg" id="tg">
           <div class="h"><b id="tgTitle" data-i18n="desk.yourSignals">Your Signals</b><span data-i18n="desk.viaJustNow">via SKLZ · just now</span></div>
+          <div style="font-size:11px;color:var(--dim2);padding:0 12px 8px;
+            line-height:1.5"><span data-i18n="tg.truth">Demo automation publishes
+            through the SKLZ demo channel. Your implementation connects your own
+            Telegram bot and channel.</span>
+            <span data-i18n="tg.intended">Your channel at implementation</span>:
+            <b id="tgIntended">—</b></div>
           <pre id="tgtext"></pre>
         </div>
         <div class="simnote"><span data-i18n="desk.simNote1">The broker execution,
@@ -679,7 +733,12 @@ function expired(msg){
   const set=(id,v)=>{const e=document.getElementById(id); if(e) e.textContent=v;};
   set("brandName", d.provider_name);
   set("tgTitle", d.telegram_channel);
-  set("tgDest", d.telegram_channel);
+  /* tgDest is the ACTUAL destination of the lifecycle publish, and that
+     is SKLZ's own demo channel — the server hard-pins it and refuses any
+     other chat. It used to be overwritten with the prospect's channel
+     name, which claimed a connection that does not exist yet. The
+     prospect's channel is shown as the implementation target instead. */
+  set("tgIntended", d.telegram_channel);
   set("masterLbl", I18N.T("desk.masterFor", { name: d.provider_name }));
   const tag=document.getElementById("brandTag");
   if(tag){ tag.textContent=d.provider_name; tag.style.display=""; }
@@ -687,6 +746,14 @@ function expired(msg){
      seconds_remaining. A null is "no deadline", not a deadline of zero —
      multiplying it would have shown every visitor an expired demo. */
   CFG.purpose = d.purpose || "private_demo";
+  /* The offer, the logo and the route back into the OS. All three are
+     additive: the desk was fully usable before any of them arrived. */
+  SKLZOffer.adopt(d);
+  SKLZOffer.paintLogo(d.provider_name, d.logo_url);
+  SKLZOffer.mount(document.getElementById("offerDesk"), { slim: true });
+  SKLZOffer.watch(API, TOKEN);
+  const back = document.getElementById("backOS");
+  if (back) back.href = "pro-trader-os.html?t=" + encodeURIComponent(TOKEN);
   CFG.demo_ends = (d.seconds_remaining === null ||
                    d.seconds_remaining === undefined)
     ? null : Date.now() + (d.seconds_remaining * 1000);
@@ -701,12 +768,17 @@ function expired(msg){
         /* A symbol entry may arrive as a bare string, or without a label or
            a default lot. Print what the server actually sent and nothing
            else — never the word "undefined" in a prospect's instrument list. */
+        /* A cold prospect often opens this on a Friday night, when FX
+           is shut. Prefer whatever BTC instrument the server exposes —
+           the symbol string is the server's own, never a guess — and
+           fall back to the server's default when there is none. */
+        const want = SKLZOffer.preferredSymbol(sd.symbols, sd.default);
         sel.innerHTML=sd.symbols.map(raw=>{
           const s = (typeof raw === "string") ? { symbol: raw } : (raw || {});
           const parts = [s.label || s.symbol, s.lot].filter(Boolean);
           if(s.always_open) parts.push("24/7");
           return `<option value="${s.symbol||""}"`+
-                 `${s.symbol===sd.default?" selected":""}>`+
+                 `${s.symbol===want?" selected":""}>`+
                  `${parts.join(" · ")}</option>`;
         }).join("");
       }

@@ -11,6 +11,7 @@
 <script src="sklz-showcase.js"></script>
 <script src="sklz-i18n-dict.js"></script>
 <script src="sklz-i18n.js"></script>
+<script src="sklz-offer.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════════════════
    SKLZ PRO TRADER — public trader site.
@@ -367,13 +368,24 @@ svg{display:block}
   .lang-ar .display{font-size:clamp(30px,8.4vw,64px)}
   .lang-ru .display{font-size:clamp(28px,7.8vw,60px)}
 }
+.storyline{display:grid;gap:10px;margin-top:26px;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.storyline .sy{border:1px solid var(--line);border-radius:13px;
+  padding:14px 15px;display:flex;flex-direction:column;gap:5px;
+  background:rgba(255,255,255,.02)}
+.storyline .sy b{font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim)}
+.storyline .sy span{font-size:13.5px;line-height:1.45}
+.storyline .sy.on{border-color:rgba(37,99,235,.45)}
+.storyline .sy.on b{color:#2563EB}
+@media(max-width:620px){.storyline{grid-template-columns:1fr 1fr}}
 </style>
 </head><body>
 
 <!-- ── nav ─────────────────────────────────────────────────────── -->
 <div class="nav" id="nav"><div class="wrap in">
   <a class="mark" href="#top">
-    <span class="m" data-initials>SK</span>
+    <span class="m" data-logo><span data-initials>SK</span></span>
     <b data-brand>SKLZ Pro Trader</b>
   </a>
   <div class="lk">
@@ -399,10 +411,16 @@ svg{display:block}
       <p class="sub rv" style="--d:.18s;margin-top:26px" data-i18n="site.hero.sub">One operating system
         for your signals, community, academy and trading business.</p>
       <div class="cta rv" style="--d:.26s">
-        <a class="btn glow" id="heroOS"><span data-i18n="site.hero.cta">Explore the OS</span>
+        <a class="btn glow" id="heroOS"><span data-i18n="site.cta.experience">Experience the Trader OS</span>
           <span class="arrow">→</span></a>
         <a class="btn line" id="heroDemo" data-i18n="nav.bookDemo">Book a demo</a>
       </div>
+      <!-- The private offer. Hidden unless the SERVER says this link
+           carries one — a showcase link and a no-token visit render
+           nothing here at all. -->
+      <div id="offerHero" class="rv" style="--d:.3s;margin-top:26px;
+           max-width:46ch" hidden></div>
+
       <div class="caps rv" style="--d:.34s;margin-top:40px">
         <span data-i18n="site.caps.trade">Trade</span><i></i><span data-i18n="site.caps.distribute">Distribute</span><i></i>
         <span data-i18n="site.caps.teach">Teach</span><i></i><span data-i18n="site.caps.engage">Engage</span><i></i><span data-i18n="site.caps.grow">Grow</span>
@@ -506,6 +524,28 @@ svg{display:block}
 </header>
 
 <!-- ── 2 · one trader, one ecosystem ───────────────────────────── -->
+
+<!-- ── what the system does, end to end ─────────────────────────── -->
+<section class="sec" id="story"><div class="wrap">
+  <div class="rv" style="text-align:center;max-width:42ch;margin:0 auto">
+    <div class="kicker" data-i18n="site.story.title">One system, end to end</div>
+  </div>
+  <div class="storyline rv" style="--d:.1s">
+    <div class="sy"><b data-i18n="site.story.attract">Attract</b>
+      <span data-i18n="site.story.attractS">Immersive website</span></div>
+    <div class="sy"><b data-i18n="site.story.convert">Convert</b>
+      <span data-i18n="site.story.convertS">AI + leads</span></div>
+    <div class="sy"><b data-i18n="site.story.monetize">Monetize</b>
+      <span data-i18n="site.story.monetizeS">VIP · membership · academy</span></div>
+    <div class="sy"><b data-i18n="site.story.deliver">Deliver</b>
+      <span data-i18n="site.story.deliverS">Signal Desk · Telegram · live · academy</span></div>
+    <div class="sy"><b data-i18n="site.story.engage">Engage</b>
+      <span data-i18n="site.story.engageS">Private community</span></div>
+    <div class="sy on"><b data-i18n="site.story.operate">Operate</b>
+      <span data-i18n="site.story.operateS">SKLZ Pro Trader OS</span></div>
+  </div>
+</div></section>
+
 <section class="sec" id="ecosystem"><div class="wrap">
   <div class="lead">
     <div>
@@ -766,7 +806,12 @@ I18N.mountSwitcher(document.getElementById("navRight"));
 
 /* ── HYDRATE SECOND ── personalisation, on its own time.
    The demo token carries a language; adopting it re-renders in place. */
-hydrateBrand(() => {
+hydrateBrand(b => {
+  /* The logo and the offer both arrive with the brand call, and both are
+     purely additive: the page was complete before either landed. */
+  SKLZOffer.paintLogo(b.name, b.logo);
+  SKLZOffer.mount(document.getElementById("offerHero"), { sales: SALES_LINK });
+  SKLZOffer.watch(API, TOKEN);
   /* The showcase token has a finite life (see sklz-showcase.js). If it has
      expired or been revoked, the desk behind this button would greet a
      visitor with "this private demo has ended" — so the button becomes a

@@ -10,12 +10,13 @@
 <script src="sklz-showcase.js"></script>
 <script src="sklz-i18n-dict.js"></script>
 <script src="sklz-i18n.js"></script>
+<script src="sklz-offer.js"></script>
 </head><body>
 
 <div class="shell">
   <aside class="side">
     <div class="brandmark">
-      <div class="m" data-initials>SK</div>
+      <div class="m" data-logo><span data-initials>SK</span></div>
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:-.01em"
              data-brand>SKLZ Pro Trader</div>
@@ -243,6 +244,7 @@
             <div data-i18n="portal.bullet2d">· Every live session and the replay library</div>
             <div data-i18n="portal.bullet3d">· VIP lounge and trade reviews</div>
           </div>
+          <div id="offerPortal" style="margin-top:14px" hidden></div>
           <a class="btn gold full" style="margin-top:16px" id="upgrade" data-i18n="portal.upgradeAllAccess">
             Upgrade to All Access</a>
           <div class="note" style="margin-top:12px" data-i18n="portal.membershipNote">Membership gives access to
@@ -359,7 +361,13 @@ const POSTS = [
   countdown(document.getElementById("cd"), Date.now() + 3*3600000 + 42*60000);
 
   /* ── HYDRATE SECOND ── */
-  hydrateBrand();
+  hydrateBrand(b => {
+  SKLZOffer.paintLogo(b.name, b.logo);
+  /* Slim, and inside the upgrade card — a member portal is not a sales
+     page and must not become one. */
+  SKLZOffer.mount(document.getElementById("offerPortal"), { slim: true });
+  SKLZOffer.watch(API, TOKEN);
+});
 })();
 
 /* language switcher — manual choice wins and persists for this browser */

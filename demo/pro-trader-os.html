@@ -10,6 +10,7 @@
 <script src="sklz-showcase.js"></script>
 <script src="sklz-i18n-dict.js"></script>
 <script src="sklz-i18n.js"></script>
+<script src="sklz-offer.js"></script>
 <style>
   /* The community room is three columns of very different content. A bare
      1fr takes its min-width from the longest post, which pushed the member
@@ -32,7 +33,7 @@
   <!-- ── navigation ─────────────────────────────────────────── -->
   <aside class="side">
     <div class="brandmark">
-      <div class="m" data-initials>SK</div>
+      <div class="m" data-logo><span data-initials>SK</span></div>
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:-.01em"
              data-brand>SKLZ Pro Trader</div>
@@ -81,6 +82,33 @@
           <span class="tag gold" data-i18n="os.tradeOnceTitle">Trade Once. Distribute Everywhere.</span>
         </div>
       </div>
+
+      <div class="card glow raise" id="deskHero" style="margin-bottom:22px;
+           border-color:rgba(245,166,35,.38);display:flex;flex-direction:column;
+           gap:14px">
+        <div class="row wrap-r" style="gap:10px;align-items:center">
+          <span class="dot on"></span>
+          <span class="tag gold" data-i18n="os.deskCard.title">Live Signal Desk</span>
+        </div>
+        <div class="h-lg" data-i18n="os.deskCard.title">Live Signal Desk</div>
+        <div class="tiny" style="max-width:62ch" data-i18n="os.deskCard.body">Open a BTC
+          demo position and watch the workflow move from execution through
+          automation to subscriber communication.</div>
+        <div class="row wrap-r" style="gap:8px">
+          <span class="tag" data-i18n="os.deskCard.f1">Open position</span>
+          <span class="tag" data-i18n="os.deskCard.f2">Manage SL / TP</span>
+          <span class="tag" data-i18n="os.deskCard.f3">AI assistant</span>
+          <span class="tag" data-i18n="os.deskCard.f4">Telegram automation</span>
+        </div>
+        <div class="row wrap-r" style="gap:10px">
+          <a class="btn gold" id="deskLaunch" data-i18n="os.deskCard.cta">Launch
+            live Signal Desk</a>
+          <span class="tiny" data-i18n="cmp.brokerDemo">Executed on an MT5 broker
+            DEMO account. Automation is live; funds are virtual.</span>
+        </div>
+      </div>
+
+      <div id="offerOS" style="margin-bottom:20px" hidden></div>
 
       <div class="flow" style="margin-bottom:22px">
         <div class="step"><div class="n">01</div><div class="t" data-i18n="site.caps.trade">Trade</div>
@@ -218,12 +246,16 @@
         <div><div class="eyebrow" data-i18n="site.caps.distribute">Distribute</div>
           <h1 class="h-lg" style="margin-top:5px" data-i18n="tg.title">Telegram Studio</h1></div>
         <div class="row"><span class="dot on"></span>
-          <span class="tiny" data-i18n="os.channelConnected">Channel connected</span></div>
+          <span class="tiny" data-i18n="tg.demoChannel">Demo Telegram channel</span></div>
       </div>
 
       <div class="grid g3" style="margin-bottom:18px">
-        <div class="card"><div class="eyebrow" data-i18n="os.channel">Channel</div>
+        <div class="card"><div class="eyebrow" data-i18n="tg.intended">Your channel at
+            implementation</div>
           <div class="h-md" style="margin-top:7px" data-channel>SKLZ Signals</div>
+          <div class="tiny" style="margin-top:6px" data-i18n="tg.truth">Demo automation
+            publishes through the SKLZ demo channel. Your implementation connects
+            your own Telegram bot and channel.</div>
           <div class="tiny" style="margin-top:6px" data-i18n="os.postOnceEdited">Signals post once and are
             edited in place through the trade's life.</div></div>
         <div class="card"><div class="eyebrow" data-i18n="os.lifecycleStates">Lifecycle states</div>
@@ -686,6 +718,11 @@ your own, and I'll prepare something for your approval.</div>
           <h1 class="h-lg" style="margin-top:5px" data-i18n="nav.pricing">Pricing</h1></div>
         <span class="tag green" id="priceSrc" data-i18n="os.fromLivePackage">from live package config</span>
       </div>
+      <div id="offerPricing" style="margin-bottom:18px" hidden>
+        <div class="eyebrow" style="margin-bottom:10px"
+             data-i18n="offer.packagesTitle">Your private pricing</div>
+        <div id="offerPacks"></div>
+      </div>
       <div class="grid g3" id="packs"></div>
       <div class="grid g2" style="margin-top:18px">
         <div class="card"><div class="h-md" data-i18n="os.implIncludes">What implementation includes</div>
@@ -810,6 +847,11 @@ const LEADS = [
   document.getElementById("deskNew").href = deskURL;
   document.getElementById("linkSite").href = tokenLink("trader-site.html");
   document.getElementById("linkPortal").href = tokenLink("client-portal.html");
+  /* The Overview card opens the desk in the Desk pane rather than a new
+     tab: the point of the card is that the engine lives inside the OS. */
+  document.getElementById("deskLaunch").addEventListener("click", e => {
+    e.preventDefault(); go("desk", true);
+  });
 
   /* Overview: no naked dash. State what the tile is and where the real
      number lives, rather than implying a figure failed to load. */
@@ -1021,7 +1063,14 @@ const LEADS = [
 
   /* ── HYDRATE SECOND ── the provider's identity arrives whenever it
      arrives, and repaints only the places that embed it in content. */
-  hydrateBrand(() => {
+  hydrateBrand(b => {
+  SKLZOffer.paintLogo(b.name, b.logo);
+  SKLZOffer.mount(document.getElementById("offerOS"), { sales: SALES_LINK });
+  SKLZOffer.mountPackages(document.getElementById("offerPacks"), SALES_LINK);
+  const box = document.getElementById("offerPricing");
+  const sync = () => { box.hidden = !SKLZOffer.active(); };
+  sync(); setInterval(sync, 1000);
+  SKLZOffer.watch(API, TOKEN);
     const pv = document.getElementById("tgPrev");
     if (pv) pv.textContent = fill(PREV[
       (document.querySelector("[data-prev].on") || {}).dataset
