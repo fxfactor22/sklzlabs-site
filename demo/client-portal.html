@@ -366,7 +366,7 @@ const POSTS = [
   /* Slim, and inside the upgrade card — a member portal is not a sales
      page and must not become one. */
   SKLZOffer.mount(document.getElementById("offerPortal"), { slim: true });
-  SKLZOffer.watch(API, TOKEN);
+  SKLZOffer.watch(API, TOKEN, "portal");
 });
 })();
 

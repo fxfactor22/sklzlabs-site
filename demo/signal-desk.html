@@ -789,7 +789,7 @@ function expired(msg){
   SKLZOffer.adopt(d);
   SKLZOffer.paintLogo(d.provider_name, d.logo_url);
   SKLZOffer.mount(document.getElementById("offerDesk"), { slim: true });
-  SKLZOffer.watch(API, TOKEN);
+  SKLZOffer.watch(API, TOKEN, "signal_desk");
   const back = document.getElementById("backOS");
   if (back) back.href = "pro-trader-os.html?t=" + encodeURIComponent(TOKEN);
   CFG.demo_ends = (d.seconds_remaining === null ||
@@ -1025,12 +1025,24 @@ async function stripe(){
   try{
     // one Checkout session charges the setup fee and starts the
     // monthly subscription — the customer buys both, so both are billed
+    /* A prospect holding a live private offer must not be billed the
+       public setup fee by the button sitting a few hundred pixels under
+       their own 50%-off code. The token travels with the request and the
+       SERVER prices it. If the window closed since this page loaded the
+       server refuses outright instead of charging full price, and the
+       offer card is re-read so that it says so. */
+    const body={package:pkg,surface:"signal_desk"};
+    if(window.SKLZOffer&&SKLZOffer.active()) body.demo_token=TOKEN;
     const r=await fetch(API+"/api/billing/checkout-package",{
       method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({package:pkg})});
+      body:JSON.stringify(body)});
     const d=await r.json();
-    if(d&&d.url) location.href=d.url;
-    else alert((d&&d.detail)||I18N.T("desk.checkoutUnavailable"));
+    if(r.ok&&d&&d.url){ location.href=d.url; return; }
+    const detail=String((d&&d.detail)||"");
+    if(detail.indexOf("offer_not_available")===0){
+      if(window.SKLZOffer&&SKLZOffer.resync) SKLZOffer.resync();
+      alert(I18N.T("offer.endedBody"));
+    } else alert(detail||I18N.T("desk.checkoutUnavailable"));
   }catch(e){alert(I18N.T("desk.checkoutUnavailable"));}
 }
 

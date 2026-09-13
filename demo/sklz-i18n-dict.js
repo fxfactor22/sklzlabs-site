@@ -19,6 +19,16 @@ window.SKLZ_I18N_DICT = {
 
 /* ==================================================================== EN */
 en: {
+  /* ── the private offer, paid by card ─────────────────────── */
+  "offer.titleApplied": "Private offer applied",
+  "offer.offerRef": "Offer reference",
+  "offer.dueToday": "{amount} due today",
+  "offer.choose": "Choose your package",
+  "offer.payNow": "Pay now",
+  "offer.opening": "Opening secure checkout…",
+  "offer.secure": "Secure card payment through Stripe. Cancelling brings you back here.",
+  "offer.quoteCheckout": "The 50% setup discount is already applied to the prices below. This code is your offer reference.",
+  "offer.checkoutError": "Checkout could not be started. Please try again.",
   /* ── the public showcase says so ──────────────────────────── */
   "desk.preparedForShowcase": "Public showcase by",
   "desk.pageTitleShowcase": "SKLZ Signal Desk — Public Showcase",
@@ -1023,6 +1033,16 @@ en: {
 
 /* ==================================================================== AR */
 ar: {
+  /* ── the private offer, paid by card ─────────────────────── */
+  "offer.titleApplied": "تم تطبيق العرض الخاص",
+  "offer.offerRef": "رقم العرض",
+  "offer.dueToday": "{amount} تُدفع اليوم",
+  "offer.choose": "اختر باقتك",
+  "offer.payNow": "ادفع الآن",
+  "offer.opening": "جارٍ فتح صفحة الدفع الآمنة…",
+  "offer.secure": "دفع آمن بالبطاقة عبر Stripe. إذا ألغيت العملية ستعود إلى هنا.",
+  "offer.quoteCheckout": "خصم التأسيس 50% مُطبَّق بالفعل على الأسعار أدناه، وهذا الرمز هو رقم العرض الخاص بك.",
+  "offer.checkoutError": "تعذّر بدء عملية الدفع. حاول مرة أخرى.",
   /* ── the public showcase says so ──────────────────────────── */
   "desk.preparedForShowcase": "عرض عام مقدَّم من",
   "desk.pageTitleShowcase": "SKLZ Signal Desk — عرض عام",
@@ -2005,6 +2025,16 @@ ar: {
 
 /* ==================================================================== RU */
 ru: {
+  /* ── the private offer, paid by card ─────────────────────── */
+  "offer.titleApplied": "Частное предложение применено",
+  "offer.offerRef": "Номер предложения",
+  "offer.dueToday": "{amount} к оплате сегодня",
+  "offer.choose": "Выберите пакет",
+  "offer.payNow": "Оплатить",
+  "offer.opening": "Открываем защищённую оплату…",
+  "offer.secure": "Защищённая оплата картой через Stripe. При отмене вы вернётесь сюда.",
+  "offer.quoteCheckout": "Скидка 50% на подключение уже применена к ценам ниже. Этот код — номер вашего предложения.",
+  "offer.checkoutError": "Не удалось начать оплату. Попробуйте ещё раз.",
   /* ── the public showcase says so ──────────────────────────── */
   "desk.preparedForShowcase": "Публичная демонстрация от",
   "desk.pageTitleShowcase": "SKLZ Signal Desk — публичная демонстрация",

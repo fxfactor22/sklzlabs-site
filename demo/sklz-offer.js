@@ -17,10 +17,19 @@
  *    a second device or a cleared browser all show the same deadline.
  *  - The discount is SETUP ONLY, and the monthly figure is printed beside
  *    it precisely so nobody has to infer that it did not change.
- *  - The promo code is a SALES-ASSISTED reference. Checkout does not
- *    accept it and is not asked to. The copy says "quote this code when
- *    activating", never "enter it at checkout", because the second one
- *    would be a lie the prospect discovers at the worst moment.
+ *  - The promo code is a REFERENCE, never a coupon. Stripe does not
+ *    accept it and is not asked to. What earns the discount is the
+ *    prospect's own demo token, which the server re-validates on every
+ *    checkout. So the copy says "applied automatically at checkout"
+ *    only where the server will in fact apply it, and "quote this code
+ *    when activating" everywhere else. Neither sentence is ever printed
+ *    beside a button that would charge the full price.
+ *  - PAY NOW prices nothing. It posts a package name, the token and the
+ *    name of the surface it was clicked on. The server decides
+ *    eligibility again, computes the figure again from its own price
+ *    list, and REFUSES rather than quietly selling at full price when
+ *    the window has closed. A refusal re-reads the offer, which is what
+ *    turns the card from "50% off" into "ended".
  *  - No price is computed here. Every figure is printed exactly as the
  *    server sent it, from the one live package configuration.
  */
@@ -47,6 +56,24 @@
   var ticking = false;
   var source = null;    /* {api, token} once watch() is armed */
 
+  /* Card checkout. `ready` stays null until the server has been asked
+     and is never assumed true: no PAY NOW button exists until the one
+     public endpoint that knows says the Stripe products are live. */
+  var CHECKOUT = {
+    api: "", token: "", surface: "",
+    ready: null,
+    busy: false,
+    /* The chooser being open, and any failure the prospect was shown,
+       are STATE rather than DOM. A re-render happens for reasons that
+       have nothing to do with this purchase — a five-minute re-sync, the
+       tab regaining focus, a language switch — and each one rebuilds the
+       card's innerHTML. Holding both here is what stops a prospect's
+       half-finished choice, or the message explaining why their payment
+       did not start, from silently disappearing underneath them. */
+    open: false,
+    error: ""
+  };
+
   /* ------------------------------------------------------------ adopt */
   /** Take the server's answer. Anything other than an explicit eligible
    *  offer clears the state — there is no "probably still valid". */
@@ -55,6 +82,9 @@
     OFFER.loaded = true;
     OFFER.reason = (o && o.reason) || "";
     if (!o || o.eligible !== true) {
+      /* Nothing left to choose or to retry. */
+      CHECKOUT.open = false;
+      CHECKOUT.error = "";
       OFFER.eligible = false;
       OFFER.code = "";
       OFFER.deadline = null;
@@ -97,22 +127,114 @@
   /** The browser's clock is a display. This re-reads the server's, on the
    *  events where drift would actually be visible: coming back to the tab,
    *  and every few minutes while it is open. */
-  function watch(api, token) {
+  var lastSync = 0;
+
+  /** Re-read the server's answer. `force` exists for the one case where
+   *  the browser has just been told it is out of date — a refused
+   *  checkout — and must not sit behind the rate limit. */
+  function resync(force) {
+    if (!source) return;
+    if (!force && Date.now() - lastSync < 30000) return;   /* never hammer it */
+    lastSync = Date.now();
+    fetch(source.api + "/api/demo-links/" + encodeURIComponent(source.token))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d) adopt(d); })
+      .catch(function () { /* offline: keep the last server answer */ });
+  }
+
+  /** surface: which demo page this is, by the server's own name for it
+   *  ("experience", "os", "signal_desk", "portal"). It travels with a
+   *  checkout so a cancelled payment returns the prospect to the page
+   *  they left — and it is a NAME rather than a URL precisely so the
+   *  browser cannot choose the destination. */
+  function watch(api, token, surface) {
     if (!api || !token) return;
     source = { api: api, token: token };
-    var last = 0;
-    function resync() {
-      if (Date.now() - last < 30000) return;      /* never hammer it */
-      last = Date.now();
-      fetch(source.api + "/api/demo-links/" + encodeURIComponent(source.token))
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) { if (d) adopt(d); })
-        .catch(function () { /* offline: keep the last server answer */ });
-    }
+    CHECKOUT.api = api;
+    CHECKOUT.token = token;
+    CHECKOUT.surface = surface || "";
+    askCheckout();
     document.addEventListener("visibilitychange", function () {
       if (!document.hidden) resync();
     });
     setInterval(resync, 5 * 60 * 1000);
+  }
+
+  /* --------------------------------------------------- card checkout */
+  /** Can a card actually be charged for these packages right now?
+   *
+   *  The one authority is the same public endpoint the pricing pages
+   *  read: `stripe.available` is false until the six Signal Desk
+   *  products exist in Stripe. Nothing is offered until it answers yes —
+   *  a PAY NOW that fails in front of a prospect is worse than no PAY
+   *  NOW, and the sales route is still there behind it. */
+  function askCheckout() {
+    if (!CHECKOUT.api || CHECKOUT.ready !== null) return;
+    CHECKOUT.ready = false;
+    fetch(CHECKOUT.api + "/api/orders/packages")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        CHECKOUT.ready = !!(d && d.stripe && d.stripe.available);
+        render();
+      })
+      .catch(function () { /* stays false */ });
+  }
+
+  /** Three things must all be true before a PAY NOW button exists: the
+   *  server said this link carries an offer, the offer has not run out,
+   *  and card checkout is live. */
+  function canPay() {
+    return CHECKOUT.ready === true && !!CHECKOUT.token && active();
+  }
+
+  function fail(msg) {
+    CHECKOUT.error = msg || "";
+    Array.prototype.forEach.call(
+      document.querySelectorAll("[data-offer-err]"), function (el) {
+        el.textContent = CHECKOUT.error;
+        el.hidden = !CHECKOUT.error;
+      });
+  }
+
+  function pay(key, btn) {
+    if (CHECKOUT.busy) return;
+    CHECKOUT.busy = true;
+    var label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = T("offer.opening");
+    fail("");
+
+    function stop(msg) {
+      CHECKOUT.busy = false;
+      btn.disabled = false;
+      btn.textContent = label;
+      fail(msg);
+    }
+
+    fetch(CHECKOUT.api + "/api/billing/checkout-package", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      /* A package, a token and a surface name. No amount, no percentage
+         and no code — the server would not read them if they were here. */
+      body: JSON.stringify({ package: key, demo_token: CHECKOUT.token,
+                             surface: CHECKOUT.surface })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; })
+        .then(function (d) { return { ok: r.ok, d: d || {} }; });
+    }).then(function (res) {
+      if (res.ok && res.d.url) { location.href = res.d.url; return; }
+      /* The server refused and created nothing. It does not fall back to
+         full price and neither does this: re-read the offer instead. */
+      var detail = String((res.d && res.d.detail) || "");
+      var gone = detail.indexOf("offer_not_available") === 0;
+      stop(T(gone ? "offer.endedBody" : "offer.checkoutError"));
+      /* Only an offer refusal means our copy of the offer is stale. Any
+         other failure leaves the offer exactly as it was, and re-reading
+         it would only throw away what the prospect is looking at. */
+      if (gone) resync(true);
+    }).catch(function () {
+      stop(T("offer.checkoutError"));
+    });
   }
 
   /* ----------------------------------------------------------- clock */
@@ -190,11 +312,52 @@
          empty bordered box — a stray rectangle on the public showcase
          and on every visit with no offer. */
       ".sklz-offer[hidden]{display:none!important}",
+      /* the same reason, one level in: the chooser and the error line
+         are toggled with el.hidden and must actually disappear */
+      ".sklz-offer [hidden]{display:none!important}",
+      ".sklz-offer .o-choose-h{font-weight:700;font-size:13px}",
+      ".sklz-offer .o-rows{display:grid;gap:10px;margin:8px 0;",
+      " grid-template-columns:repeat(auto-fit,minmax(188px,1fr))}",
+      ".sklz-offer .o-row{border:1px solid rgba(245,166,35,.28);",
+      " border-radius:11px;padding:11px 12px;display:flex;min-width:0;",
+      " flex-direction:column;gap:5px}",
+      ".sklz-offer .o-rname{font-weight:700}",
+      ".sklz-offer .o-rprice{display:flex;align-items:baseline;gap:7px;",
+      " flex-wrap:wrap}",
+      ".sklz-offer .o-rprice b{font-size:21px;letter-spacing:-.02em;",
+      " direction:ltr;unicode-bidi:isolate}",
+      ".sklz-offer .p-was{opacity:.55;text-decoration:line-through;",
+      " font-size:13px;direction:ltr;unicode-bidi:isolate}",
+      /* Only the AMOUNT is forced LTR. The sentence around it is the
+         page's language and must not be reversed with it — a whole line
+         set to direction:ltr puts Arabic words in the wrong order. An
+         isolated amount inside ordinary text is what the bidi algorithm
+         is for. */
+      ".sklz-offer .o-amt{direction:ltr;unicode-bidi:isolate}",
+      ".sklz-offer .o-due{font-weight:700}",
+      ".sklz-pkgs .p-due{font-weight:700}",
+      ".sklz-offer .o-pay{margin-top:auto}",
+      ".sklz-offer .o-err{color:#FF9C8A;font-size:12.5px}",
+      ".sklz-offer.o-slim [data-offer-choose]{flex:1 1 100%}",
+      /* The package grid is mounted on its own host, outside .sklz-offer,
+         so the shared button and error rules are repeated for it rather
+         than inherited. Its CTA has been an unstyled link until now;
+         giving it the same button as everywhere else is the point of
+         having one offer module. */
+      ".sklz-pkgs .o-btn{border:0;border-radius:9px;padding:8px 14px;",
+      " font:inherit;font-weight:700;cursor:pointer;background:#F5A623;",
+      " color:#12100A}",
+      ".sklz-pkgs a.o-btn{text-decoration:none;display:inline-block;",
+      " text-align:center}",
+      ".sklz-pkgs .o-pay{margin-top:auto}",
+      ".sklz-pkgs .o-err{color:#FF9C8A;font-size:12.5px}",
+      ".sklz-pkgs [hidden]{display:none!important}",
       "[data-logo]{overflow:hidden}",
       ".sklz-brand-logo{max-width:100%;max-height:100%;width:auto;",
       " height:auto;object-fit:contain;display:block;margin:auto}",
       "@media(max-width:620px){.sklz-offer .o-head{font-size:17px}",
       " .sklz-offer .o-clock{font-size:19px}",
+      " .sklz-offer .o-rows{grid-template-columns:1fr}",
       " .sklz-pkgs{grid-template-columns:1fr}}"
     ].join("");
     document.head.appendChild(css);
@@ -207,30 +370,115 @@
     });
   }
 
+  /** The package chooser.
+   *
+   *  Every figure printed here is a string the server sent. Nothing is
+   *  added up: the two amounts charged today are shown as the two
+   *  amounts they are, which is also how the first invoice will read.
+   *  The setup figure is struck through and replaced rather than
+   *  described, so there is no wording to disagree with the number. */
+  function chooser() {
+    var order = ["signal_desk", "signal_desk_pro", "pro_trader_os"];
+    var rows = order.map(function (k) {
+      var p = OFFER.packages && OFFER.packages[k];
+      if (!p) return "";
+      return '<div class="o-row">' +
+        '<div class="o-rname">' + esc(p.name) + "</div>" +
+        '<div class="o-rprice"><span class="p-was">' +
+          esc(p.normal_setup.display) + "</span> <b>" +
+          esc(p.offer_setup.display) + "</b> " +
+          '<span class="o-sub">' + esc(T("offer.setup")) + "</span></div>" +
+        '<div><span class="o-amt">' + esc(p.monthly.display) + "</span> " +
+          '<span class="o-sub">' + esc(T("offer.perMonth")) + "</span></div>" +
+        '<div class="o-due">' + esc(T("offer.dueToday",
+          { amount: dueToday(p) })) + "</div>" +
+        '<button type="button" class="o-btn o-pay" data-offer-pay="' +
+          esc(k) + '">' + esc(T("offer.payNow")) + "</button>" +
+        "</div>";
+    }).join("");
+    return '<div class="o-choose-h">' + esc(T("offer.choose")) + "</div>" +
+      '<div class="o-rows">' + rows + "</div>" +
+      '<div class="o-sub">' + esc(T("offer.secure")) + "</div>" + errLine();
+  }
+
+  /* The ONE figure on these cards the server does not send as a string.
+   *
+   * The offer payload gives the discounted setup and the monthly
+   * separately and deliberately carries no aggregate. The checkout does
+   * charge both on the first invoice, so a prospect about to press PAY
+   * NOW is entitled to read the number Stripe will show them — which
+   * means adding the server's own two figures for THIS package here.
+   *
+   * Both inputs move with the server's price list, so this cannot drift
+   * from it; only the formatting is ours, and it follows the same rule
+   * (whole dollars stay whole, Latin digits in every locale). The right
+   * home for it is the offer payload itself — move it there the next
+   * time that payload changes.
+   */
+  function money(v) {
+    var n = Math.round(Number(v) * 100) / 100;
+    if (!isFinite(n)) return "";
+    return "$" + n.toLocaleString("en-US", {
+      minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  }
+
+  function dueToday(p) {
+    var s = Number(p && p.offer_setup && p.offer_setup.usd);
+    var m = Number(p && p.monthly && p.monthly.usd);
+    return (isFinite(s) && isFinite(m)) ? money(s + m) : "";
+  }
+
+  /** The failure line, rendered from state so it survives a re-render. */
+  function errLine() {
+    return '<div class="o-err" data-offer-err' +
+      (CHECKOUT.error ? "" : " hidden") + ">" + esc(CHECKOUT.error) + "</div>";
+  }
+
   function banner(slim, sales) {
-    var head = '<div class="o-tag">' + esc(T("offer.title")) + "</div>" +
+    /* With a card route live the discount is not something to claim from
+       a person later — the server has already applied it to the figures
+       below. The tag says so. Without a card route this is still the
+       48-hour offer it was. */
+    var head = '<div class="o-tag">' +
+      esc(T(canPay() ? "offer.titleApplied" : "offer.title")) + "</div>" +
       '<div class="o-head">' + esc(T("offer.headline")) + "</div>";
     var sub = '<div class="o-sub">' + esc(T("offer.monthlyUnchanged")) + "</div>";
     var timer = '<div><div class="o-sub">' + esc(T("offer.endsIn")) + "</div>" +
       '<div class="o-clock" data-offer-clock>' + clock(remaining()) + "</div></div>";
     var code = OFFER.code
-      ? '<div class="o-code"><span class="o-sub">' + esc(T("offer.promoCode")) +
+      ? '<div class="o-code"><span class="o-sub">' +
+        esc(T(canPay() ? "offer.offerRef" : "offer.promoCode")) +
         '</span><b data-offer-code>' + esc(OFFER.code) + "</b>" +
         '<button type="button" class="o-btn o-ghost" data-offer-copy>' +
         esc(T("offer.copyCode")) + "</button></div>"
       : "";
-    var note = '<div class="o-sub o-note">' + esc(T("offer.quote")) + "</div>";
-    var cta = sales
-      ? '<a class="o-btn" href="' + esc(sales) + '" target="_blank" ' +
-        'rel="noopener">' + esc(T("offer.cta")) + "</a>"
-      : "";
+    /* Which sentence is true depends on what the button below it does.
+       With card checkout live the discount really is applied by the
+       server during checkout; without it the code is quoted to a person.
+       The page never prints one of these beside the other one's button. */
+    var note = '<div class="o-sub o-note">' +
+      esc(T(canPay() ? "offer.quoteCheckout" : "offer.quote")) + "</div>";
+    var cta = canPay()
+      ? '<div' + (CHECKOUT.open ? " hidden" : "") +
+        '><button type="button" class="o-btn" data-offer-claim>' +
+        esc(T("offer.cta")) + "</button></div>" +
+        '<div data-offer-choose' + (CHECKOUT.open ? "" : " hidden") + ">" +
+        chooser() + "</div>"
+      : (sales
+        ? '<a class="o-btn" href="' + esc(sales) + '" target="_blank" ' +
+          'rel="noopener">' + esc(T("offer.cta")) + "</a>"
+        : "");
     /* The compact variant carries the redemption sentence too.
        Without it the Signal Desk showed a promo code a few hundred pixels
        above its own full-price "Continue to secure checkout" button, with
        nothing saying the discount is applied by SKLZ rather than by that
        button. Same translated string as the full card — no new wording,
        and still no mention of checkout. */
-    if (slim) return head + timer + code + note;
+    /* The compact strip carries the same route. It used to end at the
+       promo code, which left a desk showing a 50%-off code above its own
+       full-price button; both routes now reach the same priced-by-the-
+       server checkout. */
+    if (slim) return head + timer + code + note + cta;
     return head + sub + timer + code + note + cta;
   }
 
@@ -263,14 +511,31 @@
 
   function wire(root) {
     var b = root.querySelector("[data-offer-copy]");
-    if (!b) return;
-    b.addEventListener("click", function () {
+    if (b) b.addEventListener("click", function () {
       try {
         navigator.clipboard.writeText(OFFER.code);
         b.textContent = T("offer.copied");
         setTimeout(function () { b.textContent = T("offer.copyCode"); }, 1800);
       } catch (e) { /* a clipboard refusal is not worth an error toast */ }
     });
+
+    var claim = root.querySelector("[data-offer-claim]");
+    var box = root.querySelector("[data-offer-choose]");
+    if (claim && box) claim.addEventListener("click", function () {
+      CHECKOUT.open = true;
+      box.hidden = false;
+      claim.parentElement.hidden = true;
+      var first = box.querySelector("[data-offer-pay]");
+      if (first && first.scrollIntoView)
+        first.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    });
+
+    Array.prototype.forEach.call(
+      root.querySelectorAll("[data-offer-pay]"), function (el) {
+        el.addEventListener("click", function () {
+          pay(el.getAttribute("data-offer-pay"), el);
+        });
+      });
   }
 
   /* ------------------------------------------------- package pricing */
@@ -304,13 +569,23 @@
           '<div class="p-lbl">' + esc(T("offer.monthly")) + "</div>" +
           '<div class="p-mon">' + esc(p.monthly.display) + "</div>" +
           '<div class="o-sub">' + esc(T("offer.perMonth")) + "</div>" +
-          (h.sales
-            ? '<a class="o-btn" style="margin-top:auto;text-align:center" ' +
-              'href="' + esc(h.sales) + '" target="_blank" rel="noopener">' +
-              esc(T("offer.cta")) + "</a>"
-            : "") +
+          '<div class="p-due">' + esc(T("offer.dueToday",
+            { amount: dueToday(p) })) + "</div>" +
+          /* The same decision as the banner: a card button only where a
+             card can actually be charged, the sales route otherwise. */
+          (canPay()
+            ? '<button type="button" class="o-btn o-pay" ' +
+              'data-offer-pay="' + esc(k) + '">' +
+              esc(T("offer.payNow")) + "</button>"
+            : (h.sales
+              ? '<a class="o-btn" style="margin-top:auto;text-align:center" ' +
+                'href="' + esc(h.sales) + '" target="_blank" rel="noopener">' +
+                esc(T("offer.cta")) + "</a>"
+              : "")) +
           "</div>";
-      }).join("");
+      }).join("") +
+        errLine().replace("<div ", '<div style="grid-column:1/-1" ');
+      wire(h.el);
     });
   }
 
@@ -396,6 +671,11 @@
     adopt: adopt, mount: mount, mountPackages: mountPackages,
     watch: watch, active: active, ended: ended, state: OFFER,
     remaining: remaining, preferredSymbol: preferredSymbol,
+    /* canPay() is the one answer to "is there a card route right now",
+       and resync() is how a surface with its own checkout tells the
+       offer card that the server has just contradicted it. */
+    canPay: canPay,
+    resync: function () { resync(true); },
     refresh: render
   };
 

@@ -811,7 +811,7 @@ hydrateBrand(b => {
      purely additive: the page was complete before either landed. */
   SKLZOffer.paintLogo(b.name, b.logo);
   SKLZOffer.mount(document.getElementById("offerHero"), { sales: SALES_LINK });
-  SKLZOffer.watch(API, TOKEN);
+  SKLZOffer.watch(API, TOKEN, "experience");
   /* The showcase token has a finite life (see sklz-showcase.js). If it has
      expired or been revoked, the desk behind this button would greet a
      visitor with "this private demo has ended" — so the button becomes a
