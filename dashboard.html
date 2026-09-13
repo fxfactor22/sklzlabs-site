@@ -237,6 +237,11 @@
     <div class="nav-item" onclick="location.href='/copytrade.html'"><span class="i">🔁</span>CopyTrader</div>
     <div class="nav-item" onclick="location.href='/copydash.html'"><span class="i">📈</span>Copy dashboard</div>
     <div class="nav-item" onclick="location.href='/newtokens.html'"><span class="i">🔎</span>New Tokens</div>
+    <div class="nav-sec" id="navAdminSec" style="display:none">SKLZ Labs</div>
+    <div class="nav-item" id="navDemoGen" style="display:none"
+         onclick="location.href='/admin/demo.html'">
+      <span class="i">🎟️</span>Demo Generator</div>
+
     <div class="nav-sec">Account</div>
     <div class="nav-item" onclick="location.href='/account.html'"><span class="i">🔑</span>Login &amp; security</div>
 
@@ -385,15 +390,23 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="/sklz-auth.js"></script>
 <script>
   const API="https://api.sklzlabs.com";
   const CIRC=2*Math.PI*63;   // 395.8 — ring circumference
   let refLink='', allRefs=[];
 
-  function tok(){return localStorage.getItem('sklz_access')}
-  if(!tok()) location.href='/login.html';
-  async function api(p){const r=await fetch(API+p,{headers:{'Authorization':'Bearer '+tok()}});
-    if(r.status===401){location.href='/login.html';throw 0} return r}
+  function tok(){return SKLZAuth.token()}
+  /* An access token that has aged out is not a signed-out operator: the
+     refresh token is what decides that, and only after it has been
+     tried. Redirecting on a missing access token alone is what used to
+     bounce people out of a perfectly good session. */
+  if(!SKLZAuth.hasSession()) SKLZAuth.toLogin();
+  async function api(p){
+    const r=await SKLZAuth.fetch(API+p);
+    /* the helper has already tried to refresh once by here */
+    if(r.status===401){SKLZAuth.clearSession();SKLZAuth.toLogin();throw 0}
+    return r}
   function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
   function toast(m){const t=document.getElementById('toast');t.textContent=m;
     t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}
@@ -446,6 +459,16 @@
   async function load(){
     try{
       const me=await(await api('/api/auth/me')).json();
+      /* Cosmetic only. Every generator API call is re-checked by
+         is_platform_admin on the server, which remains the real boundary.
+         me.is_platform_admin is that same server decision, reported for
+         display — the browser never re-derives it. */
+      if(me.is_platform_admin === true){
+        const sec=document.getElementById('navAdminSec');
+        const gen=document.getElementById('navDemoGen');
+        if(sec) sec.style.display='';
+        if(gen) gen.style.display='';
+      }
     }catch(e){}
     try{
       const d=await(await api('/api/account/overview')).json();
@@ -525,9 +548,7 @@
   }
 
   async function logout(){
-    try{await fetch(API+'/api/auth/logout',{method:'POST',
-      headers:{'Authorization':'Bearer '+tok()}})}catch(e){}
-    localStorage.removeItem('sklz_access');localStorage.removeItem('sklz_refresh');
+    await SKLZAuth.logout();     /* clears BOTH tokens */
     location.href='/';
   }
 

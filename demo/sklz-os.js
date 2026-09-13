@@ -79,7 +79,9 @@ async function loadBrand() {
       BRAND.language = d.language || BRAND.language;
       BRAND.tokenLanguage = d.language || null;
       BRAND.logo = d.logo_url || "";
+      /* null means the link does not expire (the public showcase). */
       BRAND.secondsLeft = d.seconds_remaining;
+      BRAND.purpose = d.purpose || "private_demo";
       BRAND.loaded = true;
       return BRAND;
     }

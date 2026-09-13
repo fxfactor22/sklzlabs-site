@@ -965,7 +965,9 @@ en: {
   "os.src.academy": "academy",
   "sell.namePlaceholder": "Your full name",
   "srv.noteFallback": "Additional broker status information received.",
-  "site.openLiveDesk": "Open the live Signal Desk"
+  "site.openLiveDesk": "Open the live Signal Desk",
+  "desk.publicDemo": "Public demo",
+  "desk.showcaseBusy": "The public showcase is busy right now. Try again shortly, or ask us for a private demo."
 },
 
 /* ==================================================================== AR */
@@ -1894,7 +1896,9 @@ ar: {
   "os.src.academy": "الأكاديمية",
   "sell.namePlaceholder": "اسمك الكامل",
   "srv.noteFallback": "تم استلام معلومات إضافية عن حالة التنفيذ.",
-  "site.openLiveDesk": "افتح مكتب الإشارات المباشر"
+  "site.openLiveDesk": "افتح مكتب الإشارات المباشر",
+  "desk.publicDemo": "عرض عام",
+  "desk.showcaseBusy": "العرض العام مشغول الآن. حاول بعد قليل، أو اطلب عرضًا خاصًا بك."
 },
 
 /* ==================================================================== RU */
@@ -2823,6 +2827,8 @@ ru: {
   "os.src.academy": "академия",
   "sell.namePlaceholder": "Ваше полное имя",
   "srv.noteFallback": "Получена дополнительная информация о статусе исполнения.",
-  "site.openLiveDesk": "Открыть живой Signal Desk"
+  "site.openLiveDesk": "Открыть живой Signal Desk",
+  "desk.publicDemo": "Публичная демонстрация",
+  "desk.showcaseBusy": "Публичная демонстрация сейчас занята. Попробуйте чуть позже или запросите приватное демо."
 }
 };

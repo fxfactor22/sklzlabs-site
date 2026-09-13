@@ -34,11 +34,33 @@ th{color:var(--dim2);font-size:11px;text-transform:uppercase;letter-spacing:.08e
 a{color:var(--gold2)}
 </style></head><body><div class="wrap">
 
-<h1>Private demo generator</h1>
-<div class="sub">One prospect, one link, 48 hours. Sign in as an admin on
-  sklzlabs.com first — this page uses that session.</div>
+<h1>Demo generator</h1>
+<div class="sub">A private prospect link, or the one public showcase.
+  Signed in as an admin on sklzlabs.com — this page shares that session.</div>
 
 <div class="card">
+  <label>Demo type</label>
+  <select id="p_purpose" onchange="onType()">
+    <option value="private_demo">Private demo — one prospect</option>
+    <option value="showcase">Public showcase — sklzlabs.com</option>
+  </select>
+
+  <div id="showcaseNote" style="display:none;margin-top:12px;padding:12px;
+       border:1px solid rgba(245,166,35,.35);border-radius:10px;
+       background:rgba(245,166,35,.06);font-size:13px;line-height:1.65">
+    <b>This link is public and permanent.</b>
+    <div style="color:var(--dim);margin-top:6px">
+      · It does not expire — the private-demo hours do not apply.<br>
+      · 6 market trades per rolling hour, then it reports busy and
+        recovers on its own.<br>
+      · AI Send is disabled: a public visitor cannot post arbitrary text
+        to the channel. Signals are still published and edited by the
+        trade lifecycle itself.<br>
+      · Only one showcase can be active. Revoke the current one to
+        replace it.
+    </div>
+  </div>
+
   <div class="f2">
     <div><label>Provider / business name *</label>
       <input id="p_name" placeholder="Falcon FX"></div>
@@ -49,7 +71,8 @@ a{color:var(--gold2)}
     <div><label>Language</label><select id="p_lang">
       <option value="en">English</option><option value="ar">العربية</option>
       <option value="ru">Русский</option></select></div>
-    <div><label>Hours open</label><input id="p_hours" type="number" value="48"></div>
+    <div id="hoursBox"><label>Hours open</label>
+      <input id="p_hours" type="number" value="48"></div>
   </div>
   <div class="f2">
     <div><label>Contact name</label><input id="p_contact" placeholder="optional"></div>
@@ -72,8 +95,7 @@ a{color:var(--gold2)}
       <button class="btn ghost" onclick="window.open(document.getElementById('url').textContent,'_blank')">Open it</button>
     </div>
     <div class="msg" id="exp" style="color:var(--dim)"></div>
-    <div class="msg" style="color:var(--green)">New link — 3 of 3 live demo
-      runs available.</div>
+    <div class="msg" id="budget" style="color:var(--green)"></div>
   </div>
 </div>
 
@@ -86,40 +108,51 @@ a{color:var(--gold2)}
   <div id="list"><div class="msg" style="color:var(--dim2)">Refresh to load.</div></div>
 </div>
 
+<script src="/sklz-auth.js"></script>
 <script>
-const API="https://api.sklzlabs.com";
-function tok(){
-  // The site stores the session as `sklz_access` — the same key every
-  // other admin page reads. Hunting for a Supabase-style "auth-token"
-  // key found nothing, because this app does not use one.
-  const direct = localStorage.getItem("sklz_access");
-  if(direct) return direct;
-  // fall back to a Supabase-shaped session if one is ever introduced
-  try{
-    const k = Object.keys(localStorage).find(k => k.includes("auth-token"));
-    if(k) return JSON.parse(localStorage.getItem(k)).access_token;
-  }catch(e){}
-  return null;
-}
+const API = SKLZAuth.API;
+
+/* Every call goes through the shared helper: it attaches the session,
+   refreshes it silently when the access token has aged out, and retries
+   once. This page no longer owns any auth logic of its own. */
+const call = SKLZAuth.fetch;
+
 function v(id){return (document.getElementById(id).value||"").trim();}
+
+function isShowcase(){ return v("p_purpose") === "showcase"; }
+
+function onType(){
+  const sc = isShowcase();
+  document.getElementById("showcaseNote").style.display = sc ? "block" : "none";
+  document.getElementById("hoursBox").style.display = sc ? "none" : "";
+  document.getElementById("go").textContent =
+    sc ? "Generate public showcase" : "Generate private link";
+}
+
+function signedOut(m){
+  m.style.color="var(--red)";
+  m.innerHTML='<b>Signed out.</b> <a href="/login.html?next='+
+    encodeURIComponent(location.pathname)+'">Sign in</a> and come back — '+
+    'the generator will pick the session up.';
+}
 async function make(){
   const b=document.getElementById("go"), m=document.getElementById("msg");
-  const t=tok();
-  if(!t){ m.style.color="var(--red)";
-    m.innerHTML='<b>No admin session found.</b><br>admin token present: no · '+
-      '<a href="/login.html?next='+encodeURIComponent(location.pathname)+
-      '">Sign in</a>, then reload this page.';
-    return; }
+  const label = isShowcase() ? "Generate public showcase" : "Generate private link";
+  if(!SKLZAuth.hasSession()){ signedOut(m); return; }
   if(!v("p_name")||!v("p_chan")){ m.style.color="var(--red)";
     m.textContent="Provider name and Telegram channel are required."; return; }
   b.disabled=true; b.textContent="Generating…"; m.textContent="";
   try{
-    const r=await fetch(API+"/api/demo-links",{method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":"Bearer "+t},
-      body:JSON.stringify({provider_name:v("p_name"),telegram_channel:v("p_chan"),
-        language:v("p_lang"),hours:Number(v("p_hours"))||48,
-        contact_name:v("p_contact"),contact_email:v("p_email"),
-        logo_url:v("p_logo"),note:v("p_note")})});
+    const body={provider_name:v("p_name"),telegram_channel:v("p_chan"),
+      language:v("p_lang"),purpose:v("p_purpose")||"private_demo",
+      contact_name:v("p_contact"),contact_email:v("p_email"),
+      logo_url:v("p_logo"),note:v("p_note")};
+    // A showcase has no lifetime, so it sends no hours at all rather
+    // than a number the server would ignore.
+    if(!isShowcase()) body.hours = Number(v("p_hours"))||48;
+    const r=await call(API+"/api/demo-links",{method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body)});
 
     // Report what actually happened. "could not create" told us nothing
     // and made an expired session look like a broken generator.
@@ -127,83 +160,115 @@ async function make(){
     try{ d=await r.clone().json(); }catch(e){ raw=(await r.text()).slice(0,200); }
 
     if(r.status===401){
-      // The session is gone. Say so, clear it, and send them to sign in
-      // — never guess at another way to authenticate.
-      try{ localStorage.removeItem("sklz_access"); }catch(e){}
-      m.style.color="var(--red)";
-      m.innerHTML='<b>Admin session expired. Please sign in again.</b><br>'+
-        'HTTP 401 · token was present · <a href="/login.html?next='+
-        encodeURIComponent(location.pathname)+'">Sign in</a>, then reload '+
-        'this page.';
-      b.disabled=false; b.textContent="Generate private link";
+      // The helper already tried to refresh and could not. Only now is
+      // the session actually gone.
+      signedOut(m);
+      b.disabled=false; b.textContent=label;
+      return;
+    }
+    if(r.status===409 && d && d.detail && d.detail.error==="showcase_exists"){
+      m.style.color="var(--gold2)";
+      m.innerHTML='<b>A showcase is already live.</b><br>'+
+        'Revoke it in the list below, then generate the replacement. '+
+        'Token <span class="mono">'+(d.detail.token||"")+'</span>';
+      b.disabled=false; b.textContent=label;
       return;
     }
     if(!r.ok || !d || !d.ok){
       const detail = d ? (typeof d.detail==="string" ? d.detail
                           : JSON.stringify(d.detail||d)) : (raw||"no body");
-      const label = r.status===403 ? "Not permitted (403)"
+      const badge = r.status===403 ? "Not permitted (403)"
                   : r.status===429 ? "Rate limited (429)"
                   : r.status>=500  ? "Server error ("+r.status+")"
                   : "Failed (HTTP "+r.status+")";
       m.style.color="var(--red)";
-      m.innerHTML=`<b>${label}</b><br>${detail}<br>`+
-        `<span style="color:var(--dim2)">admin token present: yes</span>`;
-      b.disabled=false; b.textContent="Generate private link";
+      m.innerHTML=`<b>${badge}</b><br>${detail}`;
+      b.disabled=false; b.textContent=label;
       return;
     }
     document.getElementById("url").textContent=d.url;
-    document.getElementById("exp").textContent =
-      "Open until "+new Date(d.expires_at).toLocaleString()+" ("+d.hours+"h).";
+    document.getElementById("exp").textContent = d.expires_at
+      ? "Open until "+new Date(d.expires_at).toLocaleString()+" ("+d.hours+"h)."
+      : "Public showcase — does not expire. Revoke it to close it.";
+    document.getElementById("budget").textContent = d.runs_window_minutes
+      ? d.runs_allowed+" market trades per "+d.runs_window_minutes+
+        " minutes · AI Send disabled"
+      : d.runs_allowed+" of "+d.runs_allowed+" live demo runs available.";
     document.getElementById("out").classList.add("on");
     m.style.color="var(--green)"; m.textContent="Link ready.";
     load();
   }catch(e){ m.style.color="var(--red)"; m.textContent="Failed: "+e.message; }
-  b.disabled=false; b.textContent="Generate private link";
+  b.disabled=false; b.textContent=label;
 }
 function cp(){
   navigator.clipboard.writeText(document.getElementById("url").textContent);
   document.getElementById("msg").style.color="var(--green)";
   document.getElementById("msg").textContent="Copied.";
 }
-async function revoke(tok){
-  if(!confirm("Close this demo now? The prospect will see the ended page."))
-    return;
-  const t=tok2(); if(!t) return;
+async function revoke(token, purpose){
+  const what = purpose==="showcase"
+    ? "Close the PUBLIC showcase now? sklzlabs.com will fall back to the "+
+      "sales bot until a new one is generated."
+    : "Close this demo now? The prospect will see the ended page.";
+  if(!confirm(what)) return;
   try{
-    await fetch(API+"/api/demo-links/"+tok+"/revoke",
-      {method:"POST",headers:{"Authorization":"Bearer "+t}});
+    await call(API+"/api/demo-links/"+token+"/revoke",{method:"POST"});
     load();
   }catch(e){ alert("Could not revoke."); }
 }
-function tok2(){return tok();}
 async function load(){
-  const t=tok(); if(!t) return;
+  if(!SKLZAuth.hasSession()) return;
   try{
-    const r=await fetch(API+"/api/demo-links",{headers:{"Authorization":"Bearer "+t}});
+    const r=await call(API+"/api/demo-links");
     const d=await r.json(); const rows=(d.links||[]);
     const lv=document.getElementById("liveflag");
     if(lv) lv.textContent = d.live_demo_enabled
       ? "live demo execution: ON" : "live demo execution: OFF";
     document.getElementById("list").innerHTML = rows.length ? (
-      '<table><tr><th>Provider</th><th>Channel</th><th>Expires</th>'+
+      '<table><tr><th>Provider</th><th>Type</th><th>Expires</th>'+
       '<th>Runs</th><th>Opens</th><th></th></tr>'+
       rows.map(x=>{
+        const sc = x.purpose==="showcase";
+        // A showcase has no expires_at at all, so there is no countdown
+        // to render and none is invented.
         const left=(new Date(x.expires_at)-Date.now())/3600000;
-        const st = x.revoked ? "closed" : left<=0 ? "expired"
-                 : left.toFixed(0)+"h left";
-        const runs = (x.runs_used||0)+"/"+(x.runs_allowed||3);
-        const fresh = (x.runs_used||0)===0;
-        return `<tr><td>${x.provider_name}</td><td>${x.telegram_channel}</td>`+
+        const st = x.revoked ? "closed"
+                 : sc ? "does not expire"
+                 : left<=0 ? "expired" : left.toFixed(0)+"h left";
+        const runs = sc
+          ? (x.runs_allowed||6)+"/"+(x.runs_window_minutes||60)+"min"
+          : (x.runs_used||0)+"/"+(x.runs_allowed||3);
+        const fresh = !sc && (x.runs_used||0)===0;
+        return `<tr><td>${x.provider_name}</td>`+
+          `<td style="color:${sc?'var(--gold2)':'var(--dim)'}">`+
+          `${sc?'showcase':'private'}</td>`+
           `<td>${st}</td>`+
           `<td style="color:${fresh?'var(--green)':'var(--gold2)'}">${runs}`+
           `${fresh?' fresh':''}</td>`+
           `<td>${x.opened_count||0}</td>`+
           `<td><a href="${x.url}" target="_blank">open</a>`+
-          (x.revoked?'':` · <a href="#" onclick="revoke('${x.token}');`+
-           `return false">revoke</a>`)+`</td></tr>`;
+          (x.revoked?'':` · <a href="#" onclick="revoke('${x.token}',`+
+           `'${x.purpose||"private_demo"}');return false">revoke</a>`)+
+          `</td></tr>`;
       }).join("")+"</table>"
     ) : '<div class="msg" style="color:var(--dim2)">No demos yet.</div>';
   }catch(e){}
 }
-load();
+
+/* Restore the session before deciding anything. An expired access token
+   with a live refresh token is a signed-in operator, not a signed-out
+   one, so the page must not flash a login prompt at them. */
+(async function start(){
+  onType();
+  const m=document.getElementById("msg");
+  if(!SKLZAuth.hasSession()){ signedOut(m); return; }
+  const who = await SKLZAuth.me();
+  if(!who){ signedOut(m); return; }
+  /* Same one authority the API enforces, reported by /api/auth/me. */
+  if(who.is_platform_admin !== true){
+    m.style.color="var(--red)";
+    m.textContent="This account is not a platform admin.";
+  }
+  load();
+})();
 </script></div></body></html>
