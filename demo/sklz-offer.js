@@ -170,6 +170,7 @@
       ".sklz-offer.o-slim{flex-direction:row;align-items:center;gap:12px;",
       " flex-wrap:wrap;padding:10px 13px;font-size:12.5px}",
       ".sklz-offer.o-slim .o-clock{font-size:16px}",
+      ".sklz-offer.o-slim .o-note{flex:1 1 100%;margin:0}",
       ".sklz-offer.o-done{border-color:rgba(255,255,255,.16);background:none}",
       ".sklz-pkgs{display:grid;gap:14px;",
       " grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}",
@@ -212,12 +213,18 @@
         '<button type="button" class="o-btn o-ghost" data-offer-copy>' +
         esc(T("offer.copyCode")) + "</button></div>"
       : "";
-    var note = '<div class="o-sub">' + esc(T("offer.quote")) + "</div>";
+    var note = '<div class="o-sub o-note">' + esc(T("offer.quote")) + "</div>";
     var cta = sales
       ? '<a class="o-btn" href="' + esc(sales) + '" target="_blank" ' +
         'rel="noopener">' + esc(T("offer.cta")) + "</a>"
       : "";
-    if (slim) return head + timer + code;
+    /* The compact variant carries the redemption sentence too.
+       Without it the Signal Desk showed a promo code a few hundred pixels
+       above its own full-price "Continue to secure checkout" button, with
+       nothing saying the discount is applied by SKLZ rather than by that
+       button. Same translated string as the full card — no new wording,
+       and still no mention of checkout. */
+    if (slim) return head + timer + code + note;
     return head + sub + timer + code + note + cta;
   }
 

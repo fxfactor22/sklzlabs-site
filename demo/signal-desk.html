@@ -309,8 +309,8 @@ if (new URLSearchParams(location.search).get("embed") === "os")
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <div>
             <div style="font-size:12px;color:var(--dim2)" id="masterLbl" data-i18n="desk.masterLine">MASTER · MT5 broker DEMO account</div>
-            <div style="font-size:17px;font-weight:700">EURUSD <span class="mono"
-              id="px">1.08522</span></div>
+            <div style="font-size:17px;font-weight:700"><span
+              id="pxSym">—</span> <span class="mono" id="px">—</span></div>
           </div>
           <div class="ctlrow" style="margin-inline-start:auto;display:flex;gap:8px">
             <select id="symSel" style="background:var(--panel2);
@@ -758,6 +758,28 @@ function expired(msg){
                    d.seconds_remaining === undefined)
     ? null : Date.now() + (d.seconds_remaining * 1000);
 
+  /* The master line is the ARMED INSTRUMENT, not a market feed.
+   *
+   * It used to print a hardcoded "EURUSD" next to a number that only the
+   * replay illustration ever wrote — a EURUSD-shaped 1.085xx. Once the
+   * desk began opening on BTC that read as a live Bitcoin quote of
+   * 1.08522, which is both wrong and the kind of wrong a prospect
+   * notices. The symbol now follows the selector, which is the only real
+   * state the page has before a fill, and the price stays neutral until
+   * the BROKER supplies one.
+   *
+   * Nothing here fetches a quote, and no value is invented.
+   */
+  function setMaster(sym, price) {
+    const s = document.getElementById("pxSym");
+    const p = document.getElementById("px");
+    if (s && sym) s.textContent = sym;
+    /* A price belongs to the instrument it was filled at. Changing the
+       selector therefore clears it rather than carrying it across. */
+    if (p) p.textContent =
+      (price === undefined || price === null || price === "") ? "—" : String(price);
+  }
+
   // The desk is a desk on arrival: instruments listed, positions read.
   (async ()=>{
     try{
@@ -781,6 +803,8 @@ function expired(msg){
                  `${s.symbol===want?" selected":""}>`+
                  `${parts.join(" · ")}</option>`;
         }).join("");
+        setMaster(sel.value);
+        sel.addEventListener("change", () => setMaster(sel.value));
       }
     }catch(e){}
     try{ await refreshPositions(); }catch(e){}
@@ -1355,6 +1379,9 @@ async function poll(cid){
     if(s.state==="succeeded" && s.ticket){
       // FILLED is only ever shown once the broker has confirmed it
       /* Broker facts verbatim; only the words around them are localised. */
+      /* The one legitimate source of a price on this line: the broker,
+         verbatim, for the instrument the broker actually filled. */
+      setMaster(s.symbol, s.fill_price);
       lset(2,"filled","s3d",
         `${s.symbol} @ ${s.fill_price} · ${I18N.T("desk.ticket")} ${s.ticket}`
         + ` · rc ${s.retcode}`
@@ -1421,8 +1448,11 @@ async function runFlow(side){
   document.getElementById("tg").classList.remove("on");
   const steps=[...document.querySelectorAll(".step")];
   steps.forEach(s=>{s.classList.remove("on");s.querySelector("[data-k]").textContent="—";});
+  /* Replay is a SIMULATED PREVIEW of a EURUSD trade and says so. Its
+     illustration lives in the steps and the Telegram preview card, both
+     already marked as simulated. It no longer writes into the master
+     line: a EURUSD number under a BTCUSD label was the whole defect. */
   const px=(1.08500+Math.random()*0.0006).toFixed(5);
-  document.getElementById("px").textContent=px;
   const marks=["filled","detected","built","sent","0.50 lot","0.36 lot","skipped","recorded"];
   const waits=[380,300,420,520,360,340,180,300];
   for(let i=0;i<steps.length;i++){
