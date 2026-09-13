@@ -796,28 +796,6 @@ function expired(msg){
                    d.seconds_remaining === undefined)
     ? null : Date.now() + (d.seconds_remaining * 1000);
 
-  /* The master line is the ARMED INSTRUMENT, not a market feed.
-   *
-   * It used to print a hardcoded "EURUSD" next to a number that only the
-   * replay illustration ever wrote — a EURUSD-shaped 1.085xx. Once the
-   * desk began opening on BTC that read as a live Bitcoin quote of
-   * 1.08522, which is both wrong and the kind of wrong a prospect
-   * notices. The symbol now follows the selector, which is the only real
-   * state the page has before a fill, and the price stays neutral until
-   * the BROKER supplies one.
-   *
-   * Nothing here fetches a quote, and no value is invented.
-   */
-  function setMaster(sym, price) {
-    const s = document.getElementById("pxSym");
-    const p = document.getElementById("px");
-    if (s && sym) s.textContent = sym;
-    /* A price belongs to the instrument it was filled at. Changing the
-       selector therefore clears it rather than carrying it across. */
-    if (p) p.textContent =
-      (price === undefined || price === null || price === "") ? "—" : String(price);
-  }
-
   // The desk is a desk on arrival: instruments listed, positions read.
   (async ()=>{
     try{
@@ -1104,7 +1082,11 @@ const MARK_KEY = {
   "dispatched":"mark.dispatched", "filled":"mark.filled",
   "confirmed":"mark.confirmed", "sent":"mark.sent", "not sent":"mark.notSent",
   "skipped":"mark.skipped", "scheduled":"mark.scheduled",
-  "timed out":"mark.timedOut"
+  "timed out":"mark.timedOut",
+  /* Waiting states. "awaiting" replaced "timed out" on the execution
+     step: the desk does not know the trade failed, and must not imply
+     it. "pending" is delivery, which is a separate fact from the fill. */
+  "awaiting":"mark.awaiting", "pending":"mark.pending"
 };
 function markText(m){
   const k = MARK_KEY[m];
@@ -1123,6 +1105,31 @@ function lreset(){
   document.getElementById("tg").classList.remove("on");
   const b=document.getElementById("tgLink"); if(b) b.remove();
 }
+/* One user action, one key.
+ *
+ * The key is minted when a BUY or SELL is issued and KEPT while that
+ * action is unresolved, so pressing the button again after a slow or
+ * unreadable confirmation is a RETRY of the same intent and the server
+ * hands back the command it already created. It is cleared once the
+ * broker has answered, so the next click is a genuinely new trade.
+ *
+ * sessionStorage rather than a variable: reloading the page during the
+ * wait was the other way to end up with two positions. */
+const KEY_STORE = "sklz_demo_action_key";
+function actionKey(){
+  try{
+    const held = sessionStorage.getItem(KEY_STORE);
+    if(held) return held;
+    const fresh = (crypto.randomUUID ? crypto.randomUUID()
+      : String(Date.now())+Math.random().toString(16).slice(2));
+    sessionStorage.setItem(KEY_STORE, fresh);
+    return fresh;
+  }catch(e){ return ""; }      /* no storage: the server backstop still holds */
+}
+function clearActionKey(){
+  try{ sessionStorage.removeItem(KEY_STORE); }catch(e){}
+}
+
 async function runLive(side){
   side = side || "buy";
   if(running) return; running=true;
@@ -1134,7 +1141,8 @@ async function runLive(side){
     const sym=(document.getElementById("symSel")||{}).value||"";
     const r=await fetch(`${API}/api/demo-links/${TOKEN}/control`,
       {method:"POST",headers:{"Content-Type":"application/json"},
-       body:JSON.stringify({action:side, symbol:sym})});
+       body:JSON.stringify({action:side, symbol:sym,
+                            client_key:actionKey()})});
     const d=await r.json();
     if(!r.ok){
       const det=(d&&d.detail)||{};
@@ -1409,24 +1417,92 @@ async function aiSend(){
   b.disabled=false; b.textContent=I18N.T("desk.sendToChannel");
 }
 
+/* Waiting is not failing.
+ *
+ * This loop used to read r.json() without looking at r.ok, so a 5xx
+ * became an object with no `state`, was silently retried, and after
+ * sixty seconds the desk told the prospect the trade had not been
+ * confirmed — while the broker had filled it. Two things changed:
+ * a server fault is now named rather than swallowed, and running out of
+ * the first minute is no longer an outcome. The desk keeps watching at a
+ * calmer interval and says plainly that the result is still coming and
+ * must not be ordered again.
+ *
+ * 40 x 1.5s of close attention, then 48 x 5s of patience: four minutes
+ * in total, and never a claim the broker did not make. */
+/* The master line is the ARMED INSTRUMENT, not a market feed.
+ *
+ * It used to print a hardcoded "EURUSD" next to a number that only the
+ * replay illustration ever wrote — a EURUSD-shaped 1.085xx. Once the
+ * desk began opening on BTC that read as a live Bitcoin quote of
+ * 1.08522, which is both wrong and the kind of wrong a prospect
+ * notices. The symbol now follows the selector, which is the only real
+ * state the page has before a fill, and the price stays neutral until
+ * the BROKER supplies one.
+ *
+ * Nothing here fetches a quote, and no value is invented.
+ *
+ * DECLARED AT THE TOP LEVEL, and that is load-bearing. It lived inside
+ * the brand-hydration function, where the selector could reach it and
+ * poll() could not — so the first line of the confirmed-fill branch
+ * threw ReferenceError on EVERY successful trade, runLive caught it, and
+ * the desk told the prospect it could not reach the demo desk while the
+ * broker had filled the order. No harness had ever driven a real fill
+ * through poll(); one does now.
+ */
+function setMaster(sym, price) {
+  const s = document.getElementById("pxSym");
+  const p = document.getElementById("px");
+  if (s && sym) s.textContent = sym;
+  /* A price belongs to the instrument it was filled at. Changing the
+     selector therefore clears it rather than carrying it across. */
+  if (p) p.textContent =
+    (price === undefined || price === null || price === "") ? "—" : String(price);
+}
+
+const POLL_FAST_TRIES=40, POLL_FAST_MS=1500;
+const POLL_SLOW_TRIES=48, POLL_SLOW_MS=5000;
+
 async function poll(cid){
-  let dispatched=false;
-  for(let i=0;i<40;i++){
-    await new Promise(r=>setTimeout(r,1500));
+  let dispatched=false, slow=false, faults=0, warned=false;
+  const tries=POLL_FAST_TRIES+POLL_SLOW_TRIES;
+  for(let i=0;i<tries;i++){
+    const fast = i<POLL_FAST_TRIES;
+    if(!fast && !slow){
+      /* The first minute is up and the broker has not answered. That is
+         a slow confirmation, not a refusal — and the one thing the
+         prospect must not do is send it again. */
+      slow=true;
+      lset(2,"awaiting","s3d",I18N.T("desk.stillConfirming"));
+    }
+    await new Promise(r=>setTimeout(r, fast?POLL_FAST_MS:POLL_SLOW_MS));
     let s;
     try{
       const r=await fetch(`${API}/api/demo-links/${TOKEN}/run-live/${cid}`);
+      if(!r.ok){
+        /* A server fault says nothing about the broker. Name it, keep
+           watching, and never invite a second order. */
+        faults++;
+        if(faults>=3 && !warned){
+          warned=true;
+          lset(2,"awaiting","s3d",I18N.T("desk.deskUnreadable"));
+        }
+        continue;
+      }
       s=await r.json();
+      faults=0;
     }catch(e){ continue; }
     if(!dispatched && s.timings && s.timings.runner_received){
       dispatched=true;
       lset(1,"dispatched","s2d",I18N.T("desk.collectedByRunner"));
     }
     if(s.state==="failed"){
+      clearActionKey();              /* the broker answered: a new click is a new trade */
       lset(2,"refused","s3d", s.broker_comment||I18N.T("desk.didNotFill"));
       return;
     }
     if(s.state==="succeeded" && s.ticket){
+      clearActionKey();              /* the broker answered: a new click is a new trade */
       // FILLED is only ever shown once the broker has confirmed it
       /* Broker facts verbatim; only the words around them are localised. */
       /* The one legitimate source of a price on this line: the broker,
@@ -1457,6 +1533,12 @@ async function poll(cid){
         }
       } else if(tg.error){
         lset(4,"not sent","tgDest",String(tg.error));
+      } else {
+        /* Delivery is a separate fact from execution. The trade above is
+           confirmed by the broker whatever happens here, and the server
+           publishes on acknowledgement now, so "not yet" is the honest
+           word rather than a failure. */
+        lset(4,"pending","tgDest",I18N.T("desk.tgPending"));
       }
       // copy steps remain a labelled preview
       lset(5,"0.50 lot"); lset(6,"0.36 lot"); lset(7,"skipped");
@@ -1490,7 +1572,10 @@ async function poll(cid){
       return;
     }
   }
-  lset(2,"timed out","s3d",I18N.T("desk.noConfirmation"));
+  /* Four minutes without a broker answer. Still not a claim that the
+     trade failed — we do not know that, and the position may well be
+     open. The prospect is told to look rather than to re-order. */
+  lset(2,"awaiting","s3d",I18N.T("desk.stillConfirmingLong"));
 }
 async function runFlow(side){
   if(running) return; running=true;

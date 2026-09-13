@@ -19,6 +19,13 @@ window.SKLZ_I18N_DICT = {
 
 /* ==================================================================== EN */
 en: {
+  /* ── waiting is not failing ───────────────────────────────── */
+  "mark.awaiting": "awaiting",
+  "mark.pending": "pending",
+  "desk.stillConfirming": "Execution is still being confirmed. Do not submit the trade again.",
+  "desk.stillConfirmingLong": "Still awaiting the broker's confirmation. The order may already be open — check the position panel rather than sending it again.",
+  "desk.deskUnreadable": "The desk cannot read the result right now. Your order is unaffected — do not send it again.",
+  "desk.tgPending": "Telegram delivery pending",
   /* ── the private offer, paid by card ─────────────────────── */
   "offer.titleApplied": "Private offer applied",
   "offer.offerRef": "Offer reference",
@@ -1033,6 +1040,13 @@ en: {
 
 /* ==================================================================== AR */
 ar: {
+  /* ── waiting is not failing ───────────────────────────────── */
+  "mark.awaiting": "بانتظار",
+  "mark.pending": "قيد الإرسال",
+  "desk.stillConfirming": "ما زال تأكيد التنفيذ جاريًا. لا ترسل الصفقة مرة أخرى.",
+  "desk.stillConfirmingLong": "ما زلنا بانتظار تأكيد الوسيط. قد تكون الصفقة مفتوحة بالفعل — راجع لوحة الصفقة بدلًا من إرسالها مرة أخرى.",
+  "desk.deskUnreadable": "تعذّر على المنصة قراءة النتيجة الآن. طلبك لم يتأثر — لا ترسله مرة أخرى.",
+  "desk.tgPending": "إرسال تيليجرام قيد التنفيذ",
   /* ── the private offer, paid by card ─────────────────────── */
   "offer.titleApplied": "تم تطبيق العرض الخاص",
   "offer.offerRef": "رقم العرض",
@@ -2025,6 +2039,13 @@ ar: {
 
 /* ==================================================================== RU */
 ru: {
+  /* ── waiting is not failing ───────────────────────────────── */
+  "mark.awaiting": "ожидание",
+  "mark.pending": "отправляется",
+  "desk.stillConfirming": "Исполнение ещё подтверждается. Не отправляйте сделку повторно.",
+  "desk.stillConfirmingLong": "Подтверждение брокера ещё не получено. Ордер может быть уже открыт — проверьте панель позиции, а не отправляйте его снова.",
+  "desk.deskUnreadable": "Сейчас не удаётся прочитать результат. Ваш ордер это не затрагивает — не отправляйте его снова.",
+  "desk.tgPending": "Отправка в Telegram выполняется",
   /* ── the private offer, paid by card ─────────────────────── */
   "offer.titleApplied": "Частное предложение применено",
   "offer.offerRef": "Номер предложения",
