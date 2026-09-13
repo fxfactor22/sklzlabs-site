@@ -4,6 +4,7 @@
 <title data-i18n="desk.pageTitle">SKLZ Signal Desk — Private Demo</title>
 <!-- localisation: bundled and synchronous, so first paint is already
      in the right language; only token/brand data hydrates later. -->
+<script src="sklz-showcase.js"></script>
 <script src="sklz-i18n-dict.js"></script>
 <script src="sklz-i18n.js"></script>
 <meta name="robots" content="noindex,nofollow">
@@ -625,7 +626,10 @@ let pkg="signal_desk", pay="stripe";
    Localised, because in a slow network this is what a prospect reads. */
 const BRAND = {name:I18N.T("desk.brandFallback"),
                channel:I18N.T("desk.channelFallback")};
-const TOKEN = new URLSearchParams(location.search).get("t") || "";
+/* Same rule as every other surface: a private link wins, the public
+   showcase token is the fallback — see sklz-showcase.js. */
+const TOKEN = new URLSearchParams(location.search).get("t")
+  || window.SKLZ_SHOWCASE_TOKEN || "";
 
 function expired(msg){
   document.body.innerHTML =
@@ -810,7 +814,9 @@ let PKG={};
     if(!d||!d.packages) throw new Error();
     PKG=d.packages;
     // packages
-    const box=document.getElementById("pkgs"); box.innerHTML="";
+    /* expired() replaces the whole body, so this node can be gone by the
+       time the packages call returns. Nothing to paint, nothing to do. */
+    const box=document.getElementById("pkgs"); if(!box) return; box.innerHTML="";
     let first=null;
     for(const [k,p] of Object.entries(PKG)){
       if(!p.available) continue;
@@ -855,7 +861,8 @@ let PKG={};
     }
     refresh();
   }catch(e){
-    document.getElementById("pkgs").innerHTML=
+    const box=document.getElementById("pkgs");
+    if(box) box.innerHTML=
       '<div class="card" style="text-align:center;color:var(--dim)">'+
       I18N.T('desk.pricingLoading')+'</div>';
   }

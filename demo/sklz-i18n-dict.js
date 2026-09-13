@@ -964,7 +964,8 @@ en: {
   "os.src.arChannel": "Arabic channel",
   "os.src.academy": "academy",
   "sell.namePlaceholder": "Your full name",
-  "srv.noteFallback": "Additional broker status information received."
+  "srv.noteFallback": "Additional broker status information received.",
+  "site.openLiveDesk": "Open the live Signal Desk"
 },
 
 /* ==================================================================== AR */
@@ -1892,7 +1893,8 @@ ar: {
   "os.src.arChannel": "القناة العربية",
   "os.src.academy": "الأكاديمية",
   "sell.namePlaceholder": "اسمك الكامل",
-  "srv.noteFallback": "تم استلام معلومات إضافية عن حالة التنفيذ."
+  "srv.noteFallback": "تم استلام معلومات إضافية عن حالة التنفيذ.",
+  "site.openLiveDesk": "افتح مكتب الإشارات المباشر"
 },
 
 /* ==================================================================== RU */
@@ -2820,6 +2822,7 @@ ru: {
   "os.src.arChannel": "арабский канал",
   "os.src.academy": "академия",
   "sell.namePlaceholder": "Ваше полное имя",
-  "srv.noteFallback": "Получена дополнительная информация о статусе исполнения."
+  "srv.noteFallback": "Получена дополнительная информация о статусе исполнения.",
+  "site.openLiveDesk": "Открыть живой Signal Desk"
 }
 };

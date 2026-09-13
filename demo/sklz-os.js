@@ -5,7 +5,11 @@
    this file never invents a trade, a price, a ticket or a result. */
 
 const API = "https://api.sklzlabs.com";
-const TOKEN = new URLSearchParams(location.search).get("t") || "";
+/* A prospect's own private link always wins. The public showcase token is
+   only a fallback, so the public site opens a working desk instead of an
+   expiry screen — see sklz-showcase.js. */
+const TOKEN = new URLSearchParams(location.search).get("t")
+  || window.SKLZ_SHOWCASE_TOKEN || "";
 
 /* One sales destination for every commercial CTA on every surface, so a
    price or a route can never drift between the site, the OS and the bot. */

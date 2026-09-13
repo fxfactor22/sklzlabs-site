@@ -8,6 +8,7 @@
 <script>document.documentElement.className="js"</script>
 <!-- localisation: bundled, synchronous, no network. The first paint is
      already in the right language; only brand/token data hydrates late. -->
+<script src="sklz-showcase.js"></script>
 <script src="sklz-i18n-dict.js"></script>
 <script src="sklz-i18n.js"></script>
 <style>
@@ -652,6 +653,7 @@ svg{display:block}
       a single desk.</p>
     <div class="cta rv" style="--d:.2s">
       <a class="btn glow" id="osEnter"><span data-i18n="nav.enterOS">Enter the OS</span> <span class="arrow">→</span></a>
+      <a class="btn line" id="osDesk" data-i18n="site.openLiveDesk">Open the live Signal Desk</a>
       <a class="btn line" id="osPortal" data-i18n="site.beyond.portal">Member portal</a>
     </div>
   </div>
@@ -732,6 +734,15 @@ Automation is live; funds are virtual.</span></div>
   ["navPortal","osPortal"].forEach(id => {
     const e = document.getElementById(id);
     if (e) e.href = tokenLink("client-portal.html"); });
+
+  /* The Signal Desk needs a token to be a desk at all. With one it opens
+     live; without one there is nothing honest to show, so the button asks
+     for a demo instead of landing the visitor on an expiry screen. */
+  const desk = document.getElementById("osDesk");
+  if (desk) {
+    if (TOKEN) { desk.href = tokenLink("signal-desk.html"); }
+    else { desk.href = SALES_LINK; desk.target = "_blank"; desk.rel = "noopener"; }
+  }
 
   /* nav frosts once the hero starts leaving */
   const nav = document.getElementById("nav");
