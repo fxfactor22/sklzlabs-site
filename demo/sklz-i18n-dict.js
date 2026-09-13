@@ -19,6 +19,11 @@ window.SKLZ_I18N_DICT = {
 
 /* ==================================================================== EN */
 en: {
+  /* ── the public showcase says so ──────────────────────────── */
+  "desk.preparedForShowcase": "Public showcase by",
+  "desk.pageTitleShowcase": "SKLZ Signal Desk — Public Showcase",
+  "desk.docTitleShowcase": "{name} · SKLZ Signal Desk — Public Showcase",
+  "desk.footLine2Showcase": "This is a public showcase. Subscriber and copy-network figures are illustrative previews. Broker execution is real on an MT5 broker DEMO account. Automation is live; funds are virtual.",
   /* ── commercial demo experience ─────────────────────────── */
   "offer.title": "Private 48-hour offer",
   "offer.headline": "50% off setup",
@@ -1018,6 +1023,11 @@ en: {
 
 /* ==================================================================== AR */
 ar: {
+  /* ── the public showcase says so ──────────────────────────── */
+  "desk.preparedForShowcase": "عرض عام مقدَّم من",
+  "desk.pageTitleShowcase": "SKLZ Signal Desk — عرض عام",
+  "desk.docTitleShowcase": "{name} · SKLZ Signal Desk — عرض عام",
+  "desk.footLine2Showcase": "هذا عرض عام. أرقام المشتركين وشبكة النسخ معاينات توضيحية. أما التنفيذ لدى الوسيط فحقيقي على حساب تجريبي لدى وسيط MT5. الأتمتة تعمل فعليًا، والأموال افتراضية.",
   /* ── commercial demo experience ─────────────────────────── */
   "offer.title": "عرض خاص لمدة 48 ساعة",
   "offer.headline": "خصم 50% على رسوم التأسيس",
@@ -1995,6 +2005,11 @@ ar: {
 
 /* ==================================================================== RU */
 ru: {
+  /* ── the public showcase says so ──────────────────────────── */
+  "desk.preparedForShowcase": "Публичная демонстрация от",
+  "desk.pageTitleShowcase": "SKLZ Signal Desk — публичная демонстрация",
+  "desk.docTitleShowcase": "{name} · SKLZ Signal Desk — публичная демонстрация",
+  "desk.footLine2Showcase": "Это публичная демонстрация. Показатели подписчиков и сети копирования — иллюстративные превью. Исполнение у брокера реальное, на брокерском DEMO-счёте MT5. Автоматизация работает в реальном времени, средства виртуальные.",
   /* ── commercial demo experience ─────────────────────────── */
   "offer.title": "Частное предложение на 48 часов",
   "offer.headline": "Скидка 50% на подключение",

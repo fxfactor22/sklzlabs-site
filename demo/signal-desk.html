@@ -729,7 +729,6 @@ function expired(msg){
   BRAND.name=d.provider_name; BRAND.channel=d.telegram_channel;
   /* the demo link carries the prospect's language; a manual choice wins */
   if (window.I18N && d.language) I18N.setTokenLocale(d.language);
-  document.title=I18N.T("desk.docTitle", { name: d.provider_name });
   const set=(id,v)=>{const e=document.getElementById(id); if(e) e.textContent=v;};
   set("brandName", d.provider_name);
   set("tgTitle", d.telegram_channel);
@@ -746,6 +745,45 @@ function expired(msg){
      seconds_remaining. A null is "no deadline", not a deadline of zero —
      multiplying it would have shown every visitor an expired demo. */
   CFG.purpose = d.purpose || "private_demo";
+
+  /* A showcase is not a private demo and must not call itself one.
+     The timer already read "Public demo" while the hero and the browser
+     tab still read "Private demo prepared for …" — one page contradicting
+     itself in front of the public. The purpose comes from the server and
+     from nowhere else: never from the token, the provider name or the URL.
+
+     The wording is a second set of dictionary keys rather than a string
+     built here, so a language switch re-renders it through translateTree
+     exactly like every other string on the page. */
+  (function purposeCopy(){
+    const showcase = CFG.purpose === "showcase";
+    const who = document.querySelector('[data-i18n="desk.preparedFor"],'
+                                     + '[data-i18n="desk.preparedForShowcase"]');
+    if (who) who.setAttribute("data-i18n",
+      showcase ? "desk.preparedForShowcase" : "desk.preparedFor");
+    const foot = document.querySelector('[data-i18n="desk.footLine2"],'
+                                      + '[data-i18n="desk.footLine2Showcase"]');
+    if (foot) foot.setAttribute("data-i18n",
+      showcase ? "desk.footLine2Showcase" : "desk.footLine2");
+    const tt = document.querySelector("title[data-i18n]");
+    if (tt) tt.setAttribute("data-i18n",
+      showcase ? "desk.pageTitleShowcase" : "desk.pageTitle");
+    const docTitle = () => I18N.T(
+      showcase ? "desk.docTitleShowcase" : "desk.docTitle",
+      { name: d.provider_name });
+    if (window.I18N) {
+      /* translateTree writes every [data-i18n] node including <title>,
+         and a <title>'s textContent IS document.title — so the branded
+         one is applied after it, never before. */
+      I18N.translateTree(document);
+      /* Switching language re-runs applyDocumentLocale, which rewrites the
+         title from the <title> key and drops the provider name. Putting it
+         back is what keeps the tab branded in all three languages. */
+      I18N.onChange(() => { document.title = docTitle(); });
+    }
+    document.title = docTitle();
+  })();
+
   /* The offer, the logo and the route back into the OS. All three are
      additive: the desk was fully usable before any of them arrived. */
   SKLZOffer.adopt(d);

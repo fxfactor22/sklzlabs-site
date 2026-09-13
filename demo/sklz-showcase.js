@@ -28,13 +28,22 @@
  *
  * Empty means "not configured" everywhere it is read.
  */
-window.SKLZ_SHOWCASE_TOKEN = "6b6a955dab4b9086ad869620844750c0";
+window.SKLZ_SHOWCASE_TOKEN = "db30d69c01d86a0cdeea14cda19a38ef";
 
-/* Minted 2026-09-13. EXPIRES 2026-09-20T01:01:28Z.
+/* Minted 2026-09-13 as purpose=showcase. It does NOT expire.
  *
- * Not permanent: POST /api/demo-links clamps `hours` to 168 (7 days) — a
- * request for 87600 came back as 168 — so this link dies in a week and the
- * public CTAs quietly fall back to the sales bot (see trader-site.html).
- * Making it genuinely permanent needs either a server-side change to that
- * cap or a job that re-mints and re-deploys this value. Until one of those
- * exists, re-mint and update this string. */
+ * The server stores it with expires_at = NULL and reports
+ * seconds_remaining = null, so there is no countdown to run out and no
+ * date to re-mint against. The previous value here was an ordinary
+ * private demo clamped to 168 hours, which is why it had to be replaced
+ * every week; that is over.
+ *
+ * What "showcase" changes on the server, and why this token is safe to
+ * publish: a rolling budget of 6 market trades per hour instead of the
+ * private 3-per-lifetime, AI Send refused outright so no visitor can post
+ * arbitrary text to the channel, and no private commercial offer — the
+ * 48-hour discount and its promo code are reserved for prospect links and
+ * the server returns offer.eligible = false here.
+ *
+ * Only one showcase can be active at a time; revoking this one is what
+ * frees the slot for a replacement. */

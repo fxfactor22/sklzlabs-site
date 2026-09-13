@@ -184,6 +184,12 @@
       ".sklz-pkg .p-lbl{font-size:11px;opacity:.62;text-transform:uppercase;",
       " letter-spacing:.09em}",
       ".sklz-pkg .p-mon{font-size:15px;direction:ltr;unicode-bidi:isolate}",
+      /* el.hidden is set whenever there is nothing to show, but a
+         class rule in an author stylesheet beats the UA's
+         [hidden]{display:none}. Without this the host stayed a visible
+         empty bordered box — a stray rectangle on the public showcase
+         and on every visit with no offer. */
+      ".sklz-offer[hidden]{display:none!important}",
       "[data-logo]{overflow:hidden}",
       ".sklz-brand-logo{max-width:100%;max-height:100%;width:auto;",
       " height:auto;object-fit:contain;display:block;margin:auto}",
