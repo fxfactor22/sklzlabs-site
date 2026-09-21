@@ -100,7 +100,10 @@ Master performance shown is derived from connected account data; demo entries ar
 <option value="risk_pct">Risk % per trade</option></select>
 <label>Value (multiplier / lots / %)</label><input id="aVal" value="1.0">
 <label>Max lot</label><input id="aMaxLot" value="1.0">
-<label>Max daily loss %</label><input id="aMaxDL" value="5"></div>
+<label>Min lot (0 = off; set equal to max lot for one fixed size)</label><input id="aMinLot" value="0">
+<label>Max open copied positions</label><input id="aMaxOpen" value="5">
+<label>Max daily loss %</label><input id="aMaxDL" value="5">
+<div class="note" id="saveNote" style="display:none"></div></div>
 <div id="w3" style="display:none">
 <a class="btn" href="/files/SKLZCopySlave.mq5" download style="display:inline-block;margin-bottom:12px">&#8595; Download SKLZCopySlave.mq5</a>
 <p style="font-size:13.5px;line-height:1.7">
@@ -159,7 +162,9 @@ function slaveRow(s,i){
  +'</td><td class="'+(s.enabled?"ok":"")+'">'+(s.enabled?"connected":"paused")
  +'</td><td>'+(s.enabled?"ON":"OFF")+'</td>'
  +'<td><button class="btn ghost" style="padding:5px 10px;font-size:11px" '
- +'onclick="toggleSlave('+i+')">'+(s.enabled?"Pause":"Resume")+'</button></td></tr>';}
+ +'onclick="toggleSlave('+i+')">'+(s.enabled?"Pause":"Resume")+'</button> '
+ +(s.demo?'':'<button class="btn ghost" style="padding:5px 10px;font-size:11px" '
+ +'onclick="openSettings('+i+')">Settings</button>')+'</td></tr>';}
 
 var DEMO_LOG=[
  {at:"12:03:11",symbol:"XAUUSD",side:1,ml:"0.10",sl:"0.05",status:"done",lat:212},
@@ -172,7 +177,7 @@ function logRow(r){
  +'</td><td>'+r.ml+' &rarr; '+r.sl+'</td><td class="'+(bad?"bad":"ok")+'">'+r.status
  +'</td><td>'+(r.lat?r.lat+"ms":"—")+'</td></tr>';}
 
-var slaves=DEMO_SLAVES.slice();
+var slaves=DEMO_SLAVES.slice(), configs={}, editing=null;
 function render(){
  document.getElementById("masters").innerHTML=DEMO_MASTERS.map(masterCard).join("");
  document.getElementById("slaves").innerHTML=slaves.map(slaveRow).join("");
@@ -192,6 +197,7 @@ async function boot(){
   if(TOKEN){
     var s=await fetch(API+"/api/mt5copy/slaves",{headers:hdrs()});
     if(s.ok){var sd=await s.json();
+      configs=sd.configs||{};
       if(sd.slaves&&sd.slaves.length){slaves=sd.slaves;demo=false;
         document.getElementById("modeBadge").style.display="none";render();}}
     var l=await fetch(API+"/api/mt5copy/log",{headers:hdrs()});
@@ -221,7 +227,49 @@ function toggleSlave(i){
    fetch(API+"/api/mt5copy/slaves/"+slaves[i].id+"/toggle",{method:"POST",
      headers:hdrs(),body:JSON.stringify({enabled:slaves[i].enabled})});}
 }
-function openAdd(){step=1;showStep();document.getElementById("addModal").classList.add("on");}
+function openAdd(){editing=null;step=1;showStep();
+ document.getElementById("wTitle").textContent="Connect an MT5 account";
+ document.getElementById("addModal").classList.add("on");}
+function openSettings(i){
+ var s=slaves[i]; if(!s||!s.id) return;
+ editing=s; step=2;
+ var c=configs[s.id]||{};
+ document.getElementById("wTitle").textContent="Copy settings — "+s.label;
+ document.getElementById("aMode").value=c.lot_mode||"risk_pct";
+ document.getElementById("aVal").value=c.lot_value!=null?c.lot_value:1;
+ document.getElementById("aMaxLot").value=c.max_lot!=null?c.max_lot:1;
+ document.getElementById("aMinLot").value=c.min_lot!=null?c.min_lot:0;
+ document.getElementById("aMaxOpen").value=c.max_open!=null?c.max_open:5;
+ document.getElementById("aMaxDL").value=c.max_daily_loss_pct!=null?c.max_daily_loss_pct:5;
+ document.getElementById("recNote").textContent=
+   "Fixed lot: every copy is exactly this size (also set min = max = the same). "
+   +"Changes apply from the next master trade.";
+ document.getElementById("saveNote").style.display="none";
+ showStep();
+ document.getElementById("addModal").classList.add("on");
+}
+function settingsBody(slaveId){
+ return {slave_id:slaveId,master_id:"sklz",
+   account_type:document.getElementById("aType").value,
+   account_size:parseFloat(document.getElementById("aSize").value)||10000,
+   lot_mode:document.getElementById("aMode").value,
+   lot_value:parseFloat(document.getElementById("aVal").value)||1,
+   min_lot:parseFloat(document.getElementById("aMinLot").value)||0,
+   max_lot:parseFloat(document.getElementById("aMaxLot").value)||1,
+   max_open:parseInt(document.getElementById("aMaxOpen").value,10)||5,
+   max_daily_loss_pct:parseFloat(document.getElementById("aMaxDL").value)||5};
+}
+async function saveSettings(){
+ var n=document.getElementById("saveNote"); n.style.display="block"; n.textContent="Saving…";
+ try{
+  var r=await fetch(API+"/api/mt5copy/configs",{method:"POST",headers:hdrs(),
+    body:JSON.stringify(settingsBody(editing.id))});
+  var d=await r.json();
+  if(!r.ok){n.textContent="Not saved: "+(d.detail||r.status);return;}
+  n.textContent="Saved. Applies from the next master trade.";
+  setTimeout(function(){closeAdd();boot();},900);
+ }catch(e){n.textContent="Not saved: network error";}
+}
 async function autofill(){
  var t=document.getElementById("aType").value,
      s=parseFloat(document.getElementById("aSize").value)||10000;
@@ -240,10 +288,11 @@ function showStep(){
  document.getElementById("w1").style.display=step===1?"block":"none";
  document.getElementById("w2").style.display=step===2?"block":"none";
  document.getElementById("w3").style.display=step===3?"block":"none";
- document.getElementById("wStep").textContent="STEP "+step+" OF 3 — "+
+ document.getElementById("wStep").textContent=editing?"EDIT — COPY SETTINGS":"STEP "+step+" OF 3 — "+
    (step===1?"ACCOUNT":step===2?"COPY SETTINGS":"ACTIVATE");
- document.getElementById("wNext").textContent=step===3?"Done":"Next";}
+ document.getElementById("wNext").textContent=editing?"Save":step===3?"Done":"Next";}
 async function wizNext(){
+ if(editing){saveSettings();return;}
  if(step<3){step++;
    if(step===2){autofill();}
    if(step===3){
@@ -255,13 +304,7 @@ async function wizNext(){
            mt5_login:document.getElementById("aLogin").value})});
        if(r.ok){var d=await r.json();key=d.slave.copy_key;
          await fetch(API+"/api/mt5copy/configs",{method:"POST",headers:hdrs(),
-           body:JSON.stringify({slave_id:d.slave.id,master_id:"sklz",
-             account_type:document.getElementById("aType").value,
-             account_size:parseFloat(document.getElementById("aSize").value)||10000,
-             lot_mode:document.getElementById("aMode").value,
-             lot_value:parseFloat(document.getElementById("aVal").value)||1,
-             max_lot:parseFloat(document.getElementById("aMaxLot").value)||1,
-             max_daily_loss_pct:parseFloat(document.getElementById("aMaxDL").value)||5})});
+           body:JSON.stringify(settingsBody(d.slave.id))});
          demo=false;}
      }catch(e){}}
      document.getElementById("keyOut").textContent=key;}
