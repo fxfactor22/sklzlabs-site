@@ -139,10 +139,113 @@
     return done.then(function () { clearSession(); });
   }
 
+  /* ── session lifetime ───────────────────────────────────────────
+   * The access JWT expires in minutes (Supabase setting) and, until now,
+   * only two pages knew how to refresh it — every other page treated the
+   * first 401 as "logged out". Two things fix that for the whole site:
+   *
+   *   1. a 72-hour session cap, measured from login: after that the
+   *      credentials are dropped and the next page asks you to sign in.
+   *   2. a fetch interceptor: any request to the API that carries OUR
+   *      access token gets a fresh one attached first (when the JWT is
+   *      about to expire) and one silent refresh + retry on a 401. Pages
+   *      keep their plain fetch() calls; nothing per page changes.
+   *
+   * Only requests bearing the stored access token are touched — a Runner
+   * key, a copy key or a demo token is never refreshed or replaced.
+   */
+  var LOGIN_AT = "sklz_login_at";
+  var SESSION_MAX_MS = 72 * 3600 * 1000;
+  var REFRESH_AHEAD_S = 120;          /* refresh when < 2 min of JWT left */
+
+  function jwtExp(t) {
+    try {
+      var p = t.split(".")[1];
+      p = p.replace(/-/g, "+").replace(/_/g, "/");
+      var j = JSON.parse(atob(p + "===".slice((p.length + 3) % 4)));
+      return +j.exp || 0;
+    } catch (e) { return 0; }
+  }
+
+  function sessionExpired() {
+    if (!hasSession()) return false;
+    var at = +get(LOGIN_AT) || 0;
+    if (!at) { set(LOGIN_AT, String(Date.now())); return false; }
+    return Date.now() - at > SESSION_MAX_MS;
+  }
+
+  function markLogin() { set(LOGIN_AT, String(Date.now())); }
+
+  /* Refresh ahead of expiry, so a request never has to fail first. */
+  function ensureFresh() {
+    if (sessionExpired()) { clearSession(); drop(LOGIN_AT); return Promise.resolve(false); }
+    var t = get(ACCESS);
+    if (!t) return get(REFRESH) ? refresh() : Promise.resolve(false);
+    var exp = jwtExp(t);
+    if (!exp) return Promise.resolve(true);
+    if (exp - Date.now() / 1000 > REFRESH_AHEAD_S) return Promise.resolve(true);
+    return refresh();
+  }
+
+  var nativeFetch = global.fetch ? global.fetch.bind(global) : null;
+
+  function bearerOf(headers) {
+    if (!headers) return "";
+    var v = "";
+    if (typeof Headers !== "undefined" && headers instanceof Headers) {
+      v = headers.get("Authorization") || headers.get("authorization") || "";
+    } else {
+      v = headers.Authorization || headers.authorization || "";
+    }
+    return /^Bearer\s+/i.test(v) ? v.replace(/^Bearer\s+/i, "") : "";
+  }
+
+  function withBearer(init, token) {
+    var out = Object.assign({}, init || {});
+    if (typeof Headers !== "undefined" && out.headers instanceof Headers) {
+      var h = new Headers(out.headers); h.set("Authorization", "Bearer " + token);
+      out.headers = h;
+    } else {
+      out.headers = Object.assign({}, out.headers || {}, { Authorization: "Bearer " + token });
+    }
+    return out;
+  }
+
+  if (nativeFetch && !global.__sklzFetchWrapped) {
+    global.__sklzFetchWrapped = true;
+    global.fetch = function (input, init) {
+      var url = (typeof input === "string") ? input : (input && input.url) || "";
+      var b = bearerOf(init && init.headers);
+      var ours = url.indexOf(API) === 0 && b && (b === get(ACCESS) || b === get(REFRESH));
+      if (!ours) return nativeFetch(input, init);
+      return ensureFresh().then(function () {
+        var t = get(ACCESS);
+        if (!t) return nativeFetch(input, init);
+        return nativeFetch(input, withBearer(init, t)).then(function (r) {
+          if (r.status !== 401) return r;
+          return refresh().then(function (ok) {
+            if (!ok) { if (ok === false) clearSession(); return r; }
+            return nativeFetch(input, withBearer(init, get(ACCESS)));
+          });
+        });
+      });
+    };
+  }
+
+  /* Keep the token warm while a dashboard sits open for hours. */
+  if (hasSession()) {
+    if (sessionExpired()) { clearSession(); drop(LOGIN_AT); }
+    else { setInterval(function () { ensureFresh(); }, 5 * 60 * 1000); }
+  }
+
+  var _clear = clearSession;
+  clearSession = function () { _clear(); drop(LOGIN_AT); };
+
   global.SKLZAuth = {
     API: API, fetch: authFetch, me: me, isAdmin: isAdmin,
     refresh: refresh, logout: logout, hasSession: hasSession,
-    clearSession: clearSession, toLogin: toLogin,
+    clearSession: clearSession, toLogin: toLogin, markLogin: markLogin,
+    ensureFresh: ensureFresh, sessionMaxHours: 72,
     token: function () { return get(ACCESS); }
   };
 })(window);

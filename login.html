@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="/sklz-auth.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sign in — SKLZ Labs</title>
@@ -140,6 +141,7 @@
       // store session
       localStorage.setItem('sklz_access', data.access_token||'');
       localStorage.setItem('sklz_refresh', data.refresh_token||'');
+      localStorage.setItem('sklz_login_at', String(Date.now()));   // 72h session cap
       // if this was a signup via a referral link, attribute it (fire-and-forget)
       if(current==='signup'){
         const ref=localStorage.getItem('sklz_ref');
