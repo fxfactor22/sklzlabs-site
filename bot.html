@@ -116,12 +116,12 @@
 </div>
   <div id="pospanel" style="display:none;background:#0F131C;border:1px solid rgba(245,166,35,.35);border-radius:12px;padding:16px;margin-bottom:16px">
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-      <div style="font-family:monospace;font-size:10px;color:#F5A623;text-transform:uppercase;letter-spacing:.05em">Admin — open positions</div>
+      <div style="font-family:monospace;font-size:10px;color:#F5A623;text-transform:uppercase;letter-spacing:.05em">Admin — your dashboard trades</div>
       <span id="p-status" style="font-family:monospace;font-size:11px;color:#8A94A6"></span>
-      <button onclick="loadPositions()" style="margin-left:auto;background:#080A0F;border:1px solid #1E2735;color:#EAEEF6;border-radius:8px;padding:7px 12px;font-family:monospace;font-size:12px;cursor:pointer">↻ read positions</button>
+      <button onclick="loadPositions()" style="margin-left:auto;background:#080A0F;border:1px solid #1E2735;color:#EAEEF6;border-radius:8px;padding:7px 12px;font-family:monospace;font-size:12px;cursor:pointer">↻</button>
     </div>
-    <div id="p-table" style="overflow-x:auto"><div class="empty" style="padding:14px">Press “read positions” — the Runner answers from the broker within a few seconds.</div></div>
-    <div style="margin-top:8px;font-family:monospace;font-size:10.5px;color:#5B6478">Close · Breakeven (stop to the broker’s actual entry) · Set SL/TP (0 = unchanged). Every action is executed by the Runner on the live account and confirmed by the broker; the signal card in the channels follows the position.</div>
+    <div id="p-table" style="overflow-x:auto"><div class="empty" style="padding:14px">Loading…</div></div>
+    <div style="margin-top:8px;font-family:monospace;font-size:10.5px;color:#5B6478">Trades you opened from this dashboard, while they are open. Close · Breakeven (stop to the broker’s actual entry) · Set SL/TP (0 = unchanged). Every action is executed by the Runner on the live account and confirmed by the broker; the signal card in the channels follows the position.</div>
   </div>
 <div id="content"><div class="loading">Loading sessions…</div></div>
   <div class="foot-note">Auto-refreshes every 10s · Read-only monitor · Software only, not financial advice</div>
@@ -216,7 +216,7 @@
     const v=+n;return isFinite(v)?v.toFixed(dig??(Math.abs(v)>=100?2:5)):esc(String(n));}
   function renderPositions(){
     const box=document.getElementById('p-table');
-    if(!POS.length){box.innerHTML='<div class="empty" style="padding:14px">No open positions on this Runner.</div>';return;}
+    if(!POS.length){box.innerHTML='<div class="empty" style="padding:14px">No dashboard trades open. Place one above and it appears here with its controls.</div>';return;}
     const cell='padding:7px 9px;border-bottom:1px solid #1E2735;font-family:monospace;font-size:12px;white-space:nowrap';
     const btn='border-radius:7px;padding:5px 9px;font-family:monospace;font-size:11px;cursor:pointer;margin-right:5px';
     box.innerHTML='<table style="width:100%;border-collapse:collapse">'+
@@ -232,7 +232,7 @@
           '<td style="'+cell+'">'+fmt(p.entry)+'</td>'+
           '<td style="'+cell+'">'+fmt(p.sl)+'</td>'+
           '<td style="'+cell+'">'+fmt(p.tp)+'</td>'+
-          '<td style="'+cell+';color:'+(pl>=0?'#34D399':'#F87171')+'">'+(pl>=0?'+':'')+pl.toFixed(2)+'</td>'+
+          '<td style="'+cell+';color:'+(pl>=0?'#34D399':'#F87171')+'">'+(p.profit===null||p.profit===undefined?'—':(pl>=0?'+':'')+pl.toFixed(2))+'</td>'+
           '<td style="'+cell+'">'+
             '<button onclick="posBreakeven('+p.ticket+')" style="'+btn+';background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.5);color:#F5A623">⇥ breakeven</button>'+
             '<button onclick="posSetLevels('+p.ticket+','+(+p.sl||0)+','+(+p.tp||0)+')" style="'+btn+';background:#080A0F;border:1px solid #1E2735;color:#EAEEF6">✎ set SL/TP</button>'+
@@ -240,18 +240,25 @@
           '</td></tr>';}).join('')+'</table>';
   }
   async function loadPositions(){
-    pStatus('reading positions…');
-    const cid=await posCmd('positions');if(!cid)return;
-    const d=await waitCmd(cid,'positions');
-    if(d.state!=='succeeded'){pStatus('could not read positions: '+(d.broker_comment||d.state),true);return;}
-    POS=d.positions||[];renderPositions();
-    pStatus(POS.length+' open · from the broker at '+new Date().toLocaleTimeString());
+    // No Runner round trip: the dashboard's own tickets (bot_orders) joined
+    // with the Runner's 30s heartbeat, which carries the broker's current
+    // stop and P/L. Refreshed with the page every 10s.
+    if(!IS_OWNER) return;
+    const bot=document.getElementById('o-bot').value; if(!bot) return;
+    try{
+      const r=await fetch(API_BASE+'/api/bot/forced?bot_name='+encodeURIComponent(bot),{headers:{'Authorization':'Bearer '+token()}});
+      const d=await r.json();
+      if(!d.ok){pStatus(d.reason||'could not load',true);return;}
+      POS=d.positions||[];renderPositions();
+      pStatus(POS.length+' open'+(d.live?' · broker levels, updated every 30s':' · '+(d.note||'')),!d.live);
+    }catch(e){pStatus('network error',true);}
   }
   async function afterAction(cid,label){
     const d=await waitCmd(cid,label);
     if(d.state==='succeeded'){pStatus('✓ '+label+' confirmed by the broker');}
     else{pStatus('✗ '+label+' — '+(d.broker_comment||d.state),true);alert(label+' did not go through: '+(d.broker_comment||d.state));}
-    loadPositions();
+    setTimeout(loadPositions,4000);     // the next heartbeat carries the new state
+    setTimeout(loadPositions,34000);
   }
   async function posClose(ticket,sym){
     if(!confirm('CLOSE '+sym+' ticket '+ticket+' at market?\n\nThis closes the position on the live account and every follower copies the close.'))return;
@@ -405,6 +412,7 @@
       <div id="ai-slot"></div>`;
     document.getElementById('content').innerHTML = html;
     try{fillBots([...new Set(ss.map(s=>s.bot).filter(Boolean))]);}catch(e){}
+    try{loadPositions();}catch(e){}
     applyOwnerUI();
     try{[...new Set(ss.map(s=>s.bot).filter(Boolean))].forEach(refreshState);}catch(e){}
     loadEvents(ss.find(s=>s.id===selected));
