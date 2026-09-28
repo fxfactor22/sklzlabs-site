@@ -161,7 +161,8 @@
     }catch(e){}
   }
   async function sendOrder(side){
-    const bot=document.getElementById('o-bot').value||'learning-runner';
+    const bot=document.getElementById('o-bot').value;
+    if(!bot){alert('No live runner is online. If your runner is on a demo account, set SKLZ_BOT_NAME in start_master.bat to a name without the word "demo" so it appears here.');return;}
     const sym=document.getElementById('o-sym').value.trim().toUpperCase();
     const note=document.getElementById('o-note').value.trim();
     if(!sym){alert('Enter a symbol');return;}
@@ -188,7 +189,7 @@
     e.textContent=t||'';e.style.color=bad?'#F87171':'#8A94A6';}
   async function posCmd(action,ticket,extra){
     const bot=document.getElementById('o-bot').value;
-    if(!bot){alert('Pick a live runner first');return null;}
+    if(!bot){alert('No live runner is online. If your runner is on a demo account, set SKLZ_BOT_NAME in start_master.bat to a name without the word "demo" so it appears here.');return null;}
     const body=Object.assign({bot_name:bot,action:action},ticket?{ticket:ticket}:{},extra||{});
     const r=await fetch(API_BASE+'/api/bot/position',{method:'POST',
       headers:{'Authorization':'Bearer '+token(),'Content-Type':'application/json'},
