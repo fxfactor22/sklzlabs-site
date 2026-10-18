@@ -2,6 +2,29 @@
 <html lang="en"><head>
 <script src="/sklz-auth.js"></script>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<!-- SEO / social / PWA -->
+<link rel="canonical" href="https://www.sklzlabs.com/marketplace.html"/>
+<meta name="description" content="Real track records, honestly rated. Scores are discounted for small samples and coin-flip setups are flagged. Copy a trader on your own account."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SKLZ Labs"/>
+<meta property="og:title" content="Trader Marketplace — SKLZ Labs"/>
+<meta property="og:description" content="Real track records, honestly rated. Scores are discounted for small samples and coin-flip setups are flagged. Copy a trader on your own account."/>
+<meta property="og:url" content="https://www.sklzlabs.com/marketplace.html"/>
+<meta property="og:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Trader Marketplace — SKLZ Labs"/>
+<meta name="twitter:description" content="Real track records, honestly rated. Scores are discounted for small samples and coin-flip setups are flagged. Copy a trader on your own account."/>
+<meta name="twitter:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta name="theme-color" content="#080A0F"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="SKLZ"/>
+<script src="/sklz-pwa.js" defer></script>
+
+
 <meta name="theme-color" content="#080A0F"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Trader Marketplace — SKLZ Labs</title>
@@ -196,20 +219,6 @@
 </script>
 <script src="/sklz-i18n.js" defer></script>
 <script src="/sklz-mobile.js" defer></script>
-<script>
-/* SKLZ paywall: members areas need an active plan. Public pages are
-   exempt; everyone else routes through pricing. */
-(async function(){
-  var API=location.hostname==="localhost"?"http://localhost:8000":"https://api.sklzlabs.com";
-  var tok=localStorage.getItem("sklz_access")||"";
-  if(!tok){ location.href="/login.html?next="+encodeURIComponent(location.pathname); return; }
-  try{
-    var r=await fetch(API+"/api/billing/status",{headers:{"Authorization":"Bearer "+tok}});
-    if(r.status===401){ location.href="/login.html?next="+encodeURIComponent(location.pathname); return; }
-    var d=await r.json();
-    if(!(d&&(d.active||d.plan==="suite_lifetime"))){ location.href="/pricing.html?join=1"; }
-  }catch(e){/* API down: fail open — never lock paying users out on our outage */}
-})();
-</script>
+<!-- public page: no paywall. The marketplace, trader profiles and the track record are the storefront — a visitor (and a search engine) must be able to read them without an account. -->
 <script>(function(){var r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('sklz_ref',r);})();</script>
 </body></html>

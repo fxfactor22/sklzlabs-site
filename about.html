@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/sklz-auth.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About — SKLZ Labs</title>
+<!-- SEO / social / PWA -->
+<link rel="canonical" href="https://www.sklzlabs.com/about.html"/>
+<meta name="description" content="SKLZ Labs is an independent trading-software studio. We build an MT5 engine, copy trading, indicators, signals and an honest journal — and publish the engine's full track record. Software only. We never hold your funds."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SKLZ Labs"/>
+<meta property="og:title" content="About — SKLZ Labs"/>
+<meta property="og:description" content="An independent trading-software studio that shows its work: public track record, no custody, no recruiting."/>
+<meta property="og:url" content="https://www.sklzlabs.com/about.html"/>
+<meta property="og:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="theme-color" content="#080A0F"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+<script src="/sklz-pwa.js" defer></script>
+<style>
+  :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--blue:#1DA9E0;--green:#34D399;--red:#F87171;
+    --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;--sans:'Inter','SF Pro Text',-apple-system,system-ui,sans-serif;--maxw:960px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  nav{position:sticky;top:0;z-index:20;background:rgba(8,10,15,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo-img{height:40px}
+  .nav-links{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+  .nav-links a:hover,.nav-links a.on{color:var(--ink)}
+  .nav-cta{background:var(--gold);color:#120B00;padding:8px 14px;border-radius:8px;font-weight:600}
+  @media(max-width:760px){.nav-links{display:none}}
+  header{padding:72px 0 36px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  h1{font-size:clamp(30px,5vw,48px);line-height:1.1;letter-spacing:-.02em;margin:14px 0 18px}
+  .lead{font-size:18px;color:var(--muted);max-width:62ch}
+  section{padding:34px 0;border-top:1px solid var(--line)}
+  h2{font-size:22px;letter-spacing:-.01em;margin-bottom:14px}
+  p{color:var(--muted);max-width:70ch;margin-bottom:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .card h3{font-size:15px;margin-bottom:6px}
+  .card p{font-size:14px;margin:0}
+  .k{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+  ul.plain{list-style:none;color:var(--muted)}
+  ul.plain li{padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}
+  ul.plain li b{color:var(--ink);font-weight:600}
+  .no{color:var(--red);font-family:var(--mono);margin-right:8px}.yes{color:var(--green);font-family:var(--mono);margin-right:8px}
+  .cta{display:inline-block;background:var(--gold);color:#120B00;padding:12px 18px;border-radius:10px;font-weight:600;margin-top:8px}
+  .ghost{display:inline-block;border:1px solid var(--line);padding:12px 18px;border-radius:10px;color:var(--ink);margin-left:8px;margin-top:8px}
+  footer{border-top:1px solid var(--line);padding:30px 0 40px;font-size:12px;color:var(--dim)}
+  footer .links{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:14px;font-size:13px;color:var(--muted)}
+  footer p{font-size:12px;max-width:none}
+</style>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a href="/" class="brand"><img src="/sklz-logo.png" alt="SKLZ Labs" class="logo-img"/></a>
+  <div class="nav-links">
+    <a href="/#products">Products</a><a href="/#how">How it works</a><a href="/marketplace.html">Traders</a>
+    <a href="/perf.html?c=live">Track record</a><a href="/pricing.html">Pricing</a><a href="/about.html" class="on">About</a>
+    <a href="/login.html">Log in</a><a href="/pricing.html" class="nav-cta">Get started</a>
+  </div>
+</div></nav>
+
+<header><div class="wrap">
+  <div class="eyebrow">About SKLZ Labs</div>
+  <h1>A trading-software studio that shows its work.</h1>
+  <p class="lead">SKLZ Labs builds the tools we wanted as traders and could not buy honestly: an algorithmic engine that runs on <em>your</em> broker account, copy trading that never touches your funds, indicators with on-chart win rates, and a journal that tells you which of your setups are coin-flips. Then we publish the engine's own track record — losses included — so you can judge us by the data, not the pitch.</p>
+  <a href="/perf.html?c=live" class="cta">See the live track record →</a><a href="/pricing.html" class="ghost">Plans from $29/mo</a>
+</div></header>
+
+<section><div class="wrap">
+  <h2>What we are — and are not</h2>
+  <div class="grid">
+    <div class="card"><div class="k">We are</div><h3>Software</h3><p>An independent studio. We ship an MT5 engine, a copy network, TradingView indicators, TradeGPT, signals, a scanner and an honest journal. You subscribe to software; you keep your account, your keys and your decisions.</p></div>
+    <div class="card"><div class="k">We are not</div><h3>A broker, a fund or an adviser</h3><p>We never take custody of money, never accept an exchange key that can withdraw, never manage accounts and never give personal financial advice. There is no "package" to buy and nothing to recruit anyone into.</p></div>
+    <div class="card"><div class="k">We publish</div><h3>The numbers, unfiltered</h3><p>Every closed trade on the published engine account is counted on the <a href="/perf.html?c=live" style="color:var(--gold)">track-record page</a>: wins, losses, drawdown, month by month. Small samples are labelled as unproven, not dressed up as proof.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>How we got here</h2>
+  <p>SKLZ started as research: 27 million ticks of market data run through the strategies traders are sold every day. Most looked brilliant on a small sample and reverted to a coin-flip out of sample. That result shaped everything we build — the journal flags coin-flip setups, the marketplace discounts short records, and the engine itself is tuned from its own live journal, not from a backtest screenshot.</p>
+  <p>The engine runs live on a funded prop-firm evaluation under the firm's own drawdown rules. That is deliberate: a strategy that cannot survive a 4% daily / 7% total drawdown limit is not a strategy, and running under those rules in public keeps us honest about position sizing, stops and partial exits.</p>
+  <ul class="plain">
+    <li><b>Single-door sizing.</b> One place in the code decides lot size, with a hard ceiling. We learned this the expensive way after an early incident sized a position at 3.12 lots; it cannot happen again by construction.</li>
+    <li><b>PropGuard.</b> Daily and total loss limits are enforced, not just stored. When a limit is hit, new entries freeze — on the master and on every follower.</li>
+    <li><b>Universal entry rule.</b> No entry at an extreme high or low: a 5-minute body close beyond the level, a retest, then a confirmation candle. Every model in the engine goes through the same gate.</li>
+    <li><b>One claims policy.</b> A single policy module decides what performance wording is allowed on the site, in Telegram and in the app. A demo is always called a demo.</li>
+    <li><b>Versioned, tested releases.</b> Every engine build ships with a changelog and a test suite; the zips are public on this site.</li>
+  </ul>
+</div></section>
+
+<section><div class="wrap">
+  <h2>What we will not do</h2>
+  <ul class="plain">
+    <li><span class="no">✕</span>Hold, pool or move your funds. Ever.</li>
+    <li><span class="no">✕</span>Accept an API key that can withdraw — checked with the exchange, not assumed.</li>
+    <li><span class="no">✕</span>Pay anyone for recruiting. The partner program is single-level, 50% of what a referred customer pays, with the numbers published.</li>
+    <li><span class="no">✕</span>Show you a "live activity" feed or a testimonial dollar figure we cannot back with journaled trades.</li>
+    <li><span class="yes">✓</span>Tell you when a record is too short to mean anything — including our own.</li>
+  </ul>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Where to find us</h2>
+  <div class="grid">
+    <div class="card"><div class="k">Community</div><h3>Telegram</h3><p><a href="https://t.me/sklzlabsarabic" style="color:var(--gold)">@sklzlabsarabic</a> — Arabic channel, daily content and signals.<br><a href="https://t.me/mindsieg_protocol" style="color:var(--gold)">@mindsieg_protocol</a> — English, for traders and signal providers.</p></div>
+    <div class="card"><div class="k">Languages</div><h3>English · العربية · Русский</h3><p>The platform, the Academy and support run in English and Arabic; the site also reads in Russian.</p></div>
+    <div class="card"><div class="k">Contact</div><h3>hello@sklzlabs.com</h3><p>Support, partnerships, white-label (Pro Trader OS, Signal Desk) and press. We answer in English and Arabic.</p></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="links"><a href="/">Home</a><a href="/pricing.html">Pricing</a><a href="/perf.html?c=live">Track record</a><a href="/marketplace.html">Traders</a><a href="/#affiliate">Partner program</a><a href="mailto:hello@sklzlabs.com">Contact</a></div>
+  <p>SKLZ Labs provides trading software and analytical tools only. SKLZ Labs is not a broker, is not a financial adviser, and does not manage client funds or accounts. Nothing on this site is financial, investment, or trading advice. Trading carries a high level of risk and can result in the loss of some or all of your capital. Performance figures are computed from journaled trades of the stated account; past performance does not guarantee future results.</p>
+  <p style="margin-top:10px">© <span id="yr"></span> SKLZ Labs · hello@sklzlabs.com</p>
+</div></footer>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="/sklz-i18n.js" defer></script>
+<script>(function(){var r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('sklz_ref',r);})();</script>
+</body></html>

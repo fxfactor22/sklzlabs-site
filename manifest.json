@@ -1,0 +1,25 @@
+{
+  "name": "SKLZ Labs",
+  "short_name": "SKLZ",
+  "description": "Trading systems, engineered. MT5 bot, copy trading, indicators, signals and an honest journal — on your own account.",
+  "start_url": "/dashboard.html?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080A0F",
+  "theme_color": "#080A0F",
+  "lang": "en",
+  "dir": "auto",
+  "categories": ["finance", "education", "productivity"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Dashboard", "url": "/dashboard.html?source=pwa", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Signals", "url": "/signals.html?source=pwa" },
+    { "name": "Journal", "url": "/journal.html?source=pwa" },
+    { "name": "Track record", "url": "/perf.html?c=live" }
+  ]
+}

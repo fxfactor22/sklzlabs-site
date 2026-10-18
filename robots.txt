@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /account.html
+Disallow: /dashboard.html
+Disallow: /copydash.html
+Disallow: /success.html
+Disallow: /reset.html
+Disallow: /newtokens.html
+Sitemap: https://www.sklzlabs.com/sitemap.xml

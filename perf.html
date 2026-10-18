@@ -2,12 +2,35 @@
 <html lang="en"><head>
 <script src="/sklz-auth.js"></script>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!-- SEO / social / PWA -->
+<link rel="canonical" href="https://www.sklzlabs.com/perf.html?c=live"/>
+<meta name="description" content="The public, unfiltered track record of the SKLZ Engine: every closed trade, including losses, with win rate, profit factor, drawdown and a monthly table."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SKLZ Labs"/>
+<meta property="og:title" content="Track record — SKLZ Labs"/>
+<meta property="og:description" content="The public, unfiltered track record of the SKLZ Engine: every closed trade, including losses, with win rate, profit factor, drawdown and a monthly table."/>
+<meta property="og:url" content="https://www.sklzlabs.com/perf.html?c=live"/>
+<meta property="og:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Track record — SKLZ Labs"/>
+<meta name="twitter:description" content="The public, unfiltered track record of the SKLZ Engine: every closed trade, including losses, with win rate, profit factor, drawdown and a monthly table."/>
+<meta name="twitter:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta name="theme-color" content="#080A0F"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="SKLZ"/>
+<script src="/sklz-pwa.js" defer></script>
+
+
 <title>Performance — SKLZ Labs</title>
 <style>
   :root{--bg:#080A0F;--panel:#0F131C;--panel2:#141A26;--line:#1E2735;--ink:#EAEEF6;--muted:#8B94A8;--dim:#5B6377;--gold:#F5A623;--green:#34D399;--red:#F87171;--blue:#1DA9E0;--mono:'JetBrains Mono',ui-monospace,monospace;--sans:'Inter',system-ui,sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;padding:24px}
-  .wrap{max-width:820px;margin:0 auto}
+  .wrap{max-width:900px;margin:0 auto}
   .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700}
   .brand img{height:46px}
@@ -23,6 +46,7 @@
   .src.tracked{border-left:3px solid var(--green)}
   .src.logged{border-left:3px solid var(--gold)}
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .badge.prop{background:rgba(52,211,153,.14);color:var(--green)}
   @media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
   .kpi .k{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;color:var(--dim)}
@@ -38,74 +62,113 @@
 <div class="wrap" id="wrap"><div class="empty">Loading performance…</div></div>
 <script>
   const API="https://api.sklzlabs.com";
-  const code=location.pathname.split('/p/')[1]||location.hash.slice(1)||new URLSearchParams(location.search).get('c');
+  const qs=new URLSearchParams(location.search);
+  const code=location.pathname.split('/p/')[1]||location.hash.slice(1)||qs.get('c')||'live';
   function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
-  function money(n){return (n>=0?'+':'')+'$'+Math.abs(+n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function money(n){n=+n||0;return (n>=0?'+':'-')+'$'+Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function pct(x){return Math.round((+x||0)*100)+'%'}
+  function num(x,d){return x==null?'—':(+x).toFixed(d==null?2:d)}
   async function load(){
-    if(!code){document.getElementById('wrap').innerHTML='<div class="empty">No performance code in the link.</div>';return;}
+    const url = code==='live' ? API+'/api/public/track-record' : API+'/api/journal/public/'+encodeURIComponent(code);
     try{
-      const r=await fetch(API+'/api/journal/public/'+encodeURIComponent(code));
-      if(!r.ok){document.getElementById('wrap').innerHTML='<div class="empty">This performance page is private or does not exist.</div>';return;}
-      const d=await r.json();render(d);
+      const r=await fetch(url);
+      if(!r.ok){document.getElementById('wrap').innerHTML='<div class="empty">'+(code==='live'?'No account is published yet.':'This performance page is private or does not exist.')+'</div>';return;}
+      render(await r.json());
     }catch(e){document.getElementById('wrap').innerHTML='<div class="empty">Could not load performance.</div>';}
   }
-  function equityCurve(a){
-    const eq=a.equity_curve||[];
+  // equity_curve arrives either as numbers or as {t,eq} points
+  function curveValues(a){return (a.equity_curve||[]).map(p=>typeof p==='number'?p:+(p.eq||0))}
+  function equityCurve(eq){
     if(eq.length<2)return '<div style="color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:40px">Not enough closed trades yet.</div>';
-    const w=780,h=200,min=Math.min(...eq),max=Math.max(...eq),rng=(max-min)||1;
-    const pts=eq.map((v,i)=>[(i/(eq.length-1))*w,h-((v-min)/rng)*h*0.9-10]);
+    const w=780,h=200,min=Math.min(0,...eq),max=Math.max(0,...eq),rng=(max-min)||1;
+    const y=v=>h-((v-min)/rng)*h*0.9-10;
+    const pts=eq.map((v,i)=>[(i/(eq.length-1))*w,y(v)]);
     const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
-    const up=eq[eq.length-1]>=eq[0];
-    return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><path d="'+path+'" fill="none" stroke="'+(up?'var(--green)':'var(--red)')+'" stroke-width="2"/></svg>';
+    const up=eq[eq.length-1]>=0;
+    return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">'+
+      '<line x1="0" y1="'+y(0).toFixed(1)+'" x2="'+w+'" y2="'+y(0).toFixed(1)+'" stroke="var(--line)" stroke-dasharray="3 3"/>'+
+      '<path d="'+path+'" fill="none" stroke="'+(up?'var(--green)':'var(--red)')+'" stroke-width="2"/></svg>';
   }
+  function drawdownCurve(eq){
+    if(eq.length<2)return '';
+    let peak=-Infinity;const dd=eq.map(v=>{peak=Math.max(peak,v);return v-peak});
+    const w=780,h=90,min=Math.min(...dd,-1);
+    const pts=dd.map((v,i)=>[(i/(dd.length-1))*w,(v/min)*h*0.9]);
+    const path='M0 0 '+pts.map(p=>'L'+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')+' L'+w+' 0 Z';
+    return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="height:90px"><path d="'+path+'" fill="rgba(248,113,113,.25)" stroke="var(--red)" stroke-width="1"/></svg>';
+  }
+  function table(rows,cols){
+    if(!rows||!rows.length)return '<div style="color:var(--dim);font-family:var(--mono);font-size:12px">No data yet.</div>';
+    return '<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px">'+
+      '<thead><tr>'+cols.map(c=>'<th style="text-align:'+(c.right?'right':'left')+';padding:6px 8px;color:var(--dim);font-weight:500;border-bottom:1px solid var(--line)">'+c.h+'</th>').join('')+'</tr></thead><tbody>'+
+      rows.map(r=>'<tr>'+cols.map(c=>{const v=c.f(r);const col=c.color?c.color(r):'';return '<td style="text-align:'+(c.right?'right':'left')+';padding:6px 8px;border-bottom:1px solid var(--line);color:'+(col||'var(--ink)')+'">'+v+'</td>'}).join('')+'</tr>').join('')+
+      '</tbody></table></div>';
+  }
+  function dictRows(obj){return Object.entries(obj||{}).map(([k,v])=>Object.assign({name:k},v)).sort((a,b)=>(b.trades||0)-(a.trades||0))}
   function render(d){
-    const a=d.account,an=d.analytics||{};
+    const a=d.account||{},an=d.analytics||{},m=d.metrics||{},rt=d.rating||null;
     const kind=(a.kind||'demo').toLowerCase();
+    const live=(kind==='live'||kind==='prop');
     const src=d.data_source==='MT5-tracked'?'tracked':d.data_source==='manually logged'?'logged':'';
     const srcText=d.data_source==='MT5-tracked'
       ?'● Data pulled directly from MT5 deal history — not hand-entered.'
       :d.data_source==='manually logged'
       ?'Trades on this account are self-reported (manually logged by the trader).'
       :'Mix of MT5-tracked and manually logged trades.';
+    const eq=curveValues(an);
+    const pnlCol=v=>(v>=0?'var(--green)':'var(--red)');
+    const monthly=(d.monthly||[]).slice().reverse();
+    const bySymbol=dictRows(an.by_symbol), bySetup=dictRows(an.by_setup), bySession=dictRows(an.by_session);
+    const statCols=[{h:'',f:r=>esc(r.name)},{h:'Trades',right:1,f:r=>r.trades??'—'},{h:'Win',right:1,f:r=>r.win_rate!=null?pct(r.win_rate):'—'},{h:'P/L',right:1,f:r=>money(r.pnl||0),color:r=>pnlCol(r.pnl||0)}];
     document.getElementById('wrap').innerHTML=
-      '<div class="top"><div class="brand"><img src="/sklz-logo.png"/>SKLZ Labs</div>'+
-        '<span class="badge '+kind+'">'+esc(a.kind||'demo')+'</span></div>'+
+      '<div class="top"><div class="brand"><a href="/"><img src="/sklz-logo.png" alt="SKLZ Labs"/></a>SKLZ Labs · Track record</div>'+
+        '<span class="badge '+(live?'live':kind)+'">'+esc(a.mode||a.kind||'demo')+'</span></div>'+
       '<div class="acct"><h1>'+esc(a.label)+'</h1>'+
         '<div class="meta">'+
           (a.broker?'<span>Broker <b>'+esc(a.broker)+'</b></span>':'')+
           '<span>Platform <b>'+esc(a.platform)+'</b></span>'+
           (a.server?'<span>Server <b>'+esc(a.server)+'</b></span>':'')+
           (a.account_no?'<span>Account <b>#'+esc(a.account_no)+'</b></span>':'')+
+          (d.first_trade_at?'<span>Since <b>'+esc(String(d.first_trade_at).slice(0,10))+'</b></span>':'')+
         '</div>'+
-        '<div class="src '+src+'">'+srcText+'</div></div>'+
+        '<div class="src '+src+'">'+srcText+' Nothing is filtered: every closed trade on this account, including losses, is counted below.</div></div>'+
       '<div class="kpis">'+
-        '<div class="kpi"><div class="k">Net P/L</div><div class="v" style="color:'+((an.total_pnl||0)>=0?'var(--green)':'var(--red)')+'">'+money(an.total_pnl||0)+'</div></div>'+
-        '<div class="kpi"><div class="k">Win rate</div><div class="v">'+Math.round((an.win_rate||0)*100)+'%</div></div>'+
-        '<div class="kpi"><div class="k">Trades</div><div class="v">'+(d.trade_count||0)+'</div></div>'+
+        '<div class="kpi"><div class="k">Net P/L</div><div class="v" style="color:'+pnlCol(an.total_pnl||0)+'">'+money(an.total_pnl||0)+'</div></div>'+
+        '<div class="kpi"><div class="k">Win rate</div><div class="v">'+pct(an.win_rate||0)+'</div></div>'+
+        '<div class="kpi"><div class="k">Closed trades</div><div class="v">'+(an.trades||d.trade_count||0)+'</div></div>'+
         '<div class="kpi"><div class="k">Profit factor</div><div class="v">'+(an.profit_factor!=null?an.profit_factor:'—')+'</div></div>'+
+        '<div class="kpi"><div class="k">Avg win / avg loss</div><div class="v" style="font-size:16px">'+money(an.avg_win||0)+' / '+money(an.avg_loss||0)+'</div></div>'+
+        '<div class="kpi"><div class="k">Max drawdown</div><div class="v" style="color:var(--red)">'+money(-Math.abs(an.max_drawdown||m.max_drawdown||0))+'</div></div>'+
+        '<div class="kpi"><div class="k">Expectancy / trade</div><div class="v" style="color:'+pnlCol(an.expectancy||0)+'">'+money(an.expectancy||0)+'</div></div>'+
+        '<div class="kpi"><div class="k">Profitable months</div><div class="v">'+(m.profitable_months!=null?(m.profitable_months+' / '+m.months_traded):'—')+'</div></div>'+
       '</div>'+
-      '<div class="card"><h2>Equity curve</h2>'+equityCurve(an)+'</div>'+
-      '<div class="foot">Performance shared via SKLZ Labs · '+srcText.replace('● ','')+'<br>'+
-        'Past performance does not guarantee future results · Trading involves risk of loss<br>'+
-        '<a href="/">Build your own honest track record → sklzlabs.com</a></div>';
+      (rt?'<div class="card"><h2>Honest rating</h2><div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">'+
+        '<div style="font-family:var(--mono);font-size:34px;font-weight:700">'+(rt.score!=null?rt.score:'—')+'<span style="font-size:12px;color:var(--dim)"> /100</span></div>'+
+        '<div><div style="font-weight:600">'+esc(rt.grade||'')+'</div><div style="color:var(--muted);font-size:13px">'+esc(rt.summary||'')+'</div>'+
+        ((rt.flags||[]).length?'<div style="margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--gold)">'+rt.flags.map(esc).join(' · ')+'</div>':'')+
+        (m.confidence?'<div style="margin-top:4px;font-family:var(--mono);font-size:11px;color:var(--dim)">'+esc(m.confidence.label||'')+'</div>':'')+
+        '</div></div></div>':'')+
+      '<div class="card"><h2>Equity curve — cumulative P/L per closed trade</h2>'+equityCurve(eq)+'</div>'+
+      (eq.length>1?'<div class="card"><h2>Drawdown from peak</h2>'+drawdownCurve(eq)+'</div>':'')+
+      '<div class="card"><h2>Month by month</h2>'+table(monthly,[
+        {h:'Month',f:r=>esc(r.month)},{h:'Trades',right:1,f:r=>r.trades},{h:'W / L',right:1,f:r=>r.wins+' / '+r.losses},
+        {h:'Win',right:1,f:r=>r.trades?pct(r.wins/r.trades):'—'},{h:'P/L',right:1,f:r=>money(r.pnl),color:r=>pnlCol(r.pnl)}])+'</div>'+
+      '<div class="card"><h2>By instrument</h2>'+table(bySymbol,statCols)+'</div>'+
+      (bySetup.length?'<div class="card"><h2>By setup / model</h2>'+table(bySetup,statCols)+
+        ((an.coin_flip_setups||[]).length?'<div style="margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--gold)">Flagged as coin-flip (win rate and profit factor where randomness lives): '+an.coin_flip_setups.map(x=>esc(x.setup||x)).join(', ')+'</div>':'')+'</div>':'')+
+      (bySession.length?'<div class="card"><h2>By session</h2>'+table(bySession,statCols)+'</div>':'')+
+      (m.sharpe!=null||m.recovery_factor!=null?'<div class="card"><h2>Risk-adjusted</h2><div class="meta">'+
+        (m.sharpe!=null?'<span>Sharpe <b>'+num(m.sharpe)+'</b></span>':'')+(m.sortino!=null?'<span>Sortino <b>'+num(m.sortino)+'</b></span>':'')+
+        (m.recovery_factor!=null?'<span>Recovery factor <b>'+num(m.recovery_factor)+'</b></span>':'')+(m.consistency!=null?'<span>Consistency <b>'+num(m.consistency,3)+'</b></span>':'')+
+        (m.max_consecutive_losses!=null?'<span>Longest losing streak <b>'+m.max_consecutive_losses+'</b></span>':'')+(m.avg_hold_hours!=null?'<span>Avg hold <b>'+m.avg_hold_hours+'h</b></span>':'')+
+        '</div></div>':'')+
+      '<div class="foot">'+esc(d.disclaimer||'Performance shared via SKLZ Labs.')+'<br>'+srcText.replace('● ','')+'<br>'+
+        'Generated '+esc(String(d.generated||'').replace('T',' ').slice(0,16))+' UTC · Past performance does not guarantee future results · Trading involves risk of loss<br>'+
+        (code==='live'?'<a href="/pricing.html">Follow this account with SKLZ Core →</a> · ':'')+'<a href="/">sklzlabs.com</a></div>';
   }
   load();
 </script>
 <script src="/sklz-i18n.js" defer></script>
-<script>
-/* SKLZ paywall: members areas need an active plan. Public pages are
-   exempt; everyone else routes through pricing. */
-(async function(){
-  var API=location.hostname==="localhost"?"http://localhost:8000":"https://api.sklzlabs.com";
-  var tok=localStorage.getItem("sklz_access")||"";
-  if(!tok){ location.href="/login.html?next="+encodeURIComponent(location.pathname); return; }
-  try{
-    var r=await fetch(API+"/api/billing/status",{headers:{"Authorization":"Bearer "+tok}});
-    if(r.status===401){ location.href="/login.html?next="+encodeURIComponent(location.pathname); return; }
-    var d=await r.json();
-    if(!(d&&(d.active||d.plan==="suite_lifetime"))){ location.href="/pricing.html?join=1"; }
-  }catch(e){/* API down: fail open — never lock paying users out on our outage */}
-})();
-</script>
+<!-- public page: no paywall. The marketplace, trader profiles and the track record are the storefront — a visitor (and a search engine) must be able to read them without an account. -->
 <script>(function(){var r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('sklz_ref',r);})();</script>
 </body></html>

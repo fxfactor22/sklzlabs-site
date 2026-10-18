@@ -2,6 +2,29 @@
 <html lang="en"><head>
 <script src="/sklz-auth.js"></script>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<!-- SEO / social / PWA -->
+<link rel="canonical" href="https://www.sklzlabs.com/academy.html"/>
+<meta name="description" content="Live sessions and recordings in English and Arabic: market structure, liquidity sweeps, fair-value gaps, sessions and prop-firm risk — the rules the SKLZ Engine trades by."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SKLZ Labs"/>
+<meta property="og:title" content="SKLZ Academy — SKLZ Labs"/>
+<meta property="og:description" content="Live sessions and recordings in English and Arabic: market structure, liquidity sweeps, fair-value gaps, sessions and prop-firm risk — the rules the SKLZ Engine trades by."/>
+<meta property="og:url" content="https://www.sklzlabs.com/academy.html"/>
+<meta property="og:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SKLZ Academy — SKLZ Labs"/>
+<meta name="twitter:description" content="Live sessions and recordings in English and Arabic: market structure, liquidity sweeps, fair-value gaps, sessions and prop-firm risk — the rules the SKLZ Engine trades by."/>
+<meta name="twitter:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta name="theme-color" content="#080A0F"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="SKLZ"/>
+<script src="/sklz-pwa.js" defer></script>
+
+
 <meta name="theme-color" content="#080A0F"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Academy — SKLZ Labs</title>
@@ -119,7 +142,7 @@
 <script>
   const API="https://api.sklzlabs.com";
   function tok(){return localStorage.getItem('sklz_access')}
-  if(!tok()) location.href='/login.html';
+  if(!tok()) location.href='/login.html?next='+encodeURIComponent('/academy.html');
   function H(){return {'Authorization':'Bearer '+tok(),'Content-Type':'application/json'}}
   function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
   function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}

@@ -4,8 +4,36 @@
 <script src="/sklz-auth.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- SEO / social / PWA -->
+<link rel="canonical" href="https://www.sklzlabs.com/"/>
+<meta name="description" content="AI-assisted trading software with a public track record: MT5 bot, copy trading on your own account, TradingView indicators, signals, an honest journal. Software only — we never hold your funds."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="SKLZ Labs"/>
+<meta property="og:title" content="SKLZ Labs — Trading systems, engineered"/>
+<meta property="og:description" content="AI-assisted trading software with a public track record: MT5 bot, copy trading on your own account, TradingView indicators, signals, an honest journal. Software only — we never hold your funds."/>
+<meta property="og:url" content="https://www.sklzlabs.com/"/>
+<meta property="og:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="SKLZ Labs — Trading systems, engineered"/>
+<meta name="twitter:description" content="AI-assisted trading software with a public track record: MT5 bot, copy trading on your own account, TradingView indicators, signals, an honest journal. Software only — we never hold your funds."/>
+<meta name="twitter:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta name="theme-color" content="#080A0F"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="SKLZ"/>
+<script src="/sklz-pwa.js" defer></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"Organization","@id":"https://www.sklzlabs.com/#org","name":"SKLZ Labs","url":"https://www.sklzlabs.com/","logo":"https://www.sklzlabs.com/icons/icon-512.png","email":"hello@sklzlabs.com","sameAs":["https://t.me/sklzlabsarabic","https://t.me/mindsieg_protocol"],"description":"Trading software and analytics: MT5 bot, copy trading, indicators, signals and an honest journal. Software only — not a broker, never holds client funds."},
+ {"@type":"WebSite","@id":"https://www.sklzlabs.com/#site","url":"https://www.sklzlabs.com/","name":"SKLZ Labs","publisher":{"@id":"https://www.sklzlabs.com/#org"},"inLanguage":["en","ar","ru"]},
+ {"@type":"SoftwareApplication","name":"SKLZ Labs","applicationCategory":"FinanceApplication","operatingSystem":"Web, Windows (MetaTrader 5)","url":"https://www.sklzlabs.com/","offers":[{"@type":"Offer","name":"SKLZ Core","price":"29","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Plus","price":"49","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Pro","price":"79","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"}]}
+]}
+</script>
+
 <title>SKLZ Labs — Trading systems, engineered</title>
-<meta name="description" content="SKLZ Labs builds AI-assisted trading software: MetaTrader 5 bots, indicators, and analytics. Software only. You keep control of your account." />
 <style>
   :root{
     --bg:#080A0F; --panel:#0F131C; --panel-2:#141A26; --line:#1E2735;
@@ -168,10 +196,27 @@
   .term-bar i:nth-child(1){background:#F2685E}.term-bar i:nth-child(2){background:var(--warn)}
   .term-bar i:nth-child(3){background:var(--acc)}
   .term-bar span{margin-left:12px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .term-bar{display:flex;align-items:center}
+  .term-link{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--acc);opacity:.85}
+  .term-link:hover{opacity:1;text-decoration:underline}
+  .chart .cap{position:absolute;right:6px;top:2px;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+  .term-log .ln{padding:4px 0;color:var(--muted)}
+  .term-log .ln.dim,.term-log .dim{color:var(--dim)}
+  .term-log .ln.pos{color:#34D399}.term-log .ln.neg{color:#F87171}
+  .term-log .ln.head{color:var(--ink);font-weight:600;margin-top:6px}
   .term-body{display:grid;grid-template-columns:1.3fr 1fr;min-height:340px}
   @media(max-width:760px){.term-body{grid-template-columns:1fr}}
   .term-left{padding:22px;border-right:1px solid var(--line)}
   @media(max-width:760px){.term-left{border-right:none;border-bottom:1px solid var(--line)}}
+  @media(max-width:760px){
+    .cards{grid-template-columns:repeat(3,1fr);gap:8px}
+    .stat{padding:10px}
+    .stat .k{font-size:9px;letter-spacing:.06em}
+    .stat .v{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .term-bar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+    .term-link{white-space:nowrap;margin-left:8px}
+    .term-log{font-size:11px;padding:16px}
+  }
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .stat{border:1px solid var(--line);border-radius:9px;padding:13px;background:var(--panel)}
   .stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
@@ -280,7 +325,9 @@
       <a href="#copy">Copy strategy</a>
       <a href="#affiliate">Affiliate</a>
       <a href="/marketplace.html">Traders</a>
+      <a href="/perf.html?c=live">Track record</a>
       <a href="#pricing">Pricing</a>
+      <a href="/about.html">About</a>
       <a href="/login.html">Log in</a>
       <a href="#products" class="nav-cta">Get the bot</a>
     </div>
@@ -306,7 +353,7 @@
 
     <!-- SIGNATURE: live-ish terminal -->
     <div class="term reveal">
-      <div class="term-bar"><i></i><i></i><i></i><span id="term-title">sklz-bot-runner — today</span></div>
+      <div class="term-bar"><i></i><i></i><i></i><span id="term-title">sklz-bot-runner — today</span><a href="/perf.html?c=live" class="term-link" id="term-link">Full track record →</a></div>
       <div class="term-body">
         <div class="term-left">
           <div class="cards">
@@ -314,7 +361,7 @@
             <div class="stat"><div class="k">Trades today</div><div class="v neu tnum" id="ntrades">—</div></div>
             <div class="stat"><div class="k">Mode</div><div class="v neu" id="mode">—</div></div>
           </div>
-          <div class="chart"><svg id="spark" viewBox="0 0 400 150" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
+          <div class="chart"><span class="cap" id="spark-cap"></span><svg id="spark" viewBox="0 0 400 150" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
         </div>
         <div class="term-log" id="log"></div>
       </div>
@@ -388,17 +435,28 @@
       </div>
       <div class="card reveal">
         <div class="num">/ 06</div>
+        <h3>SKLZ Academy</h3>
+        <p>Live sessions and recordings in English and Arabic: market structure, liquidity sweeps, fair-value gaps, sessions and kill zones, prop-firm risk — the same rules the SKLZ Engine trades by, taught in the open.</p>
+        <ul>
+          <li>Weekly live session + replay library</li>
+          <li>Engine review: the week's trades, wins and losses</li>
+          <li>English &amp; العربية</li>
+        </ul>
+        <a href="/academy.html" class="tag live" style="text-decoration:none">● Open Academy →</a>
+      </div>
+      <div class="card reveal">
+        <div class="num">/ 07</div>
         <h3>Trading Tools</h3>
-        <p>An instrument-aware lot calculator across 24 markets, bot monitoring, and an academy of live sessions and recordings.</p>
+        <p>An instrument-aware lot calculator across 24 markets and a live monitor for your own bot.</p>
         <ul>
           <li>Lot calculator — FX, metals, indices, crypto</li>
           <li>Live bot monitor</li>
-          <li>SKLZ Academy sessions</li>
+          <li>Session log read back by AI</li>
         </ul>
         <span class="tag live">● Live</span>
       </div>
       <div class="card reveal">
-        <div class="num">/ 07</div>
+        <div class="num">/ 08</div>
         <h3>Crypto CopyTrader</h3>
         <p>Connect your own exchange account and copy a trader automatically. You choose two things: how much to allocate and how much risk. Everything else is worked out for you.</p>
         <ul>
@@ -409,7 +467,7 @@
         <span class="tag live">● Live</span>
       </div>
       <div class="card reveal">
-        <div class="num">/ 08</div>
+        <div class="num">/ 09</div>
         <h3>Trader Marketplace</h3>
         <p>Real track records, honestly rated. Scores are discounted for small samples, and setups that behave like coin-flips are flagged as exactly that.</p>
         <ul>
@@ -507,7 +565,7 @@
       <div class="hero-cta" style="justify-content:center;margin-top:28px">
         <a href="/partner.html" class="btn btn-ghost">Open your Partner dashboard →</a>
       </div>
-      <div class="wait-note" style="margin-top:18px">$25/mo per active $49 membership you refer — recurring for as long as they stay. Retention bonuses at 6 and 12 months. Sign up free, share your link, track everything live.</div>
+      <div class="wait-note" style="margin-top:18px">Half of every payment that clears: $14.50 on Core, $25 on Plus, $39.50 on Pro — every month they stay — and 50% of an annual plan paid at once ($139 / $235 / $379). Retention bonuses at 6 and 12 months. Single level, published numbers, no rank volumes: we pay you to refer traders, not to recruit recruiters.</div>
     </div>
   </div>
 </section>
@@ -555,10 +613,11 @@
     </style>
     <div class="p-head">
       <h2>Simple pricing. Honest tools.</h2>
+      <p class="sec-sub" style="margin-top:6px">No upfront "package" fee, no $1,000+ enrolment, no recruiting. From $29 a month, cancel in one click.</p>
       <div class="p-sub">Every plan renews at the price on the button, cancels in one click,
         and carries a 7-day money-back guarantee on your first purchase.</div>
     </div>
-    <div class="p-founder"><span id="p-founder-badge">⚡ MT5 copy trading is live — every plan follows the SKLZ Engine's honest track record</span></div>
+    <div class="p-founder"><span id="p-founder-badge">⚡ MT5 copy trading is live — every plan follows the SKLZ Engine. <a href="/perf.html?c=live" style="color:inherit;text-decoration:underline">Its full track record is public →</a></span></div>
     <div class="p-grid">
       <div class="p-card">
         <div class="p-name">SKLZ Core</div>
@@ -566,7 +625,7 @@
         <div class="p-price"><span class="p-n">$29</span><span class="p-u">/month</span></div>
         <div class="p-renew">cancel anytime · or $278/yr — save 20%</div>
         <ul><li>MT5 Bot copy trading — partner broker, 1 account</li>
-            <li>SKLZ Engine as your master — honest track record</li>
+            <li>SKLZ Engine as your master — <a href="/perf.html?c=live" style="color:var(--acc);text-decoration:underline dotted">see its track record</a></li>
             <li>All four TradingView indicators</li>
             <li>TradeGPT Pro — unlimited chart analysis</li>
             <li>Signals, Journal, AI reviews</li></ul>
@@ -629,8 +688,16 @@
         <a href="#how">How it works</a>
         <a href="#copy">Copy strategy</a>
         <a href="#affiliate">Affiliate</a>
+        <a href="/perf.html?c=live">Track record</a>
+        <a href="/about.html">About</a>
         <a href="mailto:hello@sklzlabs.com">Contact</a>
       </div>
+    </div>
+    <div class="foot-community" style="display:flex;flex-wrap:wrap;gap:10px 22px;margin:18px 0 6px;font-family:var(--mono);font-size:12px">
+      <span style="color:var(--dim)">Community</span>
+      <a href="https://t.me/sklzlabsarabic" target="_blank" rel="noopener">Telegram · العربية @sklzlabsarabic</a>
+      <a href="https://t.me/mindsieg_protocol" target="_blank" rel="noopener">Telegram · English @mindsieg_protocol</a>
+      <a href="/marketplace.html">Trader Marketplace</a>
     </div>
     <p class="foot-legal">
       SKLZ Labs provides trading software and analytical tools only. SKLZ Labs is not a broker, is not a financial adviser, and does not manage client funds or accounts. Nothing on this site is financial, investment, or trading advice, or a solicitation to buy or sell any instrument. Automated and manual trading carries a high level of risk and can result in the loss of some or all of your capital; only trade with money you can afford to lose. Any performance figures shown are illustrative or hypothetical unless explicitly marked as a verified live track record, and past performance does not guarantee future results. You are solely responsible for your own trading decisions and for complying with the laws and regulations of your jurisdiction.
@@ -648,44 +715,10 @@
   const io = new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  // Sparkline (illustrative equity path — clearly demo)
-  (function(){
-    const svg=document.getElementById('spark');let pts=[],eq=0,x=0;
-    const w=400,h=150,n=60;let rng=42;
-    const rnd=()=>{rng=(rng*1103515245+12345)&0x7fffffff;return rng/0x7fffffff-.5};
-    for(let i=0;i<n;i++){eq+=rnd()*6+0.6;pts.push(eq)}
-    const min=Math.min(...pts),max=Math.max(...pts),rg=(max-min)||1;
-    const path=pts.map((p,i)=>`${i?'L':'M'}${(i/(n-1))*w},${h-((p-min)/rg)*(h-16)-8}`).join(' ');
-    const area=path+`L${w},${h}L0,${h}Z`;
-    svg.innerHTML=`
-      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#F5A623" stop-opacity=".28"/>
-        <stop offset="1" stop-color="#F5A623" stop-opacity="0"/></linearGradient></defs>
-      <path d="${area}" fill="url(#g)"/>
-      <path d="${path}" fill="none" stroke="#F5A623" stroke-width="2"/>`;
-  })();
-
-  // Animated log
-  const logs=[
-    ['09:14:02','SYS','runner started · trend_ema · XAUUSD · M15',''],
-    ['09:16:31','SIG','signal buy — EMA cross, close above fast','win'],
-    ['09:16:31','RSK','approved · vol 0.12 · risk 0.5%',''],
-    ['09:16:32','ORD','entry ok · buy 0.12 XAUUSD @ 2404.35','win'],
-    ['09:41:08','POS','breakeven → SL moved to entry',''],
-    ['10:03:55','ORD','take-profit hit · +$38.40','win'],
-    ['10:22:17','RSK','blocked · spread too wide (68 > 60)','warn'],
-  ];
-  const logEl=document.getElementById('log');let li=0;
-  function pushLog(){
-    if(li>=logs.length){setTimeout(()=>{logEl.innerHTML='';li=0;pushLog()},4200);return}
-    const [t,lv,msg,cls]=logs[li++];
-    const row=document.createElement('div');
-    row.className='log-line '+cls;
-    row.innerHTML=`<span class="t">${t}</span><span class="lv">${lv}</span><span>${msg}</span>`;
-    logEl.appendChild(row);
-    setTimeout(pushLog,900);
-  }
-  pushLog();
+  // The terminal panel is filled ONLY by /api/public/live-stats below.
+  // There is deliberately no illustrative sparkline and no scripted log:
+  // a page that says "we tell you the truth" cannot animate a fake
+  // take-profit while the real account sits at zero trades.
 
   // Waitlist (front-end stub — wire to backend later)
   const API_BASE = "https://api.sklzlabs.com";  // set to your API domain
@@ -778,7 +811,9 @@
     }
     function log(lines){
       var el=document.getElementById('log'); if(!el) return;
-      el.innerHTML=lines.map(function(l){return '<div class="ln">'+l+'</div>';}).join('');
+      el.innerHTML=lines.map(function(l){
+        var cls=/class="head"/.test(l)?' head':/class="dim"/.test(l)&&l.indexOf('<span class="dim">')===0?' dim':'';
+        return '<div class="ln'+cls+'">'+l+'</div>';}).join('');
     }
     function pull(){
     fetch(API+'/api/public/live-stats').then(function(r){return r.json();}).then(function(d){
@@ -789,13 +824,27 @@
       }
       var acc=d.account||{};
       if(t)t.textContent='sklz-bot-runner — '+(acc.label||'live')+' · '+d.date;
-      set('mode', acc.mode||'DEMO', 'neu');
+      set('mode', acc.mode||'DEMO', (acc.kind==='live'||acc.kind==='prop')?'pos':'neu');
+      var w=d.window||null, cap=document.getElementById('spark-cap');
+      function windowLines(){
+        if(!w||!w.trades) return ['<span class="dim">No closed trades in the last 30 days.</span>'];
+        return ['<span class="head">Last '+w.days+' days · '+w.trades+' trades</span>',
+          '<span class="'+(w.net_pnl>=0?'pos':'neg')+'">net '+money(w.net_pnl)+'</span>  ·  '+
+            w.wins+' win / '+w.losses+' loss  ·  '+Math.round((w.win_rate||0)*100)+'%',
+          'avg win '+money(w.avg_win)+'   avg loss '+money(w.avg_loss)+
+            (w.profit_factor!=null?('   PF '+w.profit_factor):''),
+          'max drawdown  -$'+(w.max_drawdown||0).toFixed(2)+'  ·  '+w.trading_days+' trading days'];
+      }
       if(!d.has_trades_today){
         set('pl','—','neu'); set('ntrades','0','neu');
         log(['<span class="dim">'+(d.message||'No trades closed yet today.')+'</span>',
-             '<span class="dim">'+(acc.platform||'')+' '+(acc.broker||'')+'</span>']);
-        drawCurve([]); return;
+             '<span class="dim">'+(acc.platform||'')+' '+(acc.broker||'')+(acc.account_no?' · #'+acc.account_no:'')+'</span>']
+            .concat(windowLines())
+            .concat(['<span class="dim">'+(d.disclaimer||'')+'</span>']));
+        if(cap) cap.textContent = (w&&w.trades) ? 'Last 30 days · cumulative' : '';
+        drawCurve((w&&w.trades)?w.curve:[]); return;
       }
+      if(cap) cap.textContent='Today · running P/L';
       set('pl', money(d.net_pnl), d.net_pnl>=0?'pos':'neg');
       set('ntrades', String(d.trades), 'neu');
       drawCurve(d.curve||[]);
@@ -806,9 +855,8 @@
           Math.round((d.win_rate||0)*100)+'% today',
         'best '+money(d.best)+'   worst '+money(d.worst),
         'max drawdown today  -$'+(d.max_drawdown||0).toFixed(2),
-        lt.symbol?('last: '+String(lt.side||'').toUpperCase()+' '+lt.symbol+'  '+money(lt.pnl)):'',
-        '<span class="dim">'+(d.disclaimer||'')+'</span>'
-      ].filter(Boolean));
+        lt.symbol?('last: '+String(lt.side||'').toUpperCase()+' '+lt.symbol+'  '+money(lt.pnl)):''
+      ].concat(windowLines()).concat(['<span class="dim">'+(d.disclaimer||'')+'</span>']).filter(Boolean));
     }).catch(function(){
       log(['<span class="dim">Live stats unavailable right now.</span>']);
     });
