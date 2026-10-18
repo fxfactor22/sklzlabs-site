@@ -119,6 +119,8 @@
     const pnlCol=v=>(v>=0?'var(--green)':'var(--red)');
     const monthly=(d.monthly||[]).slice().reverse();
     const bySymbol=dictRows(an.by_symbol), bySetup=dictRows(an.by_setup), bySession=dictRows(an.by_session);
+    const srcName={bot:'Engine (automatic)',dashboard:'Manual / dashboard orders',manual:'Manually logged'};
+    const bySource=dictRows(an.by_source).map(r=>Object.assign({},r,{name:srcName[r.name]||r.name}));
     const statCols=[{h:'',f:r=>esc(r.name)},{h:'Trades',right:1,f:r=>(r.trades??r.n)??'—'},{h:'Win',right:1,f:r=>r.win_rate!=null?pct(r.win_rate):'—'},{h:'P/L',right:1,f:r=>money(r.pnl||0),color:r=>pnlCol(r.pnl||0)}];
     document.getElementById('wrap').innerHTML=
       '<div class="top"><div class="brand"><a href="/"><img src="/sklz-logo.png" alt="SKLZ Labs"/></a>SKLZ Labs · Track record</div>'+
@@ -153,6 +155,7 @@
       '<div class="card"><h2>Month by month</h2>'+table(monthly,[
         {h:'Month',f:r=>esc(r.month)},{h:'Trades',right:1,f:r=>r.trades},{h:'W / L',right:1,f:r=>r.wins+' / '+r.losses},
         {h:'Win',right:1,f:r=>r.trades?pct(r.wins/r.trades):'—'},{h:'P/L',right:1,f:r=>money(r.pnl),color:r=>pnlCol(r.pnl)}])+'</div>'+
+      (bySource.length>1?'<div class="card"><h2>Engine vs manual — who placed the trade</h2>'+table(bySource,statCols)+'<div style="margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--dim)">Both are counted in every number above. The engine\'s own record is the first row; dashboard orders are trades a human placed on the same account.</div></div>':'')+
       '<div class="card"><h2>By instrument</h2>'+table(bySymbol,statCols)+'</div>'+
       (bySetup.length?'<div class="card"><h2>By setup / model</h2>'+table(bySetup,statCols)+
         ((an.coin_flip_setups||[]).length?'<div style="margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--gold)">Flagged as coin-flip (win rate and profit factor where randomness lives): '+an.coin_flip_setups.map(x=>esc(x.setup||x)).join(', ')+'</div>':'')+'</div>':'')+
