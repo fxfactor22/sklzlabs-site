@@ -104,7 +104,7 @@
       rows.map(r=>'<tr>'+cols.map(c=>{const v=c.f(r);const col=c.color?c.color(r):'';return '<td style="text-align:'+(c.right?'right':'left')+';padding:6px 8px;border-bottom:1px solid var(--line);color:'+(col||'var(--ink)')+'">'+v+'</td>'}).join('')+'</tr>').join('')+
       '</tbody></table></div>';
   }
-  function dictRows(obj){return Object.entries(obj||{}).map(([k,v])=>Object.assign({name:k},v)).sort((a,b)=>(b.trades||0)-(a.trades||0))}
+  function dictRows(obj){return Object.entries(obj||{}).filter(([k])=>k!=='—').map(([k,v])=>Object.assign({name:k},v)).sort((a,b)=>((b.trades??b.n)||0)-((a.trades??a.n)||0))}
   function render(d){
     const a=d.account||{},an=d.analytics||{},m=d.metrics||{},rt=d.rating||null;
     const kind=(a.kind||'demo').toLowerCase();
@@ -119,7 +119,7 @@
     const pnlCol=v=>(v>=0?'var(--green)':'var(--red)');
     const monthly=(d.monthly||[]).slice().reverse();
     const bySymbol=dictRows(an.by_symbol), bySetup=dictRows(an.by_setup), bySession=dictRows(an.by_session);
-    const statCols=[{h:'',f:r=>esc(r.name)},{h:'Trades',right:1,f:r=>r.trades??'—'},{h:'Win',right:1,f:r=>r.win_rate!=null?pct(r.win_rate):'—'},{h:'P/L',right:1,f:r=>money(r.pnl||0),color:r=>pnlCol(r.pnl||0)}];
+    const statCols=[{h:'',f:r=>esc(r.name)},{h:'Trades',right:1,f:r=>(r.trades??r.n)??'—'},{h:'Win',right:1,f:r=>r.win_rate!=null?pct(r.win_rate):'—'},{h:'P/L',right:1,f:r=>money(r.pnl||0),color:r=>pnlCol(r.pnl||0)}];
     document.getElementById('wrap').innerHTML=
       '<div class="top"><div class="brand"><a href="/"><img src="/sklz-logo.png" alt="SKLZ Labs"/></a>SKLZ Labs · Track record</div>'+
         '<span class="badge '+(live?'live':kind)+'">'+esc(a.mode||a.kind||'demo')+'</span></div>'+
