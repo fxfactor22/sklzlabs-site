@@ -60,7 +60,7 @@
 </head>
 <body>
 <div class="shell">
-  <aside class="side"></aside>
+  <aside class="side" data-nav></aside>
   <main class="main">
     <div class="crumb">
       <div><h1 id="hello">Good day</h1><div class="sub" id="sub">Your cockpit — the engine, your copy, your journal, the latest signals.</div></div>
@@ -69,8 +69,8 @@
 
     <div class="g12">
       <!-- ENGINE -->
-      <section class="sk-card hi c8">
-        <div class="sk-h"><h3>SKLZ Engine</h3><a href="/bot.html">Open the live monitor →</a></div>
+      <section class="sk-card sk-art c8" style="background-image:url(/media/art-engine.jpg)">
+        <div class="sk-h"><div><div class="eyebrow">Trade · the engine</div><h2 style="margin:4px 0 0">SKLZ Engine</h2></div><a href="/bot.html">Open the live monitor →</a></div>
         <div class="eng-top">
           <span class="sk-pill" id="eng-pill"><i></i><span>connecting…</span></span>
           <span class="note" id="eng-meta" style="margin:0"></span>
@@ -105,7 +105,7 @@
       </section>
 
       <!-- LEARN -->
-      <section class="sk-card c4">
+      <section class="sk-card sk-art c4" style="background-image:url(/media/art-learn.jpg)">
         <div class="sk-h"><h3>This week in the Academy</h3><a href="/academy.html">Academy →</a></div>
         <div id="ac-body"><div class="sk-empty">Loading…</div></div>
       </section>
@@ -116,15 +116,12 @@
         <div id="pt-body"><div class="sk-empty">Loading…</div></div>
       </section>
 
-      <!-- QUICK -->
-      <section class="sk-card c4">
-        <div class="sk-h"><h3>Quick tools</h3></div>
-        <div class="quick">
-          <a class="q" href="/tradegpt.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><b>TradeGPT</b><span>Analyse a chart</span></a>
-          <a class="q" href="/lotcalc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></svg><b>Lot size</b><span>Risk-exact sizing</span></a>
-          <a class="q" href="/scanner.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M2.29 9.62a10 10 0 1 0 19.02-1.27M16.24 7.76A6 6 0 1 0 8.23 16.67"/></svg><b>Scanner</b><span>Crypto setups</span></a>
-          <a class="q" href="/indicators.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-6 4 3 5-7"/></svg><b>Indicators</b><span>TradingView access</span></a>
-        </div>
+      <!-- DIRECTIONS -->
+      <section class="c4" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <a class="sk-tile" href="/bot.html" style="background-image:url(/media/art-engine.jpg)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span><b>Trade</b><span>Engine · copy · signals</span></a>
+        <a class="sk-tile" href="/tradegpt.html" style="background-image:url(/media/art-copy.jpg)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><b>Tools</b><span>TradeGPT · journal · scanner</span></a>
+        <a class="sk-tile" href="/academy.html" style="background-image:url(/media/art-learn.jpg)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Learn</b><span>Academy · weekly review</span></a>
+        <a class="sk-tile" href="/partner.html" style="background-image:url(/media/art-partner.jpg)"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><b>Partner</b><span>50% recurring · links</span></a>
       </section>
     </div>
   </main>

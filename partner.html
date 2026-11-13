@@ -55,7 +55,7 @@
 </head>
 <body>
 <div class="shell">
-  <aside class="side"></aside>
+  <aside class="side" data-nav></aside>
   <main class="main">
     <div class="crumb">
       <div><h1>Partner dashboard</h1><div class="sub">50% recurring on every membership you bring. No ranks to buy, no packages, no recruiting requirements.</div></div>
@@ -115,8 +115,8 @@
 
     document.getElementById('content').innerHTML=
       '<div class="g12">'+
-      '<section class="sk-card hero c12">'+
-        '<div class="sk-k">Your level</div><div class="lvl">'+esc(lvl.name)+'<small>'+(lvl.next?lvl.to_next+' more active customer'+(lvl.to_next===1?'':'s')+' → '+esc(lvl.next):'top level')+'</small></div>'+
+      '<section class="sk-card sk-art hero c12" style="background-image:url(/media/art-partner.jpg)">'+
+        '<div class="eyebrow">Partner · your level</div><div class="lvl">'+esc(lvl.name)+'<small>'+(lvl.next?lvl.to_next+' more active customer'+(lvl.to_next===1?'':'s')+' → '+esc(lvl.next):'top level')+'</small></div>'+
         '<div class="sk-bar" style="margin-top:10px;max-width:420px"><i style="width:'+prog+'%"></i></div>'+
         '<div class="sk-timeline">'+tl+'</div>'+
         '<div class="kpis">'+
