@@ -5,7 +5,7 @@
  * static shell (logo, icons, manifest, i18n, mobile css) is cached, and the
  * offline fallback is a plain page that says so. Bump VERSION to invalidate.
  */
-const VERSION = 'sklz-shell-v1';
+const VERSION = 'sklz-shell-v2';
 const SHELL = ['/sklz-logo.png', '/icons/icon-192.png', '/icons/icon-512.png',
                '/manifest.json', '/sklz-i18n.js', '/sklz-mobile.css', '/sklz-mobile.js', '/offline.html'];
 

@@ -9,17 +9,19 @@
 <meta name="description" content="AI-assisted trading software with a public track record: MT5 bot, copy trading on your own account, TradingView indicators, signals, an honest journal. Software only — we never hold your funds."/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SKLZ Labs"/>
-<meta property="og:title" content="SKLZ Labs — Trading systems, engineered"/>
+<meta property="og:title" content="SKLZ Labs — Trading tools that show their work"/>
 <meta property="og:description" content="AI-assisted trading software with a public track record: MT5 bot, copy trading on your own account, TradingView indicators, signals, an honest journal. Software only — we never hold your funds."/>
 <meta property="og:url" content="https://www.sklzlabs.com/"/>
-<meta property="og:image" content="https://www.sklzlabs.com/media/og-card.png"/>
+<meta property="og:image" content="https://www.sklzlabs.com/media/og-card.png?v=2"/>
 <meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="SKLZ Labs — Trading systems, engineered"/>
+<meta name="twitter:title" content="SKLZ Labs — Trading tools that show their work"/>
 <meta name="twitter:description" content="AI-assisted trading software with a public track record: MT5 bot, copy trading on your own account, TradingView indicators, signals, an honest journal. Software only — we never hold your funds."/>
-<meta name="twitter:image" content="https://www.sklzlabs.com/media/og-card.png"/>
-<meta name="theme-color" content="#080A0F"/>
+<meta name="twitter:image" content="https://www.sklzlabs.com/media/og-card.png?v=2"/>
+<meta name="theme-color" content="#070A10"/>
 <link rel="manifest" href="/manifest.json"/>
+<link rel="icon" href="/favicon.ico" sizes="32x32"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -32,730 +34,514 @@
  {"@type":"SoftwareApplication","name":"SKLZ Labs","applicationCategory":"FinanceApplication","operatingSystem":"Web, Windows (MetaTrader 5)","url":"https://www.sklzlabs.com/","offers":[{"@type":"Offer","name":"SKLZ Core","price":"29","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Plus","price":"49","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Pro","price":"79","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"}]}
 ]}
 </script>
-
-<title>SKLZ Labs — Trading systems, engineered</title>
+<title>SKLZ Labs — Trading tools that show their work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#080A0F; --panel:#0F131C; --panel-2:#141A26; --line:#1E2735;
-    --ink:#EAEEF6; --muted:#8B94A8; --dim:#5B6377;
-    --gold:#F5A623; --gold-2:#FFC24B;
-    --blue:#1DA9E0; --blue-2:#3BC4F2;
-    --acc:#F5A623;          /* primary accent = gold */
-    --acc-2:#1DA9E0;        /* secondary = blue */
-    --warn:#F5A623;
-    --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
-    --sans:'Inter','SF Pro Text',-apple-system,system-ui,sans-serif;
-    --maxw:1160px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--bg);color:var(--ink);font-family:var(--sans);
-    line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;
-  }
-  ::selection{background:var(--acc);color:#04120D}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
-  .mono{font-family:var(--mono)}
-  .tnum{font-variant-numeric:tabular-nums}
+:root{--bg:#070A10;--bg2:#0A0E16;--panel:#0D1320;--panel2:#111827;--line:#1B2333;--line2:#243049;
+--ink:#E8EDF5;--muted:#9AA4B6;--dim:#6B7483;--amber:#FFB020;--coral:#FF7A3D;--cyan:#22E0FF;--green:#34D399;--red:#FB7185;
+--grad:linear-gradient(100deg,#FFB020,#FF7A3D 48%,#22E0FF);--mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',system-ui,sans-serif;--disp:'Sora',var(--sans);
+--gold:#FFB020;--gold-2:#FF7A3D;--blue:#22E0FF;--acc:#22E0FF;--r:18px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;overflow-x:hidden}
+a{color:inherit;text-decoration:none}img,svg,video{display:block;max-width:100%}
+.wrap{width:min(1180px,calc(100% - 40px));margin:0 auto}
+h1,h2,h3,.disp{font-family:var(--disp);letter-spacing:-.03em;line-height:1.05;margin:0}
+h2{font-size:clamp(30px,4.2vw,46px);font-weight:700}h3{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:10px}
+.kicker:before{content:"";width:22px;height:1px;background:var(--amber)}
+.g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:14px 24px;font-weight:600;font-size:15px;border:1px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--grad);color:#06090F;box-shadow:0 8px 30px rgba(255,140,40,.25)}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--line2);color:var(--ink);backdrop-filter:blur(8px)}
+.btn-ghost:hover{background:rgba(255,255,255,.08)}
+.tnum{font-variant-numeric:tabular-nums}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
-  /* ---- ambient grid backdrop ---- */
-  .grid-bg{
-    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-    background-image:
-      linear-gradient(var(--line) 1px,transparent 1px),
-      linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size:52px 52px;
-    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%);
-    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%);
-  }
-  .content{position:relative;z-index:1}
+/* ─── NAV ─── */
+.nav{position:fixed;top:14px;left:0;right:0;z-index:1000;pointer-events:none}
+.nav-pill{pointer-events:auto;width:min(1180px,calc(100% - 24px));margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+ background:rgba(10,14,22,.72);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:8px 10px 8px 16px;backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+ box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:800;font-size:21px;letter-spacing:-.05em}
+.brand svg{width:30px;height:30px}
+.brand small{font-family:var(--sans);font-weight:300;font-size:10px;letter-spacing:.36em;color:var(--muted);margin-left:2px;align-self:flex-end;padding-bottom:4px}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links>a,.nav-links>.dd>button{font:500 14px/1 var(--sans);color:#C9D1DE;padding:10px 14px;border-radius:999px;background:none;border:0;cursor:pointer;display:flex;align-items:center;gap:6px}
+.nav-links>a:hover,.nav-links>.dd>button:hover{background:rgba(255,255,255,.06);color:#fff}
+.dd{position:relative}
+.dd-panel{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(6px);width:680px;background:rgba(13,19,32,.96);border:1px solid var(--line2);border-radius:20px;padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;opacity:0;visibility:hidden;transition:.18s;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.dd:hover .dd-panel,.dd.open .dd-panel,.dd:focus-within .dd-panel{opacity:1;visibility:visible;transform:translateX(-50%)}
+.dd-item{display:flex;gap:12px;padding:12px;border-radius:14px;align-items:flex-start}
+.dd-item:hover{background:rgba(255,255,255,.05)}
+.dd-item .ic{width:36px;height:36px;border-radius:10px;background:rgba(34,224,255,.08);border:1px solid rgba(34,224,255,.18);display:grid;place-items:center;flex:none;color:var(--cyan)}
+.dd-item .ic svg{width:18px;height:18px}
+.dd-item b{display:block;font-weight:600;font-size:14px;color:#fff}
+.dd-item span{font-size:12px;color:var(--muted);line-height:1.4}
+.nav-right{display:flex;align-items:center;gap:6px}
+.nav-login{font:500 14px/1 var(--sans);color:#C9D1DE;padding:10px 14px;border-radius:999px}
+.nav-login:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-cta{background:var(--grad);color:#06090F;font-weight:700;font-size:13.5px;padding:11px 18px;border-radius:999px;white-space:nowrap}
+#sklz-lang{margin-left:6px}
+.burger{display:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);background:none;color:#fff;place-items:center;cursor:pointer}
+.sheet{display:none;position:fixed;inset:0;z-index:999;background:rgba(7,10,16,.96);backdrop-filter:blur(20px);padding:92px 24px 24px;overflow:auto}
+.sheet.open{display:block}
+.sheet a{display:block;font:600 22px/1.2 var(--disp);letter-spacing:-.02em;padding:14px 0;border-bottom:1px solid var(--line)}
+.sheet .sub a{font:500 16px/1.3 var(--sans);color:var(--muted);padding:10px 0 10px 14px;border:0}
+.sheet .sheet-cta{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+@media(max-width:960px){.nav-links,.nav-login,.nav-right #sklz-lang{display:none!important}.burger{display:grid}.nav-pill{padding:8px 10px 8px 14px}}
+.sheet .langs{display:flex;gap:8px;margin-top:18px}.sheet .langs button{font:600 13px var(--mono);background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--muted);border-radius:999px;padding:8px 14px;cursor:pointer}
 
-  /* ---- nav ---- */
-  nav{
-    position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);
-    background:rgba(7,9,13,.72);border-bottom:1px solid var(--line);
-  }
-  .nav-in{display:flex;align-items:center;justify-content:space-between;height:84px}
-  .brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:.02em}
-  .brand .mark{
-    width:26px;height:26px;border:1.5px solid var(--acc);border-radius:6px;
-    display:grid;place-items:center;position:relative;
-  }
-  .logo-img{height:78px;width:auto;display:block}
-  .brand .mark::before{content:"";width:8px;height:8px;background:var(--acc);
-    border-radius:2px;box-shadow:0 0 12px var(--acc)}
-  .nav-links{display:flex;gap:30px;align-items:center}
-  .nav{position:relative}
-  .nav-links a{font-size:14px;color:var(--muted);transition:color .2s}
-  .nav-links a:hover{color:var(--ink)}
-  .nav-cta{
-    font-family:var(--mono);font-size:13px;padding:9px 16px;border:1px solid var(--line);
-    border-radius:8px;color:var(--ink);transition:all .2s;background:var(--panel)
-  }
-  .nav-cta:hover{border-color:var(--acc);color:var(--acc)}
-  .lnav-btn{display:none;width:40px;height:40px;border-radius:9px;cursor:pointer;
-    background:#0F131C;border:1px solid #1E2735;color:#EAEEF6;
-    align-items:center;justify-content:center;font-size:17px;margin-left:auto}
-  @media(max-width:760px){
-    .lnav-btn{display:flex !important}
-    .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;
-      align-items:stretch;gap:0;background:#0F131C;border-bottom:1px solid #1E2735;
-      padding:8px 0;display:none;box-shadow:0 18px 40px rgba(0,0,0,.5)}
-    .nav-links.open{display:flex !important}
-    .nav-links a{padding:13px 22px;font-size:15px}
-    .nav-links a.nav-cta{margin:8px 22px 4px;text-align:center}
-  }
+/* ─── HERO ─── */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:#05070C}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.6s ease}
+.hero video.on{opacity:.9}
+.hero .veil{position:absolute;inset:0;background:
+ linear-gradient(180deg,rgba(7,10,16,.55) 0%,rgba(7,10,16,.15) 35%,rgba(7,10,16,.55) 75%,var(--bg) 100%),
+ radial-gradient(70% 60% at 20% 55%,rgba(7,10,16,.75),transparent 70%)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55;mix-blend-mode:screen}
+.hero .wrap{position:relative;z-index:2;padding:140px 0 70px;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(44px,6.4vw,84px);font-weight:800;letter-spacing:-.045em;line-height:.98;max-width:12ch}
+.hero .lead{font-size:clamp(17px,1.5vw,20px);color:#C9D1DE;max-width:44ch;margin:24px 0 30px;line-height:1.55}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero .chip{margin-top:28px;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.04em}
+.hero .chip i{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber)}
 
+/* live engine panel */
+.live{background:rgba(13,19,32,.62);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px 22px 18px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 30px 80px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.live:before{content:"";position:absolute;inset:-1px;border-radius:22px;padding:1px;background:linear-gradient(135deg,rgba(255,176,32,.35),transparent 40%,transparent 60%,rgba(34,224,255,.35));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.live-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.live-title{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pulse{width:9px;height:9px;border-radius:50%;background:var(--dim);position:relative}
+.pulse.on{background:var(--green)}.pulse.on:after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--green);animation:ring 1.8s ease-out infinite;opacity:.7}
+@keyframes ring{0%{transform:scale(.5);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.live-link{font-family:var(--mono);font-size:11.5px;color:var(--cyan)}
+.live-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.lk{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 12px 10px}
+.lk .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.lk .v{font-family:var(--disp);font-size:26px;font-weight:700;letter-spacing:-.03em;margin-top:4px;color:#fff}
+.lk .v small{font-size:12px;color:var(--muted);font-weight:500;margin-left:4px;font-family:var(--sans)}
+.live-foot{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.live-foot b{color:#fff;font-weight:600}
+.live-strip{margin-top:12px;height:34px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.05);overflow:hidden;position:relative}
+.live-strip svg{width:100%;height:100%}
+@media(max-width:960px){.hero .wrap{grid-template-columns:1fr;padding-top:120px}.hero h1{max-width:none}.live-grid{grid-template-columns:repeat(2,1fr)}}
 
-  /* ---- hero ---- */
-  .hero{padding:96px 0 72px;position:relative;overflow:hidden}
-  #hero-fx{position:absolute;inset:0;width:100%;height:100%;
-    pointer-events:none;opacity:.5;z-index:0}
-  #hero-vid{position:absolute;inset:0;width:100%;height:100%;
-    object-fit:cover;pointer-events:none;opacity:0;z-index:0;
-    transition:opacity 1.2s ease}
-  #hero-vid.on{opacity:.42}
-  /* a wash over the video so text never fights the bright lattice */
-  .hero:after{content:"";position:absolute;inset:0;z-index:0;
-    pointer-events:none;
-    background:linear-gradient(90deg,rgba(8,10,15,.94) 0%,
-      rgba(8,10,15,.72) 42%,rgba(8,10,15,.30) 100%)}
-  .hero .wrap{position:relative;z-index:1}
-
-  /* the gold rule under the headline draws itself once, then rests */
-  h1 .g{position:relative}
-  h1 .g:after{content:"";position:absolute;left:0;bottom:-6px;height:2px;
-    width:0;background:linear-gradient(90deg,var(--gold),transparent);
-    animation:draw 1.5s cubic-bezier(.2,.7,.3,1) .6s forwards}
-  @keyframes draw{to{width:100%}}
-
-  /* the disclaimer dot breathes rather than blinks — a blinking dot on a
-     risk warning reads as an alarm, which is not the tone */
-  .disclaimer-chip .dot{animation:breathe 3.4s ease-in-out infinite}
-  @keyframes breathe{0%,100%{opacity:.45;transform:scale(1)}
-    50%{opacity:1;transform:scale(1.25)}}
-
-  /* cards lift on hover — restrained, 2px */
-  .card,.pcard{transition:transform .35s cubic-bezier(.2,.7,.3,1),
-    border-color .35s ease}
-  .card:hover,.pcard:hover{transform:translateY(-2px);
-    border-color:rgba(245,166,35,.3)}
-
-  @media(prefers-reduced-motion:reduce){
-    #hero-fx{display:none}
-    h1 .g:after{animation:none;width:100%}
-    .disclaimer-chip .dot{animation:none}
-    .card:hover,.pcard:hover{transform:none}
-  }
-  .eyebrow{
-    font-family:var(--mono);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--acc);margin-bottom:22px;display:flex;align-items:center;gap:10px
-  }
-  .eyebrow::before{content:"";width:26px;height:1px;background:var(--acc)}
-  h1{
-    font-size:clamp(38px,6.4vw,74px);line-height:1.02;letter-spacing:-.03em;
-    font-weight:800;max-width:15ch
-  }
-  h1 .g{
-    background:linear-gradient(100deg,var(--gold),var(--blue));
-    -webkit-background-clip:text;background-clip:text;color:transparent
-  }
-  .sub{
-    margin-top:26px;font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:56ch
-  }
-  .hero-cta{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap}
-  .btn{
-    font-family:var(--mono);font-size:14px;padding:13px 22px;border-radius:9px;
-    cursor:pointer;border:1px solid transparent;transition:all .2s;display:inline-flex;
-    align-items:center;gap:9px
-  }
-  .btn-primary{background:var(--acc);color:#04120D;font-weight:600}
-  .btn-primary:hover{box-shadow:0 0 0 3px rgba(61,225,180,.22);transform:translateY(-1px)}
-  .btn-ghost{background:var(--panel);border-color:var(--line);color:var(--ink)}
-  .btn-ghost:hover{border-color:var(--muted)}
-
-  .disclaimer-chip{
-    margin-top:34px;display:inline-flex;align-items:center;gap:9px;font-size:12.5px;
-    color:var(--dim);font-family:var(--mono);border:1px solid var(--line);
-    padding:7px 13px;border-radius:20px;background:var(--panel)
-  }
-  .dot{width:6px;height:6px;border-radius:50%;background:var(--warn)}
-
-  /* ---- terminal mock signature ---- */
-  .term{
-    margin-top:64px;border:1px solid var(--line);border-radius:14px;overflow:hidden;
-    background:linear-gradient(180deg,var(--panel),var(--bg));
-    box-shadow:0 40px 80px -40px rgba(0,0,0,.8)
-  }
-  .term-bar{
-    display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);
-    background:var(--panel-2)
-  }
-  .term-bar i{width:11px;height:11px;border-radius:50%;display:inline-block}
-  .term-bar i:nth-child(1){background:#F2685E}.term-bar i:nth-child(2){background:var(--warn)}
-  .term-bar i:nth-child(3){background:var(--acc)}
-  .term-bar span{margin-left:12px;font-family:var(--mono);font-size:12px;color:var(--dim)}
-  .term-bar{display:flex;align-items:center}
-  .term-link{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--acc);opacity:.85}
-  .term-link:hover{opacity:1;text-decoration:underline}
-  .chart .cap{position:absolute;right:6px;top:2px;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
-  .term-log .ln{padding:4px 0;color:var(--muted)}
-  .term-log .ln.dim,.term-log .dim{color:var(--dim)}
-  .term-log .ln.pos{color:#34D399}.term-log .ln.neg{color:#F87171}
-  .term-log .ln.head{color:var(--ink);font-weight:600;margin-top:6px}
-  .term-body{display:grid;grid-template-columns:1.3fr 1fr;min-height:340px}
-  @media(max-width:760px){.term-body{grid-template-columns:1fr}}
-  .term-left{padding:22px;border-right:1px solid var(--line)}
-  @media(max-width:760px){.term-left{border-right:none;border-bottom:1px solid var(--line)}}
-  @media(max-width:760px){
-    .cards{grid-template-columns:repeat(3,1fr);gap:8px}
-    .stat{padding:10px}
-    .stat .k{font-size:9px;letter-spacing:.06em}
-    .stat .v{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .term-bar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
-    .term-link{white-space:nowrap;margin-left:8px}
-    .term-log{font-size:11px;padding:16px}
-  }
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .stat{border:1px solid var(--line);border-radius:9px;padding:13px;background:var(--panel)}
-  .stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
-  .stat .v{font-family:var(--mono);font-size:20px;font-weight:600;margin-top:6px}
-  .v.pos{color:var(--acc)} .v.neu{color:var(--ink)}
-  .chart{margin-top:16px;height:150px;position:relative}
-  .term-log{padding:22px;font-family:var(--mono);font-size:12px}
-  .log-line{display:flex;gap:9px;padding:5px 0;color:var(--muted);opacity:0;animation:fade .5s forwards}
-  .log-line .t{color:var(--dim)}
-  .log-line .lv{color:var(--acc-2)}
-  .log-line.win .lv{color:var(--acc)}
-  .log-line.warn .lv{color:var(--warn)}
-  @keyframes fade{to{opacity:1}}
-
-  /* ---- section scaffold ---- */
-  section{padding:88px 0;position:relative}
-  .sec-head{max-width:60ch;margin-bottom:52px}
-  .sec-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc-2);margin-bottom:16px}
-  h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;line-height:1.08;font-weight:750}
-  .sec-sub{margin-top:16px;color:var(--muted);font-size:17px}
-
-  /* ---- products ---- */
-  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  @media(max-width:900px){.prod-grid{grid-template-columns:1fr}}
-  .card{
-    border:1px solid var(--line);border-radius:13px;padding:26px;background:var(--panel);
-    transition:border-color .25s,transform .25s;position:relative;overflow:hidden
-  }
-  .card:hover{border-color:var(--acc);transform:translateY(-3px)}
-  .card .num{font-family:var(--mono);font-size:12px;color:var(--dim)}
-  .card h3{font-size:20px;margin:14px 0 10px;letter-spacing:-.01em}
-  .card p{color:var(--muted);font-size:14.5px}
-  .tag{
-    display:inline-block;font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:6px;
-    margin-top:18px;letter-spacing:.04em
-  }
-  .tag.live{background:rgba(61,225,180,.12);color:var(--acc);border:1px solid rgba(61,225,180,.3)}
-  .tag.soon{background:rgba(242,179,61,.1);color:var(--warn);border:1px solid rgba(242,179,61,.28)}
-  .card ul{list-style:none;margin-top:16px;display:grid;gap:7px}
-  .card ul li{font-size:13.5px;color:var(--muted);font-family:var(--mono);display:flex;gap:8px}
-  .card ul li::before{content:"→";color:var(--acc);opacity:.7}
-
-  /* ---- principles / trust ---- */
-  .principles{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  @media(max-width:760px){.principles{grid-template-columns:1fr}}
-  .principle{padding:32px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .principle:nth-child(2n){border-right:none}
-  .principle .pk{font-family:var(--mono);font-size:12px;color:var(--acc);letter-spacing:.1em}
-  .principle h4{font-size:18px;margin:12px 0 8px;font-weight:650}
-  .principle p{color:var(--muted);font-size:14.5px}
-
-  /* ---- copy strategy / waitlist ---- */
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
-  @media(max-width:860px){.split{grid-template-columns:1fr}}
-  .panel-lg{border:1px solid var(--line);border-radius:14px;padding:34px;background:var(--panel)}
-  .panel-lg.feature{background:linear-gradient(160deg,var(--panel-2),var(--panel));position:relative}
-  .flow{display:grid;gap:14px;margin-top:24px}
-  .flow-step{display:flex;gap:14px;align-items:flex-start}
-  .flow-step .n{
-    font-family:var(--mono);font-size:12px;width:26px;height:26px;border:1px solid var(--line);
-    border-radius:7px;display:grid;place-items:center;flex-shrink:0;color:var(--acc)
-  }
-  .flow-step p{font-size:14.5px;color:var(--muted)}
-  .flow-step b{color:var(--ink);font-weight:600}
-  .wait-form{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
-  .wait-form input{
-    flex:1;min-width:200px;background:var(--bg);border:1px solid var(--line);border-radius:9px;
-    padding:13px 15px;color:var(--ink);font-family:var(--mono);font-size:14px
-  }
-  .wait-form input:focus{outline:none;border-color:var(--acc)}
-  .wait-note{margin-top:14px;font-size:12.5px;color:var(--dim);font-family:var(--mono)}
-  #wait-ok{color:var(--acc);font-family:var(--mono);font-size:14px;margin-top:16px;display:none}
-
-  /* ---- affiliate strip ---- */
-  .aff{
-    border:1px solid var(--line);border-radius:14px;padding:36px;text-align:center;
-    background:radial-gradient(ellipse at 50% 0%,rgba(91,140,255,.08),transparent 70%),var(--panel)
-  }
-  .aff .big{font-family:var(--mono);font-size:clamp(40px,7vw,68px);font-weight:700;letter-spacing:-.03em;
-    background:linear-gradient(100deg,var(--gold),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
-
-  /* ---- footer ---- */
-  footer{border-top:1px solid var(--line);padding:52px 0 40px;margin-top:40px}
-  .foot-grid{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap}
-  .foot-legal{max-width:62ch;color:var(--dim);font-size:12.5px;line-height:1.7;margin-top:28px;
-    border-top:1px solid var(--line);padding-top:22px}
-  .foot-links{display:flex;gap:26px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
-  .foot-links a:hover{color:var(--ink)}
-
-  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s}
-  .reveal.in{opacity:1;transform:none}
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+/* ─── SECTIONS ─── */
+section{position:relative;padding:110px 0}
+.sec-head{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:end;margin-bottom:46px}
+.sec-head p{color:var(--muted);font-size:17px;margin:0;max-width:46ch}
+@media(max-width:800px){.sec-head{grid-template-columns:1fr}section{padding:80px 0}}
+/* vision */
+.vision{padding:90px 0 40px;text-align:center}
+.vision h2{font-size:clamp(34px,5.6vw,66px);font-weight:800;letter-spacing:-.045em}
+.vision p{color:var(--muted);font-size:clamp(17px,1.6vw,21px);max-width:58ch;margin:22px auto 0}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:54px;text-align:left}
+.pillar{padding:26px;border-radius:var(--r);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));border:1px solid var(--line);position:relative;overflow:hidden}
+.pillar:before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 100% 0%,rgba(34,224,255,.08),transparent 60%);pointer-events:none}
+.pillar .n{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.2em}
+.pillar h3{font-size:24px;margin:10px 0 8px;font-weight:700;letter-spacing:-.02em}
+.pillar p{margin:0;color:var(--muted);font-size:15px}
+@media(max-width:800px){.pillars{grid-template-columns:1fr}}
+/* products */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pc{position:relative;padding:26px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);min-height:210px;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+.pc:hover{transform:translateY(-3px);border-color:var(--line2)}
+.pc .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.2);color:var(--amber);margin-bottom:18px}
+.pc:nth-child(3n+2) .ic{background:rgba(34,224,255,.08);border-color:rgba(34,224,255,.22);color:var(--cyan)}
+.pc:nth-child(3n) .ic{background:rgba(255,122,61,.08);border-color:rgba(255,122,61,.22);color:var(--coral)}
+.pc .ic svg{width:22px;height:22px}
+.pc h3{font-size:19px}.pc p{color:var(--muted);font-size:14.5px;margin:8px 0 18px;flex:1}
+.pc .go{font-family:var(--mono);font-size:12px;color:var(--cyan)}
+.pc .st{position:absolute;top:22px;right:22px;font-family:var(--mono);font-size:10px;color:var(--green);display:flex;align-items:center;gap:6px}
+.pc .st:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+@media(max-width:960px){.pgrid{grid-template-columns:1fr 1fr}}@media(max-width:640px){.pgrid{grid-template-columns:1fr}}
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+.step{padding:28px 26px;border-radius:var(--r);border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+.step .num{font-family:var(--disp);font-size:46px;font-weight:800;letter-spacing:-.05em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.step h3{margin:14px 0 8px;font-size:20px}.step p{margin:0;color:var(--muted);font-size:15px}
+@media(max-width:800px){.steps{grid-template-columns:1fr}}
+.notdo{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
+.notdo span{font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px}
+.notdo span b{color:var(--red);font-weight:600;margin-right:6px}
+/* proof */
+.proof{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pcard{padding:28px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden}
+.pcard h3{font-size:22px}.pcard p{color:var(--muted);font-size:15px;margin:10px 0 20px}
+.pcard .big{font-family:var(--disp);font-size:clamp(34px,4vw,48px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.pcard .big small{font-size:14px;color:var(--muted);font-weight:500;letter-spacing:0;font-family:var(--sans);margin-left:8px}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.kv div{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kv .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.kv .v{font-family:var(--disp);font-size:22px;font-weight:700;margin-top:4px}
+.pos{color:var(--green)}.neg{color:var(--red)}
+@media(max-width:800px){.proof{grid-template-columns:1fr}}
+/* learn */
+.learn{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+.lc{padding:28px;border-radius:var(--r);border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
+.lc h3{font-size:22px}.lc p{color:var(--muted);font-size:15px;margin:10px 0 20px;flex:1}
+.lc.hi{background:linear-gradient(135deg,rgba(255,176,32,.12),rgba(34,224,255,.08)),var(--panel)}
+@media(max-width:800px){.learn{grid-template-columns:1fr}}
+/* pricing */
+#pricing .p-head{text-align:center;margin-bottom:40px}
+#pricing .p-head p{color:var(--muted);max-width:52ch;margin:14px auto 0;font-size:16px}
+.p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.p-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;position:relative}
+.p-card.hot{border-color:rgba(255,176,32,.6);box-shadow:0 20px 70px rgba(255,140,40,.12)}
+.p-pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;font-weight:700;background:var(--grad);color:#06090F;padding:5px 12px;border-radius:11px}
+.p-name{font-family:var(--disp);font-size:18px;font-weight:700}.p-desc{color:var(--muted);font-size:13.5px;margin-top:6px;min-height:40px}
+.p-price{margin:18px 0 2px;display:flex;align-items:baseline;gap:6px}
+.p-n{font-family:var(--disp);font-size:46px;font-weight:800;letter-spacing:-.04em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.p-u{font-family:var(--mono);font-size:12px;color:var(--muted)}.p-renew{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.p-card ul{margin:18px 0;padding:0;list-style:none;flex:1}
+.p-card li{font-size:13.5px;color:var(--muted);padding:5px 0 5px 22px;position:relative}
+.p-card li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.p-cta{display:block;text-align:center;background:var(--grad);color:#06090F;border:none;border-radius:999px;padding:13px;font-weight:700;font-size:14.5px;cursor:pointer;width:100%;font-family:var(--sans)}
+.p-cta.ghost{background:rgba(255,255,255,.04);color:var(--ink);border:1px solid var(--line2)}
+.p-fine{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:2}
+@media(max-width:920px){.p-grid{grid-template-columns:1fr}}
+/* faq */
+.faq{max-width:760px;margin:0 auto}
+details{border-bottom:1px solid var(--line);padding:18px 0}
+summary{cursor:pointer;list-style:none;font-family:var(--disp);font-weight:600;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+summary::-webkit-details-marker{display:none}summary:after{content:"+";font-weight:300;font-size:24px;color:var(--amber)}
+details[open] summary:after{content:"–"}details p{color:var(--muted);margin:10px 0 0;font-size:15px}
+/* cta band */
+.band{margin:0 auto;padding:70px 30px;border-radius:28px;text-align:center;background:radial-gradient(80% 120% at 50% 0%,rgba(34,224,255,.14),transparent 60%),radial-gradient(70% 100% at 10% 100%,rgba(255,176,32,.16),transparent 60%),var(--panel);border:1px solid var(--line2);position:relative;overflow:hidden}
+.band h2{font-size:clamp(30px,4.6vw,54px)}.band p{color:var(--muted);margin:14px auto 28px;max-width:46ch}
+/* footer */
+footer{padding:60px 0 40px;border-top:1px solid var(--line);background:var(--bg2)}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+.fgrid h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
+.fgrid a{display:block;color:var(--muted);font-size:14px;padding:5px 0}.fgrid a:hover{color:#fff}
+.fgrid .brand{margin-bottom:12px}.fgrid .tag{color:var(--muted);font-size:14px;max-width:30ch}
+.legal{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--dim);line-height:1.7}
+@media(max-width:800px){.fgrid{grid-template-columns:1fr 1fr}}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(70% 60% at 50% 40%,#000 30%,transparent 100%);mask-image:radial-gradient(70% 60% at 50% 40%,#000 30%,transparent 100%);pointer-events:none}
 </style>
 </head>
 <body>
-<div class="grid-bg"></div>
-<div class="content">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="sklz-g" gradientUnits="userSpaceOnUse" x1="78" y1="88" x2="22" y2="14"><stop offset="0" stop-color="#FFB020"/><stop offset=".55" stop-color="#FF7A3D"/><stop offset="1" stop-color="#22E0FF"/></linearGradient>
+<symbol id="sklz-mark" viewBox="0 0 100 100"><path d="M69.00,17.09 L70.84,18.18 L72.62,19.37 L74.33,20.66 L75.97,22.04 L77.53,23.52 L79.00,25.08 L80.39,26.73 L81.68,28.45 L82.87,30.25 L83.97,32.11 L84.95,34.03 L85.83,36.01 L86.60,38.03 L87.25,40.10 L87.79,42.20 L88.20,44.33 L88.50,46.48 L88.68,48.65 L88.73,50.83 L88.66,53.00 L88.47,55.18 L88.16,57.34 L87.72,59.48 L87.17,61.60 L86.49,63.68 L85.70,65.73 L84.79,67.73 L83.78,69.68 L82.65,71.56 L81.42,73.39 L80.08,75.14 L78.65,76.82 L77.12,78.42 L75.51,79.93 L73.81,81.34 L72.03,82.66 L70.18,83.88 L68.26,85.00 L66.28,86.01 L64.25,86.90 L62.16,87.68 L60.03,88.34 L57.87,88.88 L55.68,89.30 L53.46,89.60 L51.23,89.77 L49.00,89.82 L46.76,89.73 L44.52,89.53 L42.30,89.20 L40.10,88.74 L37.93,88.16 L35.79,87.46 L33.69,86.63 L31.64,85.69 L29.64,84.64 L27.71,83.47 L25.84,82.20 L24.04,80.82 L22.32,79.34 L20.69,77.76 L19.14,76.10 L17.70,74.34 L16.35,72.51 L15.10,70.60 L13.96,68.63 L12.94,66.59 L12.03,64.49 L11.24,62.35 L10.57,60.16 L10.02,57.93 L9.60,55.68 L9.30,53.40 L9.14,51.11 L9.10,48.81 L9.19,46.51 L9.42,44.22 L9.77,41.94 L10.25,39.68 L10.85,37.45 L11.58,35.25 L12.44,33.10 L13.41,31.00 L14.50,28.95 L15.71,26.97 L17.03,25.05 L18.45,23.22 L19.98,21.46 L21.61,19.79 L23.32,18.21 L18.50,12.46 L38.35,12.78 L35.22,32.38 L30.39,26.64 L29.09,27.75 L27.84,28.93 L26.66,30.18 L25.55,31.50 L24.52,32.89 L23.56,34.32 L22.69,35.82 L21.90,37.36 L21.20,38.94 L20.59,40.57 L20.06,42.23 L19.64,43.91 L19.30,45.63 L19.07,47.35 L18.93,49.10 L18.89,50.84 L18.95,52.60 L19.10,54.34 L19.36,56.08 L19.71,57.80 L20.16,59.50 L20.71,61.18 L21.34,62.82 L22.08,64.43 L22.90,66.00 L23.81,67.52 L24.80,68.99 L25.88,70.40 L27.04,71.75 L28.27,73.03 L29.57,74.25 L30.94,75.39 L32.38,76.45 L33.88,77.43 L35.43,78.33 L37.03,79.14 L38.67,79.86 L40.35,80.49 L42.07,81.02 L43.82,81.45 L45.59,81.79 L47.39,82.03 L49.19,82.16 L51.00,82.20 L52.81,82.13 L54.62,81.96 L56.41,81.69 L58.20,81.31 L59.95,80.84 L61.69,80.27 L63.38,79.60 L65.05,78.83 L66.66,77.98 L68.23,77.03 L69.74,75.99 L71.20,74.87 L72.59,73.67 L73.91,72.39 L75.16,71.03 L76.34,69.61 L77.43,68.12 L78.44,66.57 L79.36,64.96 L80.19,63.30 L80.92,61.60 L81.57,59.85 L82.11,58.07 L82.55,56.26 L82.89,54.43 L83.12,52.57 L83.25,50.71 L83.28,48.84 L83.20,46.97 L83.02,45.10 L82.73,43.24 L82.33,41.40 L81.83,39.59 L81.24,37.80 L80.54,36.05 L79.74,34.34 L78.84,32.67 L77.86,31.05 L76.78,29.49 L75.61,28.00 L74.36,26.56 L73.03,25.20 L71.63,23.92 L70.15,22.71 L68.61,21.59 L67.00,20.56 Z" fill="url(#sklz-g)"/><path d="M39.75,67.75 L40.72,68.31 L41.72,68.82 L42.75,69.27 L43.80,69.67 L44.87,70.01 L45.96,70.29 L47.07,70.51 L48.19,70.67 L49.32,70.77 L50.45,70.81 L51.59,70.78 L52.72,70.70 L53.85,70.55 L54.98,70.34 L56.09,70.07 L57.18,69.73 L58.26,69.34 L59.32,68.89 L60.35,68.38 L61.35,67.82 L62.32,67.20 L63.26,66.52 L64.16,65.80 L65.03,65.03 L65.85,64.21 L66.62,63.34 L67.35,62.43 L68.03,61.48 L68.65,60.50 L69.23,59.48 L69.74,58.43 L70.20,57.35 L70.60,56.25 L70.94,55.13 L71.22,53.98 L71.44,52.82 L71.59,51.65 L71.68,50.47 L71.71,49.29 L71.67,48.10 L71.56,46.92 L71.39,45.74 L71.16,44.58 L70.86,43.42 L70.50,42.28 L70.08,41.16 L69.60,40.07 L69.05,39.00 L68.45,37.96 L67.79,36.95 L67.08,35.98 L66.31,35.05 L65.50,34.16 L64.63,33.32 L63.72,32.52 L62.76,31.77 L61.77,31.08 L60.73,30.44 L59.66,29.85 L58.56,29.33 L57.43,28.86 L56.28,28.46 L55.10,28.12 L53.91,27.84 L52.70,27.63 L51.48,27.49 L50.25,27.41 L49.01,27.40 L47.78,27.45 L46.55,27.58 L45.32,27.77 L44.11,28.03 L42.91,28.35 L41.73,28.74 L40.57,29.19 L39.44,29.71 L38.33,30.29 L37.26,30.93 L36.22,31.63 L35.22,32.38 L32.32,28.93 L30.13,41.87 L43.25,41.96 L40.36,38.51 L40.98,37.98 L41.63,37.48 L42.31,37.01 L43.02,36.58 L43.74,36.19 L44.50,35.85 L45.27,35.54 L46.05,35.27 L46.86,35.05 L47.67,34.87 L48.50,34.73 L49.33,34.64 L50.17,34.59 L51.01,34.60 L51.85,34.64 L52.69,34.74 L53.53,34.87 L54.35,35.06 L55.17,35.29 L55.98,35.56 L56.77,35.88 L57.55,36.25 L58.30,36.65 L59.03,37.10 L59.74,37.59 L60.43,38.11 L61.08,38.68 L61.70,39.28 L62.30,39.91 L62.85,40.58 L63.37,41.27 L63.86,42.00 L64.30,42.75 L64.70,43.53 L65.06,44.33 L65.38,45.15 L65.65,45.99 L65.88,46.84 L66.06,47.71 L66.19,48.58 L66.27,49.47 L66.31,50.36 L66.30,51.25 L66.23,52.14 L66.12,53.02 L65.97,53.91 L65.76,54.78 L65.50,55.64 L65.20,56.49 L64.85,57.33 L64.46,58.14 L64.02,58.93 L63.54,59.70 L63.01,60.45 L62.45,61.16 L61.84,61.84 L61.20,62.50 L60.52,63.11 L59.81,63.69 L59.07,64.23 L58.29,64.73 L57.49,65.19 L56.66,65.61 L55.81,65.97 L54.94,66.30 L54.06,66.57 L53.15,66.80 L52.24,66.98 L51.31,67.11 L50.37,67.18 L49.44,67.21 L48.50,67.18 L47.56,67.11 L46.62,66.98 L45.69,66.80 L44.78,66.57 L43.87,66.29 L42.98,65.96 L42.10,65.58 L41.25,65.16 Z" fill="#FFB020"/></symbol>
+<symbol id="i-engine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol>
+<symbol id="i-signal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-6 4 3 5-7"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+<symbol id="i-radar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34M4 6h.01M2.29 9.62a10 10 0 1 0 19.02-1.27M16.24 7.76A6 6 0 1 0 8.23 16.67M12 18h.01M17.99 11.66a6 6 0 0 1-2.22 5.01"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+<symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+</defs></svg>
 
-<nav>
-  <div class="wrap nav-in">
-    <div class="brand"><img src="./sklz-logo.png" alt="SKLZ Labs" class="logo-img"/></div>
-    <div class="lnav-btn" onclick="sklzToggleNav()">&#9776;</div>
-    <div class="nav-links" id="navLinks">
-      <a href="#products">Products</a>
-      <a href="#how">How it works</a>
-      <a href="#copy">Copy strategy</a>
-      <a href="#affiliate">Affiliate</a>
-      <a href="/marketplace.html">Traders</a>
-      <a href="/perf.html?c=live">Track record</a>
-      <a href="#pricing">Pricing</a>
-      <a href="/about.html">About</a>
-      <a href="/login.html">Log in</a>
-      <a href="#products" class="nav-cta">Get the bot</a>
+<!-- NAV -->
+<div class="nav"><div class="nav-pill">
+  <a class="brand" href="/" aria-label="SKLZ Labs home"><svg><use href="#sklz-mark"/></svg>SKLZ<small>LABS</small></a>
+  <nav class="nav-links" aria-label="Main">
+    <div class="dd" id="ddProducts"><button type="button" aria-haspopup="true" onclick="this.parentNode.classList.toggle('open')">Products <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="dd-panel" role="menu">
+        <a class="dd-item" href="#engine"><span class="ic"><svg><use href="#i-engine"/></svg></span><div><b>SKLZ Engine</b><span>Runs the models. Copy it on your account.</span></div></a>
+        <a class="dd-item" href="/signals.html"><span class="ic"><svg><use href="#i-signal"/></svg></span><div><b>Signals</b><span>Entry, stop, target. Outcome tracked.</span></div></a>
+        <a class="dd-item" href="/tradegpt.html"><span class="ic"><svg><use href="#i-chat"/></svg></span><div><b>TradeGPT</b><span>Chart analysis that argues both sides.</span></div></a>
+        <a class="dd-item" href="/indicators.html"><span class="ic"><svg><use href="#i-chart"/></svg></span><div><b>Indicators</b><span>Four TradingView tools with honest stats.</span></div></a>
+        <a class="dd-item" href="/journal.html"><span class="ic"><svg><use href="#i-book"/></svg></span><div><b>Journal</b><span>Which of your setups has real edge.</span></div></a>
+        <a class="dd-item" href="/scanner.html"><span class="ic"><svg><use href="#i-radar"/></svg></span><div><b>Crypto Scanner</b><span>Setups vs traps across the top 100.</span></div></a>
+        <a class="dd-item" href="/copytrade.html"><span class="ic"><svg><use href="#i-copy"/></svg></span><div><b>CopyTrader</b><span>Copy a trader on your own exchange.</span></div></a>
+        <a class="dd-item" href="/marketplace.html"><span class="ic"><svg><use href="#i-users"/></svg></span><div><b>Trader Marketplace</b><span>Real records, honestly rated.</span></div></a>
+        <a class="dd-item" href="/lotcalc.html"><span class="ic"><svg><use href="#i-shield"/></svg></span><div><b>Lot Calculator</b><span>Risk-exact sizing, 24 markets.</span></div></a>
+      </div>
     </div>
+    <a href="#proof">Proof</a>
+    <a href="#learn">Learn</a>
+    <a href="#pricing">Pricing</a>
+  </nav>
+  <div class="nav-right">
+    <a class="nav-login" href="/login.html">Log in</a>
+    <a class="nav-cta" href="/login.html#signup">Start free</a>
+    <button class="burger" aria-label="Menu" onclick="document.getElementById('sheet').classList.toggle('open')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
-</nav>
+</div></div>
+<div class="sheet" id="sheet">
+  <a href="#engine" onclick="sheet.classList.remove('open')">Products</a>
+  <div class="sub"><a href="/signals.html">Signals</a><a href="/tradegpt.html">TradeGPT</a><a href="/indicators.html">Indicators</a><a href="/journal.html">Journal</a><a href="/scanner.html">Crypto Scanner</a><a href="/copytrade.html">CopyTrader</a><a href="/marketplace.html">Trader Marketplace</a></div>
+  <a href="#proof" onclick="sheet.classList.remove('open')">Proof</a>
+  <a href="#learn" onclick="sheet.classList.remove('open')">Learn</a>
+  <a href="#pricing" onclick="sheet.classList.remove('open')">Pricing</a>
+  <a href="/affiliate.html">Partners</a>
+  <a href="/about.html">About</a>
+  <div class="sheet-cta"><a class="btn btn-primary" href="/login.html#signup">Start free</a><a class="btn btn-ghost" href="/login.html">Log in</a></div>
+  <div class="langs"><button onclick="sklzSetLang('en')">EN</button><button onclick="sklzSetLang('ar')">العربية</button><button onclick="sklzSetLang('ru')">RU</button></div>
+</div>
 
 <!-- HERO -->
-<header class="hero">
-  <video id="hero-vid" aria-hidden="true" autoplay muted loop playsinline
-         preload="none" poster="/media/hero-poster.jpg">
-    <source src="/media/hero-web.mp4" type="video/mp4"/>
+<header class="hero" id="top">
+  <video id="hero-vid" aria-hidden="true" muted loop playsinline preload="none" poster="/media/hero-poster.jpg?v=2">
+    <source src="/media/hero-web.webm?v=2" type="video/webm"/><source src="/media/hero-web.mp4?v=2" type="video/mp4"/>
   </video>
+  <div class="veil"></div>
   <canvas id="hero-fx" aria-hidden="true"></canvas>
   <div class="wrap">
-    <div class="eyebrow reveal">Trading systems, engineered</div>
-    <h1 class="reveal">Algorithmic trading tools that <span class="g">show their work.</span></h1>
-    <p class="sub reveal">AI-assisted trading software that tells you the truth — indicators, chart analysis, signals with real levels, an honest journal that flags your coin-flip setups, a scanner that calls out traps, and copy trading on your own exchange account. We never hold your funds.</p>
-    <div class="hero-cta reveal">
-      <a href="/login.html" class="btn btn-primary">Create free account →</a>
-      <a href="#products" class="btn btn-ghost">Explore the tools</a>
+    <div>
+      <div class="kicker reveal">SKLZ Labs · Trading systems, engineered</div>
+      <h1 class="reveal" style="margin-top:18px">Trading tools that <span class="g">show their work.</span></h1>
+      <p class="lead reveal">Software that trades on your own account, logs every decision, and publishes its record. We never hold your funds.</p>
+      <div class="ctas reveal"><a href="/login.html#signup" class="btn btn-primary">Start free →</a><a href="#proof" class="btn btn-ghost">Watch the engine live</a></div>
+      <div class="chip reveal"><i></i> Software only · Not financial advice · Trading involves risk</div>
     </div>
-    <div class="disclaimer-chip reveal"><span class="dot"></span> Software only · Not financial advice · Trading involves risk of loss</div>
-
-    <!-- SIGNATURE: live-ish terminal -->
-    <div class="term reveal">
-      <div class="term-bar"><i></i><i></i><i></i><span id="term-title">sklz-bot-runner — today</span><a href="/perf.html?c=live" class="term-link" id="term-link">Full track record →</a></div>
-      <div class="term-body">
-        <div class="term-left">
-          <div class="cards">
-            <div class="stat"><div class="k">Today's P/L</div><div class="v neu tnum" id="pl">—</div></div>
-            <div class="stat"><div class="k">Trades today</div><div class="v neu tnum" id="ntrades">—</div></div>
-            <div class="stat"><div class="k">Mode</div><div class="v neu" id="mode">—</div></div>
-          </div>
-          <div class="chart"><span class="cap" id="spark-cap"></span><svg id="spark" viewBox="0 0 400 150" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
-        </div>
-        <div class="term-log" id="log"></div>
+    <div class="live reveal" id="live">
+      <div class="live-top"><div class="live-title"><span class="pulse" id="pulse"></span><span id="live-state">Engine · connecting…</span></div><a class="live-link" href="/perf.html?c=live">Track record →</a></div>
+      <div class="live-grid">
+        <div class="lk"><div class="k">Markets</div><div class="v tnum" id="lk-mk">21</div></div>
+        <div class="lk"><div class="k">Open now</div><div class="v tnum" id="lk-open">—</div></div>
+        <div class="lk"><div class="k">Entries today</div><div class="v tnum" id="lk-ent">—</div></div>
+        <div class="lk"><div class="k">Setups armed</div><div class="v tnum" id="lk-arm">—</div></div>
       </div>
+      <div class="live-strip"><svg id="beat" viewBox="0 0 600 34" preserveAspectRatio="none"></svg></div>
+      <div class="live-foot"><span id="live-mode">—</span><span id="live-age">heartbeat —</span><span><b>Model R</b> order-flow gold · live since 11 Nov</span></div>
     </div>
   </div>
 </header>
 
+<!-- VISION -->
+<section class="vision" id="vision"><div class="grid-bg"></div><div class="wrap">
+  <div class="kicker reveal" style="justify-content:center">What SKLZ Labs is</div>
+  <h2 class="reveal" style="margin-top:16px">Most of this industry sells promises.<br><span class="g">We ship software that proves itself.</span></h2>
+  <p class="reveal">One engine, a set of tools, and a public record. No upfront packages, no recruiting, no custody of your money — just systems you can watch work.</p>
+  <div class="pillars">
+    <div class="pillar reveal"><div class="n">01 · HONEST</div><h3>Every number is traceable.</h3><p>Wins, losses, stops, drawdowns — reconciled against the broker, published unfiltered.</p></div>
+    <div class="pillar reveal"><div class="n">02 · AUTONOMOUS</div><h3>The engine decides, and says why.</h3><p>Each entry carries its model, its confluence and its reasons. Silence is impossible.</p></div>
+    <div class="pillar reveal"><div class="n">03 · YOURS</div><h3>Your account. Your keys.</h3><p>Runs on your broker or exchange. Withdrawal rights are never requested. You can stop it any second.</p></div>
+  </div>
+</div></section>
+
+<!-- PROOF -->
+<section id="proof"><div class="wrap">
+  <div class="sec-head"><div><div class="kicker reveal">Proof</div><h2 class="reveal" style="margin-top:14px">Don't trust the claim.<br>Watch the engine.</h2></div><p class="reveal">The SKLZ Engine runs around the clock on a real account. Its heartbeat is above; its full record is public, losses included.</p></div>
+  <div class="proof">
+    <div class="pcard reveal" id="tr-card">
+      <h3>Track record</h3>
+      <p id="tr-sub">Every closed trade on the published account — engine and manual shown separately.</p>
+      <div id="tr-body"><div class="big" id="tr-big">—</div><div class="kv" id="tr-kv"></div></div>
+      <a class="btn btn-ghost" href="/perf.html?c=live">Open the full record →</a>
+    </div>
+    <div class="pcard reveal">
+      <h3>How a decision is made</h3>
+      <p>Four frames, fourteen models, one quality bar. Then confluence, the playbook, order-flow, and a confirmation candle. A setup that fails any step is logged with the reason.</p>
+      <div class="kv"><div><div class="k">Models</div><div class="v">14 + R</div></div><div><div class="k">Gates</div><div class="v">7</div></div><div><div class="k">Logged</div><div class="v">100%</div></div></div>
+      <a class="btn btn-ghost" href="/academy.html">See the weekly engine review →</a>
+    </div>
+  </div>
+</div></section>
+
 <!-- PRODUCTS -->
-<section id="products">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-eyebrow">01 — Products</div>
-      <h2>Built as tools, not promises.</h2>
-      <p class="sec-sub">Everything runs on your own broker account. Buy once or subscribe, keep full control, see exactly what the software does.</p>
+<section id="engine" style="padding-top:40px"><div class="wrap">
+  <div class="sec-head"><div><div class="kicker reveal">Products</div><h2 class="reveal" style="margin-top:14px">Built as tools,<br>not promises.</h2></div><p class="reveal">Everything runs on your own account. Buy once or subscribe; keep full control.</p></div>
+  <div class="pgrid">
+    <a class="pc reveal" href="/copy.html"><span class="st">live</span><div class="ic"><svg><use href="#i-engine"/></svg></div><h3>SKLZ Engine · MT5 Copy</h3><p>Follow the engine on your own MT5 account. Your lot cap, your stop, your broker.</p><span class="go">Follow the engine →</span></a>
+    <a class="pc reveal" href="/signals.html"><span class="st">live</span><div class="ic"><svg><use href="#i-signal"/></svg></div><h3>Signals</h3><p>Entry zone, stop and target on every call — and the outcome, tracked.</p><span class="go">See signals →</span></a>
+    <a class="pc reveal" href="/tradegpt.html"><span class="st">live</span><div class="ic"><svg><use href="#i-chat"/></svg></div><h3>TradeGPT</h3><p>Drop a chart. Get structure, levels, position size — and the case against the trade.</p><span class="go">Analyse a chart →</span></a>
+    <a class="pc reveal" href="/indicators.html"><span class="st">live</span><div class="ic"><svg><use href="#i-chart"/></svg></div><h3>Indicators</h3><p>Trend, Flow, Radar, Structure for TradingView, with on-chart win rates.</p><span class="go">Get the indicators →</span></a>
+    <a class="pc reveal" href="/journal.html"><span class="st">live</span><div class="ic"><svg><use href="#i-book"/></svg></div><h3>Honest Journal</h3><p>Log your trades. Learn which setups have edge and which just feel like it.</p><span class="go">Open the journal →</span></a>
+    <a class="pc reveal" href="/scanner.html"><span class="st">live</span><div class="ic"><svg><use href="#i-radar"/></svg></div><h3>Crypto Scanner</h3><p>Top-100 momentum with an honest read: real setups versus traps.</p><span class="go">Run the scanner →</span></a>
+  </div>
+</div></section>
+
+<!-- HOW -->
+<section id="how" style="padding-top:40px"><div class="wrap">
+  <div class="sec-head"><div><div class="kicker reveal">How it works</div><h2 class="reveal" style="margin-top:14px">Three steps.<br>Nothing to hand over.</h2></div><p class="reveal">Live trading is off by default and needs a deliberate confirmation. Loss limits sit above every strategy.</p></div>
+  <div class="steps">
+    <div class="step reveal"><div class="num">1</div><h3>Create a free account</h3><p>Pick a plan when you are ready. Cancel in one click.</p></div>
+    <div class="step reveal"><div class="num">2</div><h3>Connect your own broker</h3><p>MT5 or a spot exchange. Trade-only keys; withdrawal rights are rejected.</p></div>
+    <div class="step reveal"><div class="num">3</div><h3>Set your caps, watch it work</h3><p>Lot ceiling, daily loss limit, hard stop. Every decision is in your log.</p></div>
+  </div>
+  <div class="notdo reveal"><span><b>✗</b>hold your funds</span><span><b>✗</b>ask for withdrawal keys</span><span><b>✗</b>promise returns</span><span><b>✗</b>hide a losing month</span><span><b>✗</b>pay you to recruit</span></div>
+</div></section>
+
+<!-- LEARN -->
+<section id="learn" style="padding-top:40px"><div class="wrap">
+  <div class="sec-head"><div><div class="kicker reveal">Learn</div><h2 class="reveal" style="margin-top:14px">The rules the engine trades by,<br>taught in the open.</h2></div><p class="reveal">English and Arabic. Free previews for everyone; the full library with any plan.</p></div>
+  <div class="learn">
+    <div class="lc hi reveal"><div class="ic"><svg width="26" height="26" style="color:var(--amber)"><use href="#i-cap"/></svg></div><h3 style="margin-top:14px">SKLZ Academy</h3><p>Market structure, liquidity sweeps, fair-value gaps, sessions and kill zones, prop-firm risk — weekly live session plus the replay library.</p><a class="btn btn-primary" href="/academy.html">Open the Academy →</a></div>
+    <div class="lc reveal"><h3>Weekly engine review</h3><p>Every week: the engine's trades, what won, what lost, and what changed in the playbook because of it.</p><a class="btn btn-ghost" href="/academy.html#review">Watch the latest →</a></div>
+  </div>
+</div></section>
+
+<!-- PRICING -->
+<section id="pricing"><div class="wrap">
+  <div class="p-head"><div class="kicker reveal" style="justify-content:center">Pricing</div><h2 class="reveal" style="margin-top:14px">Simple pricing. Honest tools.</h2><p class="reveal">No upfront package. No enrolment fee. No recruiting. From $29 a month, cancel in one click, 7-day money-back on your first purchase.</p></div>
+  <div class="p-grid">
+    <div class="p-card reveal">
+      <div class="p-name">SKLZ Core</div><div class="p-desc">The full platform — MT5 copy, indicators, TradeGPT — minus crypto.</div>
+      <div class="p-price"><span class="p-n">$29</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or $278/yr — save 20%</div>
+      <ul><li>MT5 copy of the SKLZ Engine — partner broker, 1 account</li><li>All four TradingView indicators</li><li>TradeGPT Pro — unlimited chart analysis</li><li>Signals, Journal, AI reviews</li></ul>
+      <button class="p-cta" onclick="sklzBuy('copy_basic_monthly')">Start Core →</button>
     </div>
-    <div class="prod-grid">
-      <div class="card reveal">
-        <div class="num">/ 01</div>
-        <h3>SKLZ Indicator Suite</h3>
-        <p>Four professional TradingView tools — Pro, Trend, Flow, Radar. Structure, regime, divergence and multi-timeframe scanning with honest performance panels.</p>
-        <ul>
-          <li>Entry zones, SL/TP projections</li>
-          <li>Regime-adaptive signals</li>
-          <li>Honest on-chart win rates</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 02</div>
-        <h3>TradeGPT</h3>
-        <p>Your AI trading analyst. Send a chart screenshot, get structured analysis — bias, levels, the case for and against the trade.</p>
-        <ul>
-          <li>Vision chart analysis</li>
-          <li>Exact position sizing</li>
-          <li>Honest confidence, not hype</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 03</div>
-        <h3>Signals</h3>
-        <p>SKLZ Radar maps the markets and posts entry zone, stop and target — to your dashboard and private Telegram channels by category.</p>
-        <ul>
-          <li>Forex · Crypto · Stocks · Metals</li>
-          <li>Entry zone + SL + TP on every call</li>
-          <li>Filter by your subscription</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 04</div>
-        <h3>Honest Journal</h3>
-        <p>The journal that tells you the truth — which of your setups have real edge, and which just feel like they do. AI reviews included.</p>
-        <ul>
-          <li>Log trades with your reasoning</li>
-          <li>Edge vs coin-flip detection</li>
-          <li>Honest AI coaching reviews</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 05</div>
-        <h3>Crypto Scanner</h3>
-        <p>Live momentum across the top 100 coins, with an AI honest read — real setups vs traps. The scanner that flags late chases instead of pumping them.</p>
-        <ul>
-          <li>Multi-timeframe momentum grid</li>
-          <li>Daily setups-vs-traps read</li>
-          <li>Per-coin bias with honest confidence</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 06</div>
-        <h3>SKLZ Academy</h3>
-        <p>Live sessions and recordings in English and Arabic: market structure, liquidity sweeps, fair-value gaps, sessions and kill zones, prop-firm risk — the same rules the SKLZ Engine trades by, taught in the open.</p>
-        <ul>
-          <li>Weekly live session + replay library</li>
-          <li>Engine review: the week's trades, wins and losses</li>
-          <li>English &amp; العربية</li>
-        </ul>
-        <a href="/academy.html" class="tag live" style="text-decoration:none">● Open Academy →</a>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 07</div>
-        <h3>Trading Tools</h3>
-        <p>An instrument-aware lot calculator across 24 markets and a live monitor for your own bot.</p>
-        <ul>
-          <li>Lot calculator — FX, metals, indices, crypto</li>
-          <li>Live bot monitor</li>
-          <li>Session log read back by AI</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 08</div>
-        <h3>Crypto CopyTrader</h3>
-        <p>Connect your own exchange account and copy a trader automatically. You choose two things: how much to allocate and how much risk. Everything else is worked out for you.</p>
-        <ul>
-          <li>12 exchanges — spot only, no leverage</li>
-          <li>Keys with withdrawal access are rejected</li>
-          <li>Allocation is a hard ceiling — the rest is untouched</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
-      <div class="card reveal">
-        <div class="num">/ 09</div>
-        <h3>Trader Marketplace</h3>
-        <p>Real track records, honestly rated. Scores are discounted for small samples, and setups that behave like coin-flips are flagged as exactly that.</p>
-        <ul>
-          <li>Sharpe, drawdown, consistency, recovery factor</li>
-          <li>A lucky 15-trade run cannot outrank a steady 200</li>
-          <li>Data source labelled — no fake "verified" badges</li>
-        </ul>
-        <span class="tag live">● Live</span>
-      </div>
+    <div class="p-card hot reveal"><div class="p-pop">MOST POPULAR</div>
+      <div class="p-name">SKLZ Plus</div><div class="p-desc">Everything in Core, plus crypto trading and crypto copy.</div>
+      <div class="p-price"><span class="p-n">$49</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or $470/yr — save 20%</div>
+      <ul><li>Everything in SKLZ Core</li><li>Crypto trading &amp; crypto copy trading</li><li>English &amp; العربية</li><li>Priority access to new features</li></ul>
+      <button class="p-cta" onclick="sklzBuy('copy_crypto_monthly')">Get Plus →</button>
+    </div>
+    <div class="p-card reveal">
+      <div class="p-name">SKLZ Pro</div><div class="p-desc">Multi-account. Any broker. Built for prop-firm traders.</div>
+      <div class="p-price"><span class="p-n">$79</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or $758/yr — save 20%</div>
+      <ul><li>Everything in SKLZ Plus</li><li>MT5 copy on any broker</li><li>Up to 10 MT5 accounts copying at once</li><li>Run multiple prop evals from one master</li></ul>
+      <button class="p-cta ghost" onclick="sklzBuy('copy_pro_monthly')">Go Pro →</button>
     </div>
   </div>
-</section>
+  <div class="p-fine">Prices in USD · Renewal price always shown at checkout · Cancel anytime from your billing portal<br>Software tools only — not financial advice · Trading involves risk of loss · <a href="/pricing.html" style="color:var(--cyan)">all plans &amp; annual pricing →</a></div>
+</div></section>
 
-<!-- HOW / PRINCIPLES -->
-<section id="how">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-eyebrow">02 — How it works</div>
-      <h2>Your account. Your keys. Your call.</h2>
-      <p class="sec-sub">The line that defines everything we build: SKLZ makes software. We are not a broker, we don't manage money, and we don't give financial advice.</p>
-    </div>
-    <div class="principles reveal">
-      <div class="principle">
-        <div class="pk">CONTROL</div>
-        <h4>You hold the credentials</h4>
-        <p>The bot runs on your machine or VPS against your own broker account. Your login never leaves your device. We literally cannot see it.</p>
-      </div>
-      <div class="principle">
-        <div class="pk">TRANSPARENCY</div>
-        <h4>Every action is logged</h4>
-        <p>Each signal, risk decision, and order is written to a session log — then read back by AI to tell you what worked and what to fix.</p>
-      </div>
-      <div class="principle">
-        <div class="pk">SAFETY</div>
-        <h4>Paper-first, guards always on</h4>
-        <p>Live trading is off by default and takes a deliberate confirmation. A daily-loss kill-switch and spread, hours and position limits sit above every strategy.</p>
-      </div>
-      <div class="principle">
-        <div class="pk">HONESTY</div>
-        <h4>No guarantees, ever</h4>
-        <p>Markets are uncertain and past results don't predict the future. We show you the tools and the data — the decisions, and the risk, stay yours.</p>
-      </div>
-    </div>
+<!-- FAQ -->
+<section id="faq" style="padding-top:30px"><div class="wrap">
+  <div class="faq">
+    <div class="kicker reveal">Questions</div>
+    <details class="reveal"><summary>Does SKLZ Labs manage my money?</summary><p>No. Nothing here is custodial. The software runs on your own broker or exchange account with trade-only access, and you can stop it at any time.</p></details>
+    <details class="reveal"><summary>Is the track record real?</summary><p>It is read from the broker's own closed trades and published unfiltered — engine and manual trades shown separately, losses included. The account type is always labelled.</p></details>
+    <details class="reveal"><summary>Do you promise returns?</summary><p>Never. Markets are uncertain and past results do not predict the future. We show you the tools and the data; the decisions and the risk stay yours.</p></details>
+    <details class="reveal"><summary>Is there an affiliate program?</summary><p>Yes — a plain referral commission on memberships you bring. No ranks to buy, no packages, no recruiting requirements. <a href="/affiliate.html" style="color:var(--cyan)">Details →</a></p></details>
   </div>
-</section>
+</div></section>
 
-<!-- COPY STRATEGY -->
-<section id="copy">
-  <div class="wrap">
-    <div class="split">
-      <div class="panel-lg feature reveal">
-        <div class="sec-eyebrow">03 — Copy trading</div>
-        <h2 style="font-size:30px">Copy a trader, on your own account.</h2>
-        <p class="sec-sub" style="font-size:15.5px">Connect your own exchange with a read and spot-trade API key. Choose who to follow, how much to allocate, and how much risk to take. Trades are placed on your account — we never hold your funds and never accept a key that can withdraw.</p>
-        <div class="flow">
-          <div class="flow-step"><span class="n">1</span><p>Connect your exchange with a <b>read + spot-trade</b> key. Withdrawal keys are rejected outright.</p></div>
-          <div class="flow-step"><span class="n">2</span><p>Pick a master trader and set two things: <b>allocation</b> and <b>risk level</b>.</p></div>
-          <div class="flow-step"><span class="n">3</span><p>Their trades are mirrored into your account, sized to your allocation — never beyond it.</p></div>
-          <div class="flow-step"><span class="n">4</span><p>Daily loss limits, per-asset caps and an emergency stop are on by default.</p></div>
-        </div>
-        <div class="hero-cta" style="margin-top:26px">
-          <a href="/copytrade.html" class="btn btn-primary">Open CopyTrader →</a>
-        </div>
-      </div>
-      <div class="panel-lg reveal">
-        <div class="sec-eyebrow">What we will not do</div>
-        <h2 style="font-size:30px">Your funds stay yours.</h2>
-        <p class="sec-sub" style="font-size:15.5px">Most of this industry asks for trust it has not earned. Here is exactly where our limits are:</p>
-        <div class="flow">
-          <div class="flow-step"><span class="n">✕</span><p>We never take custody of your funds. Ever.</p></div>
-          <div class="flow-step"><span class="n">✕</span><p>We reject any API key that can withdraw — verified with the exchange, not assumed.</p></div>
-          <div class="flow-step"><span class="n">✕</span><p>No leverage, no futures, no margin. Spot only.</p></div>
-          <div class="flow-step"><span class="n">✓</span><p>Your credentials are encrypted before storage and never shown again. Revoke anytime.</p></div>
-        </div>
-        <div class="disclaimer-chip" style="margin-top:26px"><span class="dot"></span> Copy trading involves risk of loss</div>
-      </div>
-    </div>
+<!-- CTA -->
+<section style="padding-top:20px"><div class="wrap"><div class="band reveal">
+  <h2>See it work before you pay a cent.</h2>
+  <p>Free account, the engine's live heartbeat, the public record, and TradeGPT previews — no card required.</p>
+  <a href="/login.html#signup" class="btn btn-primary">Create free account →</a>
+</div></div></section>
+
+<footer><div class="wrap">
+  <div class="fgrid">
+    <div><a class="brand" href="/"><svg><use href="#sklz-mark"/></svg>SKLZ<small>LABS</small></a><p class="tag">Trading tools that show their work. Software only — we never hold your funds.</p></div>
+    <div><h4>Products</h4><a href="/copy.html">SKLZ Engine · MT5 Copy</a><a href="/signals.html">Signals</a><a href="/tradegpt.html">TradeGPT</a><a href="/indicators.html">Indicators</a><a href="/journal.html">Journal</a><a href="/scanner.html">Crypto Scanner</a><a href="/copytrade.html">CopyTrader</a></div>
+    <div><h4>Company</h4><a href="/perf.html?c=live">Track record</a><a href="/marketplace.html">Trader Marketplace</a><a href="/academy.html">Academy</a><a href="/affiliate.html">Partners</a><a href="/about.html">About</a><a href="mailto:hello@sklzlabs.com">Contact</a></div>
+    <div><h4>Community</h4><a href="https://t.me/sklzlabsarabic" target="_blank" rel="noopener">Telegram · العربية</a><a href="https://t.me/mindsieg_protocol" target="_blank" rel="noopener">Telegram · English</a><a href="/login.html">Log in</a></div>
   </div>
-</section>
+  <p class="legal">SKLZ Labs provides trading software and analytical tools only. SKLZ Labs is not a broker, is not a financial adviser, and does not manage client funds or accounts. Nothing on this site is financial advice or a solicitation to trade. Trading leveraged products involves significant risk of loss and is not suitable for everyone. Past performance, including the published track record, does not guarantee future results. Use the software at your own risk.<br><br>© <span id="yr"></span> SKLZ Labs. All rights reserved.</p>
+</div></footer>
 
-<!-- AFFILIATE -->
-<section id="affiliate">
-  <div class="wrap">
-    <div class="aff reveal">
-      <div class="sec-eyebrow" style="color:var(--acc)">04 — Partner Program</div>
-      <div class="big">50%</div>
-      <h2 style="font-size:26px;margin-top:8px">Earn 50% recurring — live now.</h2>
-      <p class="sec-sub" style="max-width:52ch;margin:14px auto 0">Earn half of the subscription revenue from every customer you bring to SKLZ software — for as long as they stay subscribed. Built in from day one.</p>
-      <div class="aff-tiers" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px">
-        <div style="background:var(--panel,#0F131C);border:1px solid #1E2735;border-radius:12px;padding:14px 20px;font-size:13px"><b style="color:#8B94A8">Partner</b><div style="font-family:monospace;font-size:11px;color:#5B6377;margin-top:4px">0–24 customers</div></div>
-        <div style="background:var(--panel,#0F131C);border:1px solid #1DA9E0;border-radius:12px;padding:14px 20px;font-size:13px"><b style="color:#1DA9E0">Elite</b><div style="font-family:monospace;font-size:11px;color:#5B6377;margin-top:4px">25–99 + bonuses</div></div>
-        <div style="background:var(--panel,#0F131C);border:1px solid #A78BFA;border-radius:12px;padding:14px 20px;font-size:13px"><b style="color:#A78BFA">Ambassador</b><div style="font-family:monospace;font-size:11px;color:#5B6377;margin-top:4px">100–499 + rewards</div></div>
-        <div style="background:var(--panel,#0F131C);border:1px solid #F5A623;border-radius:12px;padding:14px 20px;font-size:13px"><b style="color:#F5A623">Legend</b><div style="font-family:monospace;font-size:11px;color:#5B6377;margin-top:4px">500+ · VIP pool</div></div>
-      </div>
-      <div class="hero-cta" style="justify-content:center;margin-top:28px">
-        <a href="/partner.html" class="btn btn-ghost">Open your Partner dashboard →</a>
-      </div>
-      <div class="wait-note" style="margin-top:18px">Half of every payment that clears: $14.50 on Core, $25 on Plus, $39.50 on Pro — every month they stay — and 50% of an annual plan paid at once ($139 / $235 / $379). Retention bonuses at 6 and 12 months. Single level, published numbers, no rank volumes: we pay you to refer traders, not to recruit recruiters.</div>
-    </div>
-  </div>
-</section>
-
-
-<!-- PRICING (injected) -->
-<section id="pricing">
-  <div class="wrap">
-    <style>
-      #pricing{padding:90px 0 70px;position:relative}
-      #pricing .p-head{text-align:center;margin-bottom:14px}
-      #pricing h2{font-size:34px;letter-spacing:-.02em}
-      #pricing .p-sub{color:var(--muted);max-width:560px;margin:12px auto 0;line-height:1.65}
-      #pricing .p-founder{display:flex;justify-content:center;margin:20px 0 34px}
-      #pricing .p-founder span{font-family:var(--mono);font-size:12px;color:var(--gold);
-        border:1px solid rgba(245,166,35,.35);border-radius:20px;padding:8px 18px;
-        background:rgba(245,166,35,.07)}
-      #pricing .p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-      @media(max-width:920px){#pricing .p-grid{grid-template-columns:1fr}}
-      #pricing .p-card{background:var(--panel,#0F131C);border:1px solid var(--line);
-        border-radius:16px;padding:26px;display:flex;flex-direction:column;position:relative}
-      #pricing .p-card.hot{border-color:var(--gold);box-shadow:0 10px 50px rgba(245,166,35,.13)}
-      #pricing .p-pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);
-        font-family:var(--mono);font-size:9px;letter-spacing:.1em;font-weight:700;
-        background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#08101A;
-        padding:4px 12px;border-radius:11px}
-      #pricing .p-name{font-size:17px;font-weight:700}
-      #pricing .p-desc{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.55;min-height:38px}
-      #pricing .p-price{margin:18px 0 3px;display:flex;align-items:baseline;gap:8px}
-      #pricing .p-n{font-family:var(--mono);font-size:42px;font-weight:700;
-        background:linear-gradient(100deg,var(--gold),var(--blue));
-        -webkit-background-clip:text;background-clip:text;color:transparent}
-      #pricing .p-u{font-family:var(--mono);font-size:12px;color:var(--muted)}
-      #pricing .p-was{font-family:var(--mono);font-size:15px;color:#5B6377;text-decoration:line-through}
-      #pricing .p-renew{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
-      #pricing ul{margin:18px 0;padding:0;list-style:none;flex:1}
-      #pricing li{font-size:13px;color:var(--muted);padding:5px 0 5px 20px;position:relative}
-      #pricing li::before{content:'✓';position:absolute;left:0;color:#34D399;font-weight:700}
-      #pricing .p-cta{display:block;text-align:center;background:linear-gradient(135deg,var(--gold),var(--gold-2));
-        color:#08101A;border:none;border-radius:9px;padding:13px;font-weight:700;
-        font-size:14.5px;cursor:pointer;width:100%}
-      #pricing .p-cta.ghost{background:var(--panel,#0F131C);color:var(--ink);border:1px solid var(--line)}
-      #pricing .p-fine{margin-top:30px;text-align:center;font-family:var(--mono);
-        font-size:10.5px;color:#5B6377;line-height:2}
-    </style>
-    <div class="p-head">
-      <h2>Simple pricing. Honest tools.</h2>
-      <p class="sec-sub" style="margin-top:6px">No upfront "package" fee, no $1,000+ enrolment, no recruiting. From $29 a month, cancel in one click.</p>
-      <div class="p-sub">Every plan renews at the price on the button, cancels in one click,
-        and carries a 7-day money-back guarantee on your first purchase.</div>
-    </div>
-    <div class="p-founder"><span id="p-founder-badge">⚡ MT5 copy trading is live — every plan follows the SKLZ Engine. <a href="/perf.html?c=live" style="color:inherit;text-decoration:underline">Its full track record is public →</a></span></div>
-    <div class="p-grid">
-      <div class="p-card">
-        <div class="p-name">SKLZ Core</div>
-        <div class="p-desc">The full platform — MT5 copy, indicators, TradeGPT — minus crypto.</div>
-        <div class="p-price"><span class="p-n">$29</span><span class="p-u">/month</span></div>
-        <div class="p-renew">cancel anytime · or $278/yr — save 20%</div>
-        <ul><li>MT5 Bot copy trading — partner broker, 1 account</li>
-            <li>SKLZ Engine as your master — <a href="/perf.html?c=live" style="color:var(--acc);text-decoration:underline dotted">see its track record</a></li>
-            <li>All four TradingView indicators</li>
-            <li>TradeGPT Pro — unlimited chart analysis</li>
-            <li>Signals, Journal, AI reviews</li></ul>
-        <button class="p-cta" onclick="sklzBuy('copy_basic_monthly')">Start Core →</button>
-      </div>
-      <div class="p-card hot">
-        <div class="p-pop">MOST POPULAR</div>
-        <div class="p-name">SKLZ Plus</div>
-        <div class="p-desc">Everything in Core, plus crypto trading and crypto copy.</div>
-        <div class="p-price"><span class="p-n">$49</span><span class="p-u">/month</span></div>
-        <div class="p-renew">cancel anytime · or $470/yr — save 20%</div>
-        <ul><li>Everything in SKLZ Core</li>
-            <li>Crypto trading &amp; crypto copy trading</li>
-            <li>MT5 copy — partner broker, 1 account</li>
-            <li>English &amp; العربية</li>
-            <li>Priority access to new features</li></ul>
-        <button class="p-cta" onclick="sklzBuy('copy_crypto_monthly')">Get Plus →</button>
-      </div>
-      <div class="p-card">
-        <div class="p-name">SKLZ Pro</div>
-        <div class="p-desc">Multi-account. Any broker. Built for prop-firm traders.</div>
-        <div class="p-price"><span class="p-n">$79</span><span class="p-u">/month</span></div>
-        <div class="p-renew">cancel anytime · or $758/yr — save 20%</div>
-        <ul><li>Everything in SKLZ Plus</li>
-            <li>MT5 copy on ANY broker</li>
-            <li>Up to 10 MT5 accounts copying at once</li>
-            <li>Run multiple prop evals from one master</li>
-            <li>English &amp; العربية</li></ul>
-        <button class="p-cta ghost" onclick="sklzBuy('copy_pro_monthly')">Go Pro →</button>
-      </div>
-    </div>
-    <div class="p-fine">Prices in USD · Renewal price always shown at checkout · Cancel anytime from your billing portal<br>
-      7-day money-back guarantee on first purchase · Software tools only — not financial advice · Trading involves risk of loss ·
-      <a href="/pricing.html" style="color:var(--blue)">all plans &amp; annual pricing →</a></div>
-  </div>
-</section>
 <script>
-  (function(){
-    const API="https://api.sklzlabs.com";
-    window.sklzBuy=async function(product){
-      const t=localStorage.getItem('sklz_access');
-      const path=t?'/api/billing/checkout':'/api/billing/checkout-public';
-      const h={'Content-Type':'application/json'};
-      if(t)h['Authorization']='Bearer '+t;
-      try{
-        const r=await fetch(API+path,{method:'POST',headers:h,body:JSON.stringify({product})});
-        const d=await r.json();
-        if(!r.ok){ alert(d.detail||'Checkout unavailable'); return; }
-        location.href=d.url;
-      }catch(e){ alert('Could not reach billing — try again in a moment.'); }
-    };
-  })();
+document.getElementById('yr').textContent=new Date().getFullYear();
+(function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+ document.addEventListener('click',function(e){var dd=document.getElementById('ddProducts');if(dd&&!dd.contains(e.target))dd.classList.remove('open')});})();
+(function(){var r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('sklz_ref',r);})();
+(function(){
+  const API="https://api.sklzlabs.com";
+  window.sklzBuy=async function(product){
+    const t=localStorage.getItem('sklz_access');const path=t?'/api/billing/checkout':'/api/billing/checkout-public';
+    const h={'Content-Type':'application/json'};if(t)h['Authorization']='Bearer '+t;
+    try{const r=await fetch(API+path,{method:'POST',headers:h,body:JSON.stringify({product})});const d=await r.json();
+      if(!r.ok){alert(d.detail||'Checkout unavailable');return;}location.href=d.url;}
+    catch(e){alert('Could not reach billing — try again in a moment.');}
+  };
+})();
 </script>
-<footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="brand"><img src="./sklz-logo.png" alt="SKLZ Labs" class="logo-img" style="height:64px"/></div>
-      <div class="foot-links">
-        <a href="#products">Products</a>
-        <a href="#how">How it works</a>
-        <a href="#copy">Copy strategy</a>
-        <a href="#affiliate">Affiliate</a>
-        <a href="/perf.html?c=live">Track record</a>
-        <a href="/about.html">About</a>
-        <a href="mailto:hello@sklzlabs.com">Contact</a>
-      </div>
-    </div>
-    <div class="foot-community" style="display:flex;flex-wrap:wrap;gap:10px 22px;margin:18px 0 6px;font-family:var(--mono);font-size:12px">
-      <span style="color:var(--dim)">Community</span>
-      <a href="https://t.me/sklzlabsarabic" target="_blank" rel="noopener">Telegram · العربية @sklzlabsarabic</a>
-      <a href="https://t.me/mindsieg_protocol" target="_blank" rel="noopener">Telegram · English @mindsieg_protocol</a>
-      <a href="/marketplace.html">Trader Marketplace</a>
-    </div>
-    <p class="foot-legal">
-      SKLZ Labs provides trading software and analytical tools only. SKLZ Labs is not a broker, is not a financial adviser, and does not manage client funds or accounts. Nothing on this site is financial, investment, or trading advice, or a solicitation to buy or sell any instrument. Automated and manual trading carries a high level of risk and can result in the loss of some or all of your capital; only trade with money you can afford to lose. Any performance figures shown are illustrative or hypothetical unless explicitly marked as a verified live track record, and past performance does not guarantee future results. You are solely responsible for your own trading decisions and for complying with the laws and regulations of your jurisdiction.
-      <br><br>© <span id="yr"></span> SKLZ Labs. All rights reserved.
-    </p>
-  </div>
-</footer>
-
-</div>
-
 <script>
-  document.getElementById('yr').textContent = new Date().getFullYear();
-
-  // Reveal on scroll
-  const io = new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-  // The terminal panel is filled ONLY by /api/public/live-stats below.
-  // There is deliberately no illustrative sparkline and no scripted log:
-  // a page that says "we tell you the truth" cannot animate a fake
-  // take-profit while the real account sits at zero trades.
-
-  // Waitlist (front-end stub — wire to backend later)
-  const API_BASE = "https://api.sklzlabs.com";  // set to your API domain
-  async function joinWait(){
-    const input=document.getElementById('wait-email');
-    const ok=document.getElementById('wait-ok');
-    const e=input.value.trim();
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){alert('Enter a valid email');return}
-    input.disabled=true;
-    try{
-      const r=await fetch(API_BASE+"/api/waitlist",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({email:e,source:"website",interest:"copy_strategy"})
-      });
-      const data=await r.json();
-      ok.textContent = data.message || "\u2713 You're on the list.";
-      ok.style.display='block';
-      input.value='';
-    }catch(err){
-      // Network/API down — still acknowledge so the user isn't stuck,
-      // and keep the email in the field so they can retry.
-      ok.textContent="\u2713 You're on the list.";
-      ok.style.display='block';
-    }finally{
-      input.disabled=false;
-    }
+/* Live engine panel — a heartbeat, never a number we cannot stand behind.
+   /api/public/engine-pulse carries alive/open/entries/armed from the same
+   heartbeat the Bot Monitor reads; equity and positions are never sent.
+   /api/public/live-stats fills the track-record card only when an account
+   is published; otherwise the card says exactly that. */
+(function(){
+  var API="https://api.sklzlabs.com", beats=[];
+  function $(i){return document.getElementById(i)}
+  function ago(s){if(s==null)return '—';return s<90?s+' s ago':Math.round(s/60)+' min ago'}
+  function drawBeat(){
+    var svg=$('beat');if(!svg)return;var w=600,h=34,n=60;
+    if(beats.length<n){for(var i=beats.length;i<n;i++)beats.unshift(0)}
+    var pts=beats.slice(-n).map(function(v,i){var x=i*(w/(n-1));var y=h/2-(v?Math.sin(i*1.7)*6+ (i%7==0?10:3):0.6);return x.toFixed(1)+','+y.toFixed(1)}).join(' ');
+    svg.innerHTML='<defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#FFB020" stop-opacity=".15"/><stop offset=".6" stop-color="#FF7A3D"/><stop offset="1" stop-color="#22E0FF"/></linearGradient></defs><polyline points="'+pts+'" fill="none" stroke="url(#bg1)" stroke-width="1.6" stroke-linejoin="round"/>';
   }
+  async function pulse(){
+    try{
+      var r=await fetch(API+'/api/public/engine-pulse',{cache:'no-store'});var d=await r.json();
+      var on=!!d.alive;$('pulse').className='pulse'+(on?' on':'');
+      $('live-state').textContent=on?'Engine · live':(d.last_seen?'Engine · heartbeat lost':'Engine · offline');
+      $('lk-open').textContent=d.open_now!=null?d.open_now:'—';
+      $('lk-ent').textContent=d.opened_today!=null?d.opened_today:'—';
+      $('lk-arm').textContent=d.setups_armed!=null?d.setups_armed:'—';
+      $('live-mode').textContent=(d.mode?String(d.mode).toUpperCase():'—')+' account'+(d.auto===false?' · paused':'');
+      $('live-age').textContent='heartbeat '+ago(d.age_sec);
+      beats.push(on?1:0);drawBeat();
+    }catch(e){$('live-state').textContent='Engine · status unavailable';$('live-age').textContent='heartbeat —';}
+  }
+  function unpublished(){
+    var big=$('tr-big'),kv=$('tr-kv'),sub=$('tr-sub');
+    big.innerHTML='Live account<small>since 4 Nov 2026</small>';
+    sub.textContent='The real account runs now; its full record is published after 30 days, whatever it says — on 4 December.';
+    kv.innerHTML='<div><div class="k">Account</div><div class="v">Real</div></div><div><div class="k">Published</div><div class="v">4 Dec</div></div><div><div class="k">Filtered</div><div class="v">Never</div></div>';
+  }
+  async function record(){
+    try{
+      var r=await fetch(API+'/api/public/live-stats',{cache:'no-store'});var d=await r.json();
+      var big=$('tr-big'),kv=$('tr-kv'),sub=$('tr-sub');
+      if(!d.published){unpublished();return;}
+      if(false){
+        big.innerHTML='Live account<small>since 4 Nov 2026</small>';
+        sub.textContent='The real account runs now; its full record is published after 30 days, whatever it says — on 4 December.';
+        kv.innerHTML='<div><div class="k">Account</div><div class="v">Real</div></div><div><div class="k">Published</div><div class="v">4 Dec</div></div><div><div class="k">Filtered</div><div class="v">Never</div></div>';
+        return;
+      }
+      var acc=d.account||{};var w=d.window||{};var net=(w.net_pnl!=null?w.net_pnl:d.net_pnl)||0;
+      big.innerHTML=(net>=0?'+':'−')+'$'+Math.abs(net).toFixed(0)+'<small>'+(w.days?'last '+w.days+' days':'today')+' · '+(acc.mode||'live')+'</small>';
+      big.className='big '+(net>=0?'pos':'neg');
+      kv.innerHTML='<div><div class="k">Trades</div><div class="v">'+(w.trades!=null?w.trades:d.trades||0)+'</div></div><div><div class="k">Win rate</div><div class="v">'+Math.round(((w.win_rate!=null?w.win_rate:d.win_rate)||0)*100)+'%</div></div><div><div class="k">Max DD</div><div class="v">−$'+((w.max_drawdown!=null?w.max_drawdown:d.max_drawdown)||0).toFixed(0)+'</div></div>';
+    }catch(e){unpublished();}
+  }
+  pulse();record();setInterval(pulse,20000);setInterval(record,120000);
+})();
 </script>
-<script>(function(){var r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('sklz_ref',r);})();</script>
+<script>
+/* Hero: AI footage underneath, a drawn overlay on top — thin price paths
+   and nodes in the brand gradient. Stops when hidden; skipped on reduced motion. */
+(function(){
+  var c=document.getElementById('hero-fx');if(!c)return;
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduced){c.remove();return}
+  var ctx=c.getContext('2d'),W,H,t=0,raf,paths=[];
+  function size(){var r=c.getBoundingClientRect();W=c.width=r.width*devicePixelRatio;H=c.height=r.height*devicePixelRatio}
+  function mk(i){return{y0:H*(0.35+0.55*Math.random()),amp:H*(0.02+0.05*Math.random()),f:0.0012+Math.random()*0.001,sp:0.15+Math.random()*0.25,ph:Math.random()*6.28,w:(0.6+Math.random()*0.9)*devicePixelRatio,a:0.12+Math.random()*0.18,hue:i%3}}
+  function reset(){size();paths=[];for(var i=0;i<7;i++)paths.push(mk(i))}
+  function col(h,a){return h==0?'rgba(255,176,32,'+a+')':h==1?'rgba(255,122,61,'+a+')':'rgba(34,224,255,'+a+')'}
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=1;
+    paths.forEach(function(p,i){
+      ctx.beginPath();
+      for(var x=0;x<=W;x+=8*devicePixelRatio){
+        var k=x/W;var y=p.y0-k*H*0.28+Math.sin(x*p.f+t*0.01*p.sp+p.ph)*p.amp+Math.sin(x*p.f*3.1+t*0.02*p.sp)*p.amp*0.35;
+        x?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }
+      ctx.strokeStyle=col(p.hue,p.a);ctx.lineWidth=p.w;ctx.stroke();
+      if(t%90==i*12){var nx=W*(0.3+0.6*Math.random());}
+    });
+    // travelling nodes
+    for(var j=0;j<4;j++){var p=paths[j];var k=((t*0.0015*(1+j*0.3))+j*0.25)%1;var x=k*W;var y=p.y0-k*H*0.28+Math.sin(x*p.f+t*0.01*p.sp+p.ph)*p.amp;
+      var g=ctx.createRadialGradient(x,y,0,x,y,14*devicePixelRatio);g.addColorStop(0,col(p.hue,.9));g.addColorStop(1,col(p.hue,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,14*devicePixelRatio,0,6.28);ctx.fill();}
+    raf=requestAnimationFrame(draw);
+  }
+  reset();draw();addEventListener('resize',reset);
+  document.addEventListener('visibilitychange',function(){document.hidden?cancelAnimationFrame(raf):draw()});
+})();
+(function(){
+  var v=document.getElementById('hero-vid');if(!v)return;
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;var conn=navigator.connection||{};
+  if(reduced||conn.saveData===true||/(^|-)2g$/.test(conn.effectiveType||'')){v.remove();return}
+  v.preload='auto';v.addEventListener('playing',function(){v.classList.add('on')},{once:true});
+  var p=v.play();if(p&&p.catch)p.catch(function(){v.remove()});
+})();
+</script>
 <!-- ISKRA AI webchat widget -->
 <script>
 (function(){
   var SLUG='sklz', API='https://www.iskra.marketing/api/chat', CONV=null, open=false, greeted=false, busy=false;
   try{ CONV=localStorage.getItem('iskra_conv_'+SLUG)||null; }catch(e){}
   var css=document.createElement('style');
-  css.textContent='#ikFab{position:fixed;right:20px;bottom:20px;z-index:99990;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#0ea5e9);color:#fff;border:0;font-size:23px;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.35)}#ikPanel{position:fixed;right:18px;bottom:90px;z-index:99991;width:min(360px,calc(100vw - 28px));height:min(500px,calc(100vh - 120px));background:#0f1523;border:1px solid #223;border-radius:16px;box-shadow:0 22px 60px rgba(0,0,0,.5);display:none;flex-direction:column;overflow:hidden;font-family:system-ui,sans-serif}#ikPanel.on{display:flex}.ikHd{background:#141b2e;color:#fff;padding:13px 15px;display:flex;align-items:center;gap:9px}.ikHd .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#0ea5e9);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}.ikHd b{font-size:14px;display:block}.ikHd span{font-size:11px;color:#7dd3fc}.ikHd .x{margin-left:auto;background:none;border:0;color:#fff;font-size:17px;cursor:pointer;opacity:.8}.ikMs{flex:1;overflow-y:auto;padding:12px;background:#0b1020;display:flex;flex-direction:column;gap:9px}.ikM{max-width:84%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.55;white-space:pre-wrap;color:#e6ecf7}.ikM.b{background:#141b2e;border:1px solid #223;border-bottom-left-radius:4px;align-self:flex-start}.ikM.u{background:#1d4ed8;border-bottom-right-radius:4px;align-self:flex-end}.ikIn{display:flex;gap:7px;padding:9px;border-top:1px solid #223;background:#0f1523}.ikIn input{flex:1;border:1px solid #2a3550;background:#0b1020;color:#e6ecf7;border-radius:999px;padding:9px 14px;font-size:13px;outline:none}.ikIn button{background:#22c55e;color:#06220f;border:0;border-radius:50%;width:38px;height:38px;font-size:14px;cursor:pointer;flex-shrink:0}.ikTy{display:inline-flex;gap:4px;padding:10px 13px;background:#141b2e;border:1px solid #223;border-radius:12px;align-self:flex-start}.ikTy i{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:ikp 1s infinite}.ikTy i:nth-child(2){animation-delay:.16s}.ikTy i:nth-child(3){animation-delay:.32s}@keyframes ikp{0%,100%{opacity:.3}50%{opacity:1}}';
+  css.textContent='#ikFab{position:fixed;right:20px;bottom:20px;z-index:99990;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#FFB020,#FF7A3D 55%,#22E0FF);color:#fff;border:0;font-size:23px;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.35)}#ikPanel{position:fixed;right:18px;bottom:90px;z-index:99991;width:min(360px,calc(100vw - 28px));height:min(500px,calc(100vh - 120px));background:#0f1523;border:1px solid #223;border-radius:16px;box-shadow:0 22px 60px rgba(0,0,0,.5);display:none;flex-direction:column;overflow:hidden;font-family:system-ui,sans-serif}#ikPanel.on{display:flex}.ikHd{background:#141b2e;color:#fff;padding:13px 15px;display:flex;align-items:center;gap:9px}.ikHd .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FFB020,#FF7A3D 55%,#22E0FF);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}.ikHd b{font-size:14px;display:block}.ikHd span{font-size:11px;color:#7dd3fc}.ikHd .x{margin-left:auto;background:none;border:0;color:#fff;font-size:17px;cursor:pointer;opacity:.8}.ikMs{flex:1;overflow-y:auto;padding:12px;background:#0b1020;display:flex;flex-direction:column;gap:9px}.ikM{max-width:84%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.55;white-space:pre-wrap;color:#e6ecf7}.ikM.b{background:#141b2e;border:1px solid #223;border-bottom-left-radius:4px;align-self:flex-start}.ikM.u{background:#1d4ed8;border-bottom-right-radius:4px;align-self:flex-end}.ikIn{display:flex;gap:7px;padding:9px;border-top:1px solid #223;background:#0f1523}.ikIn input{flex:1;border:1px solid #2a3550;background:#0b1020;color:#e6ecf7;border-radius:999px;padding:9px 14px;font-size:13px;outline:none}.ikIn button{background:#22c55e;color:#06220f;border:0;border-radius:50%;width:38px;height:38px;font-size:14px;cursor:pointer;flex-shrink:0}.ikTy{display:inline-flex;gap:4px;padding:10px 13px;background:#141b2e;border:1px solid #223;border-radius:12px;align-self:flex-start}.ikTy i{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:ikp 1s infinite}.ikTy i:nth-child(2){animation-delay:.16s}.ikTy i:nth-child(3){animation-delay:.32s}@keyframes ikp{0%,100%{opacity:.3}50%{opacity:1}}';
   document.head.appendChild(css);
   var fab=document.createElement('button'); fab.id='ikFab'; fab.textContent='\uD83D\uDCAC'; fab.setAttribute('aria-label','Chat');
   var p=document.createElement('div'); p.id='ikPanel';
@@ -871,138 +657,6 @@
     });
   })();
 </script>
-<!-- /ISKRA widget -->
 <script src="/sklz-i18n.js" defer></script>
-
-<script>
-/* Hero background: a slow market-depth lattice.
- *
- * Drawn rather than filmed, for three reasons — it weighs about 2KB against
- * several megabytes for video, it never shows a chart going up (which would
- * imply a promise the rest of the page refuses to make), and it cannot look
- * like the stock footage every other trading site uses.
- *
- * It also stops entirely when the tab is hidden or the visitor has asked for
- * reduced motion. A background animation should never be the reason a laptop
- * fan spins up.
- */
-(function () {
-  var cv = document.getElementById('hero-fx');
-  if (!cv) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var ctx = cv.getContext('2d');
-  var pts = [], W = 0, H = 0, raf = null, running = true;
-
-  function size() {
-    var r = cv.getBoundingClientRect();
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = r.width; H = r.height;
-    cv.width = W * dpr; cv.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    build();
-  }
-
-  function build() {
-    // density scales with area, capped — a phone should not draw 200 nodes
-    var n = Math.min(46, Math.max(14, Math.round(W * H / 26000)));
-    pts = [];
-    for (var i = 0; i < n; i++) {
-      pts.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22,
-        r: Math.random() * 1.4 + 0.5
-      });
-    }
-  }
-
-  function frame() {
-    if (!running) return;
-    ctx.clearRect(0, 0, W, H);
-
-    for (var i = 0; i < pts.length; i++) {
-      var p = pts[i];
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > W) p.vx *= -1;
-      if (p.y < 0 || p.y > H) p.vy *= -1;
-
-      // links between near neighbours, fading with distance
-      for (var j = i + 1; j < pts.length; j++) {
-        var q = pts[j];
-        var dx = p.x - q.x, dy = p.y - q.y;
-        var d2 = dx * dx + dy * dy;
-        if (d2 > 20000) continue;
-        var a = (1 - d2 / 20000) * 0.22;
-        ctx.strokeStyle = 'rgba(245,166,35,' + a.toFixed(3) + ')';
-        ctx.lineWidth = 0.6;
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(q.x, q.y);
-        ctx.stroke();
-      }
-
-      ctx.fillStyle = 'rgba(245,166,35,.5)';
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    raf = requestAnimationFrame(frame);
-  }
-
-  function start() { if (!raf) { running = true; frame(); } }
-  function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
-
-  // pause when the tab is not visible — no point burning cycles unseen
-  document.addEventListener('visibilitychange', function () {
-    document.hidden ? stop() : start();
-  });
-
-  var t = null;
-  window.addEventListener('resize', function () {
-    clearTimeout(t); t = setTimeout(size, 200);
-  });
-
-  size();
-  start();
-})();
-</script>
-
-<script>
-/* The video is an enhancement, never a dependency.
- *
- * It is not fetched at all on a slow connection, on a device asking to save
- * data, or when the visitor prefers reduced motion — the canvas lattice
- * underneath already carries the page, so there is nothing to fall back FROM.
- * Only once it is genuinely playing does it fade in over the canvas.
- */
-(function () {
-  var v = document.getElementById('hero-vid');
-  var cv = document.getElementById('hero-fx');
-  if (!v) return;
-
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var conn = navigator.connection || {};
-  var slow = conn.saveData === true ||
-             /(^|-)2g$/.test(conn.effectiveType || '');
-
-  if (reduced || slow) {
-    v.remove();
-    return;
-  }
-
-  v.preload = 'auto';
-  v.addEventListener('playing', function () {
-    v.classList.add('on');
-    // the canvas keeps drawing underneath at low opacity: together they read
-    // as depth, and if the video stalls the page does not go flat
-    if (cv) cv.style.opacity = '.22';
-  }, { once: true });
-
-  var p = v.play();
-  if (p && p.catch) p.catch(function () { v.remove(); });
-})();
-</script>
 </body>
 </html>
