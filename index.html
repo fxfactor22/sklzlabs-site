@@ -31,7 +31,7 @@
 {"@context":"https://schema.org","@graph":[
  {"@type":"Organization","@id":"https://www.sklzlabs.com/#org","name":"SKLZ Labs","url":"https://www.sklzlabs.com/","logo":"https://www.sklzlabs.com/icons/icon-512.png","email":"hello@sklzlabs.com","sameAs":["https://t.me/sklzlabsarabic","https://t.me/mindsieg_protocol"],"description":"Trading software and analytics: MT5 bot, copy trading, indicators, signals and an honest journal. Software only — not a broker, never holds client funds."},
  {"@type":"WebSite","@id":"https://www.sklzlabs.com/#site","url":"https://www.sklzlabs.com/","name":"SKLZ Labs","publisher":{"@id":"https://www.sklzlabs.com/#org"},"inLanguage":["en","ar","ru"]},
- {"@type":"SoftwareApplication","name":"SKLZ Labs","applicationCategory":"FinanceApplication","operatingSystem":"Web, Windows (MetaTrader 5)","url":"https://www.sklzlabs.com/","offers":[{"@type":"Offer","name":"SKLZ Core","price":"29","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Plus","price":"49","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Pro","price":"79","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"}]}
+ {"@type":"SoftwareApplication","name":"SKLZ Labs","applicationCategory":"FinanceApplication","operatingSystem":"Web, Windows (MetaTrader 5)","url":"https://www.sklzlabs.com/","offers":[{"@type":"Offer","name":"SKLZ Core","price":"119","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Plus","price":"149","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"},{"@type":"Offer","name":"SKLZ Pro","price":"179","priceCurrency":"USD","url":"https://www.sklzlabs.com/pricing.html"}]}
 ]}
 </script>
 <title>SKLZ Labs — Trading tools that show their work</title>
@@ -263,7 +263,7 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);background:var(--bg2
   </nav>
   <div class="nav-right">
     <a class="nav-login" href="/login.html">Log in</a>
-    <a class="nav-cta" href="/login.html#signup">Start free</a>
+    <a class="nav-cta" href="#pricing">Get started</a>
     <button class="burger" aria-label="Menu" onclick="document.getElementById('sheet').classList.toggle('open')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </div></div>
@@ -275,7 +275,7 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);background:var(--bg2
   <a href="#pricing" onclick="sheet.classList.remove('open')">Pricing</a>
   <a href="/affiliate.html">Partners</a>
   <a href="/about.html">About</a>
-  <div class="sheet-cta"><a class="btn btn-primary" href="/login.html#signup">Start free</a><a class="btn btn-ghost" href="/login.html">Log in</a></div>
+  <div class="sheet-cta"><a class="btn btn-primary" href="#pricing" onclick="sheet.classList.remove('open')">Get started →</a><a class="btn btn-ghost" href="/login.html">Log in</a></div>
   <div class="langs"><button onclick="sklzSetLang('en')">EN</button><button onclick="sklzSetLang('ar')">العربية</button><button onclick="sklzSetLang('ru')">RU</button></div>
 </div>
 
@@ -291,7 +291,7 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);background:var(--bg2
       <div class="kicker reveal">SKLZ Labs · Trading systems, engineered</div>
       <h1 class="reveal" style="margin-top:18px">Trading tools that <span class="g">show their work.</span></h1>
       <p class="lead reveal">Software that trades on your own account, logs every decision, and publishes its record. We never hold your funds.</p>
-      <div class="ctas reveal"><a href="/login.html#signup" class="btn btn-primary">Start free →</a><a href="#proof" class="btn btn-ghost">Watch the engine live</a></div>
+      <div class="ctas reveal"><a href="#pricing" class="btn btn-primary">Get started →</a><a href="#proof" class="btn btn-ghost">Watch the engine live</a></div>
       <div class="chip reveal"><i></i> Software only · Not financial advice · Trading involves risk</div>
     </div>
     <div class="live reveal" id="live">
@@ -356,7 +356,7 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);background:var(--bg2
 <section id="how" style="padding-top:40px"><div class="wrap">
   <div class="sec-head"><div><div class="kicker reveal">How it works</div><h2 class="reveal" style="margin-top:14px">Three steps.<br>Nothing to hand over.</h2></div><p class="reveal">Live trading is off by default and needs a deliberate confirmation. Loss limits sit above every strategy.</p></div>
   <div class="steps">
-    <div class="step reveal"><div class="num">1</div><h3>Create a free account</h3><p>Pick a plan when you are ready. Cancel in one click.</p></div>
+    <div class="step reveal"><div class="num">1</div><h3>Pick a plan</h3><p>Monthly or annual. No upfront fee. Cancel in one click.</p></div>
     <div class="step reveal"><div class="num">2</div><h3>Connect your own broker</h3><p>MT5 or a spot exchange. Trade-only keys; withdrawal rights are rejected.</p></div>
     <div class="step reveal"><div class="num">3</div><h3>Set your caps, watch it work</h3><p>Lot ceiling, daily loss limit, hard stop. Every decision is in your log.</p></div>
   </div>
@@ -374,28 +374,28 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);background:var(--bg2
 
 <!-- PRICING -->
 <section id="pricing"><div class="wrap">
-  <div class="p-head"><div class="kicker reveal" style="justify-content:center">Pricing</div><h2 class="reveal" style="margin-top:14px">Simple pricing. Honest tools.</h2><p class="reveal">No upfront package. No enrolment fee. No recruiting. From $29 a month, cancel in one click, 7-day money-back on your first purchase.</p></div>
+  <div class="p-head"><div class="kicker reveal" style="justify-content:center">Pricing</div><h2 class="reveal" style="margin-top:14px">Simple pricing. Honest tools.</h2><p class="reveal">The "trading OS" memberships out there charge $170 a month after a $349–$1,699 initial fee. SKLZ: no initial fee, no recruiting, about 30% less — cancel in one click, 7-day money-back on your first purchase.</p></div>
   <div class="p-grid">
     <div class="p-card reveal">
       <div class="p-name">SKLZ Core</div><div class="p-desc">The full platform — MT5 copy, indicators, TradeGPT — minus crypto.</div>
-      <div class="p-price"><span class="p-n">$29</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or $278/yr — save 20%</div>
-      <ul><li>MT5 copy of the SKLZ Engine — partner broker, 1 account</li><li>All four TradingView indicators</li><li>TradeGPT Pro — unlimited chart analysis</li><li>Signals, Journal, AI reviews</li></ul>
-      <button class="p-cta" onclick="sklzBuy('copy_basic_monthly')">Start Core →</button>
+      <div class="p-price"><span class="p-n">$119</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or <a href="#" onclick="sklzBuy('sklz_core_annual');return false" style="color:var(--cyan)">$1,190/yr — 2 months free</a></div>
+      <ul><li>SKLZ Engine copy on your MT5 — partner broker, 1 account</li><li>Signals with tracked outcomes · Journal · AI reviews</li><li>TradeGPT Pro — unlimited chart analysis</li><li>All four TradingView indicators</li><li>Academy: weekly live session + replay library</li><li>Private Telegram channels</li></ul>
+      <button class="p-cta" onclick="sklzBuy('sklz_core_monthly')">Start Core →</button>
     </div>
     <div class="p-card hot reveal"><div class="p-pop">MOST POPULAR</div>
       <div class="p-name">SKLZ Plus</div><div class="p-desc">Everything in Core, plus crypto trading and crypto copy.</div>
-      <div class="p-price"><span class="p-n">$49</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or $470/yr — save 20%</div>
-      <ul><li>Everything in SKLZ Core</li><li>Crypto trading &amp; crypto copy trading</li><li>English &amp; العربية</li><li>Priority access to new features</li></ul>
-      <button class="p-cta" onclick="sklzBuy('copy_crypto_monthly')">Get Plus →</button>
+      <div class="p-price"><span class="p-n">$149</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or <a href="#" onclick="sklzBuy('sklz_plus_annual');return false" style="color:var(--cyan)">$1,490/yr — 2 months free</a></div>
+      <ul><li>Everything in SKLZ Core</li><li>Crypto trading &amp; crypto copy on your own exchange</li><li>Crypto Scanner — setups vs traps, top 100</li><li>Weekly engine review, live</li><li>Priority access to new models (Model R first)</li></ul>
+      <button class="p-cta" onclick="sklzBuy('sklz_plus_monthly')">Get Plus →</button>
     </div>
     <div class="p-card reveal">
       <div class="p-name">SKLZ Pro</div><div class="p-desc">Multi-account. Any broker. Built for prop-firm traders.</div>
-      <div class="p-price"><span class="p-n">$79</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or $758/yr — save 20%</div>
-      <ul><li>Everything in SKLZ Plus</li><li>MT5 copy on any broker</li><li>Up to 10 MT5 accounts copying at once</li><li>Run multiple prop evals from one master</li></ul>
-      <button class="p-cta ghost" onclick="sklzBuy('copy_pro_monthly')">Go Pro →</button>
+      <div class="p-price"><span class="p-n">$179</span><span class="p-u">/month</span></div><div class="p-renew">cancel anytime · or <a href="#" onclick="sklzBuy('sklz_pro_annual');return false" style="color:var(--cyan)">$1,790/yr — 2 months free</a></div>
+      <ul><li>Everything in SKLZ Plus</li><li>MT5 copy on <b>any</b> broker</li><li>Up to 10 MT5 accounts copying at once</li><li>Run several prop evaluations from one master</li><li>Direct line to the desk for setup</li></ul>
+      <button class="p-cta ghost" onclick="sklzBuy('sklz_pro_monthly')">Go Pro →</button>
     </div>
   </div>
-  <div class="p-fine">Prices in USD · Renewal price always shown at checkout · Cancel anytime from your billing portal<br>Software tools only — not financial advice · Trading involves risk of loss · <a href="/pricing.html" style="color:var(--cyan)">all plans &amp; annual pricing →</a></div>
+  <div class="p-fine">Prices in USD · Renewal price always shown at checkout · Cancel anytime from your billing portal · Existing subscribers keep their current price<br>Software tools only — not financial advice · Trading involves risk of loss · <a href="/pricing.html" style="color:var(--cyan)">all plans &amp; annual pricing →</a></div>
 </div></section>
 
 <!-- FAQ -->
@@ -411,9 +411,9 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);background:var(--bg2
 
 <!-- CTA -->
 <section style="padding-top:20px"><div class="wrap"><div class="band reveal">
-  <h2>See it work before you pay a cent.</h2>
-  <p>Free account, the engine's live heartbeat, the public record, and TradeGPT previews — no card required.</p>
-  <a href="/login.html#signup" class="btn btn-primary">Create free account →</a>
+  <h2>One membership. Every tool. The engine on your account.</h2>
+  <p>No initial fee, no recruiting, cancel in one click. 7-day money-back on your first purchase.</p>
+  <a href="#pricing" class="btn btn-primary">Choose your plan →</a>
 </div></div></section>
 
 <footer><div class="wrap">
