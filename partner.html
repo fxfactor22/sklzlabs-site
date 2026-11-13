@@ -50,11 +50,6 @@
   .empty{color:var(--dim);font-size:13px;padding:10px 0}
   .script{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:8px}
   .script b{color:#fff}
-  .lg-bars{display:flex;align-items:flex-end;gap:3px;height:92px;margin-top:8px}
-  .lg-bars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-width:0}
-  .lg-bars i{display:block;width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#22E0FF,#FF7A3D 60%,#FFB020)}
-  .lg-bars span{font-family:var(--mono);font-size:8px;color:var(--dim);transform:rotate(-60deg);transform-origin:top left;white-space:nowrap;height:14px}
-  @media(max-width:800px){.lg-two{grid-template-columns:1fr!important}}
 </style>
 <link rel="stylesheet" href="/sklz-shell.css"/>
 </head>
@@ -112,9 +107,14 @@
     const idx=Math.max(0,LEVELS.findIndex(l=>l[0]===lvl.name));
     const prog=lvl.next_at?Math.min(100,Math.round(act/lvl.next_at*100)):100;
     const tl=LEVELS.map((l,i)=>'<div class="sk-tl '+(i<idx?'done':i===idx?'now':'')+'"><i></i>'+esc(l[0])+'<div style="font-family:var(--mono);font-size:10px;color:var(--dim)">'+l[1]+'+ active</div></div>').join('');
-    const custs=(d.customer_list||[]).map(c=>'<div class="crow"><span>'+esc(c.masked)+'</span><span class="sk-chip '+(c.active?'buy':'')+'">'+(c.active?'active':'churned')+'</span><span class="mono">'+(c.months||0)+' mo</span><span class="mono" style="color:#fff">'+money(c.commission)+'/mo</span></div>').join('')
-      ||'<div class="empty">No customers yet. Share your link — the first one is the hardest.</div>';
-    const ledger=(d.recent_commissions||[]).map(e=>'<div class="lrow"><span>'+(e.bonus>0?'Retention bonus + commission':'Monthly commission')+'</span><span class="sk-chip '+(e.status==='paid'?'buy':'')+'">'+esc(e.status)+'</span><span style="font-family:var(--mono);color:#fff">'+money(e.amount)+'</span></div>').join('')
+    const CL=(d.customer_list||[]).slice().sort((a,b)=>(b.active-a.active)||(b.commission-a.commission));
+    window.__cl=CL;
+    const custRow=c=>'<div class="crow"><span>'+esc(c.masked)+'</span><span class="sk-chip '+(c.active?'buy':'')+'">'+(c.active?'active':'inactive')+'</span><span class="mono">'+(c.months||0)+(c.source==='sklz'?' mo':' order'+((c.months||0)===1?'':'s'))+(c.since?' · since '+String(c.since).slice(0,10):'')+'</span><span class="mono" style="color:#fff">'+money(c.commission)+(c.source==='sklz'?'/mo':'')+'</span></div>';
+    window.custFilter=function(){const q=(document.getElementById('cq')?.value||'').toLowerCase();const rows=window.__cl.filter(c=>!q||String(c.masked).toLowerCase().includes(q));
+      document.getElementById('custlist').innerHTML=(rows.slice(0,window.__clAll?10000:40).map(custRow).join('')||'<div class="empty">No customers yet. Share your link — the first one is the hardest.</div>')+
+      (rows.length>40&&!window.__clAll?'<div style="text-align:center;margin-top:10px"><button class="sk-btn g" onclick="window.__clAll=true;custFilter()">Show all '+rows.length+' customers</button></div>':'');};
+    const custs='<div id="custlist"></div>';
+    const ledger=(d.recent_commissions||[]).map(e=>'<div class="lrow"><span>'+(e.bonus>0?'Retention bonus + commission':'Commission')+(e.created_at?' <span class="mono">'+String(e.created_at).slice(0,10)+'</span>':'')+'</span><span class="sk-chip '+(e.status==='paid'?'buy':'')+'">'+esc(e.status)+'</span><span style="font-family:var(--mono);color:#fff">'+money(e.amount)+'</span></div>').join('')
       ||'<div class="empty">No commissions yet.</div>';
     const w=d.wallet||{};
 
@@ -157,55 +157,14 @@
         '<div class="sk-k" style="margin:16px 0 4px">Recent commissions</div>'+ledger+
       '</section>'+
 
-      '<section class="sk-card c12" id="legacy" style="display:none"></section>'+
       '<section class="sk-card c12" id="customers">'+
-        '<div class="sk-h"><h3>Customers</h3><span class="sk-chip">'+((d.customers||{}).total||0)+' total</span></div>'+custs+
+        '<div class="sk-h"><h3>Customers</h3><span style="display:flex;gap:8px;align-items:center"><span class="sk-chip">'+((d.customers||{}).total||0)+' total · '+((d.customers||{}).active||0)+' active</span><input id="cq" placeholder="Search" oninput="custFilter()" style="background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:999px;color:#fff;padding:7px 12px;font:13px var(--sans);width:160px"/></span></div>'+custs+
         '<div class="disc">50% recurring commission on each active membership, for as long as it stays active. Payouts are processed manually by SKLZ Labs. You are responsible for any taxes on commissions earned.</div>'+
       '</section>'+
       '</div>';
+    custFilter();
   }
   load();
-  // ── Skillsart (legacy) — owner only; the API answers 403 for everyone else ──
-  (async function legacy(){
-    try{
-      const r=await SKLZAuth.fetch(API+'/api/partner/legacy?full=1');
-      if(!r.ok)return;const d=await r.json();if(!d.available)return;
-      const el=document.getElementById('legacy');if(!el)return;
-      const T=d.totals,A=d.account;
-      const months=d.by_month.slice(-24);const mx=Math.max(1,...months.map(m=>m.commission));
-      const bars=months.map(m=>'<div title="'+m.month+' · '+m.orders+' orders · $'+m.commission.toFixed(0)+'"><i style="height:'+Math.max(3,Math.round(m.commission/mx*70))+'px"></i><span>'+m.month.slice(2).replace('-','/')+'</span></div>').join('');
-      const rankOrder=['Emerald','Consultant','Trader','Scalper','Kick Starter','Newbie'];
-      const RC={'Emerald':'var(--green)','Consultant':'var(--gold)','Trader':'var(--blue)','Scalper':'#A78BFA','Kick Starter':'var(--muted)','Newbie':'var(--dim)'};
-      const chips=rankOrder.filter(k=>d.by_rank[k]).map(k=>'<span class="sk-chip" style="color:'+RC[k]+'">'+k+' '+d.by_rank[k]+'</span>').join(' ');
-      window.__lg=d;
-      el.style.display='';
-      el.innerHTML='<div class="sk-h"><h3>Skillsart · your legacy book</h3><span class="sk-chip">snapshot '+esc(d.snapshot_at)+' · owner only</span></div>'+
-        '<div class="kpis" style="margin-top:0">'+
-          '<div class="kpi"><div class="sk-k">Clients</div><div class="sk-v">'+T.clients+'<small>'+T.clients_with_orders+' bought</small></div></div>'+
-          '<div class="kpi"><div class="sk-k">Referral orders</div><div class="sk-v">'+T.orders+'<small>$'+T.sales.toLocaleString()+' sales</small></div></div>'+
-          '<div class="kpi"><div class="sk-k">Commission earned</div><div class="sk-v" style="color:var(--gold)">$'+T.commission_total.toLocaleString(undefined,{maximumFractionDigits:0})+'</div></div>'+
-          '<div class="kpi"><div class="sk-k">E-wallet balance</div><div class="sk-v sk-pos">'+A.wallet_available.toLocaleString()+'<small>points</small></div></div>'+
-        '</div>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px" class="lg-two">'+
-          '<div><div class="sk-k">Rank on Skillsart</div><div style="font-family:\'Sora\',var(--sans);font-size:22px;font-weight:800;margin:4px 0 6px">'+esc(A.rank)+' <small style="font-size:12px;color:var(--muted);font-weight:500">'+A.rank_points+' / '+A.next_rank_points+' → '+esc(A.next_rank)+'</small></div><div class="sk-bar"><i style="width:'+Math.round(A.rank_points/A.next_rank_points*100)+'%"></i></div>'+
-          '<div class="disc" style="margin-top:8px">Team ranks: '+chips+'</div>'+
-          '<div class="disc">'+esc(A.subscription)+' · '+A.subscription_days_left+' days left · first order '+T.first_order+' · last '+T.last_order+'</div></div>'+
-          '<div><div class="sk-k">Commission by month (last 24)</div><div class="lg-bars">'+bars+'</div></div>'+
-        '</div>'+
-        '<div class="sk-h" style="margin-top:18px"><h3 style="font-size:14px">Clients</h3><input id="lg-q" placeholder="Search name" oninput="lgFilter()" style="background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:999px;color:#fff;padding:8px 14px;font:13px var(--sans);min-width:200px"/></div>'+
-        '<div id="lg-list"></div>'+
-        '<div class="disc">Read-only snapshot of your Skillsart partner dashboard (names as shown there). Commission = fixed commission + percentage commission per order. Refresh by re-exporting.</div>';
-      window.lgFilter=function(){
-        const q=(document.getElementById('lg-q').value||'').toLowerCase();
-        const rows=window.__lg.clients.filter(c=>!q||c.name.toLowerCase().includes(q)).sort((a,b)=>(b.commission-a.commission)||(b.orders-a.orders)||a.id-b.id);
-        document.getElementById('lg-list').innerHTML='<div class="crow" style="color:var(--dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em"><span>Client</span><span>Rank</span><span>Orders</span><span>Commission</span></div>'+
-          rows.slice(0,window.__lgAll?1000:40).map(c=>'<div class="crow"><span>'+esc(c.name)+' <span class="mono">#'+c.id+'</span></span><span class="sk-chip" style="color:'+(RC[c.rank]||'var(--dim)')+'">'+esc(c.rank)+'</span><span class="mono">'+c.orders+(c.last_order?' · '+c.last_order:'')+'</span><span class="mono" style="color:#fff">$'+c.commission.toFixed(0)+'</span></div>').join('')+
-          (rows.length?'' :'<div class="empty">No match.</div>')+
-          (rows.length>40&&!window.__lgAll?'<div style="text-align:center;margin-top:10px"><button class="sk-btn g" onclick="window.__lgAll=true;lgFilter()">Show all '+rows.length+' clients</button></div>':'');
-      };
-      lgFilter();
-    }catch(e){}
-  })();
 })();
 </script>
 <script src="/sklz-i18n.js" defer></script>

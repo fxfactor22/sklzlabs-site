@@ -234,8 +234,7 @@
       if(!r.ok||!d.code){el.innerHTML='<div class="sk-empty">Earn 50% recurring on every membership you refer.</div><a class="sk-btn g" href="/partner.html" style="margin-top:10px">Get your link →</a>';return}
       var w=d.wallet||{},c=d.customers||{};
       el.innerHTML='<div class="kpis" style="margin-top:0;grid-template-columns:1fr 1fr"><div class="kpi"><div class="sk-k">Available</div><div class="sk-v sk-pos">$'+Number(w.available||0).toFixed(0)+'</div></div><div class="kpi"><div class="sk-k">Active customers</div><div class="sk-v">'+(c.active||0)+'</div></div></div>'+
-        '<div class="note">Level <b style="color:#fff">'+esc((d.level||{}).name||'Partner')+'</b>'+((d.level||{}).next?' · '+(d.level.to_next)+' more to '+esc(d.level.next):'')+'</div><div id="pt-legacy"></div>';
-      try{var lg=await J('/api/partner/legacy');if(lg.ok&&lg.d&&lg.d.available){var T=lg.d.totals;$('pt-legacy').innerHTML='<div class="note" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line)">Skillsart legacy book: <b style="color:#fff">'+T.clients+' clients</b> · '+T.orders+' orders · <b style="color:var(--gold)">$'+Math.round(T.commission_total).toLocaleString()+'</b> commission · <a href="/partner.html#legacy" style="color:var(--blue)">open →</a></div>'}}catch(e){}
+        '<div class="note">Level <b style="color:#fff">'+esc((d.level||{}).name||'Partner')+'</b>'+((d.level||{}).next?' · '+(d.level.to_next)+' more to '+esc(d.level.next):'')+'</div>';
     }catch(e){el.innerHTML='<div class="sk-empty">Partner data unavailable.</div>'}
   })();
 })();
