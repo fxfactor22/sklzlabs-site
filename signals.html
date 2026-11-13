@@ -153,6 +153,18 @@
     .side.open{transform:translateX(0)}
     .main{padding-top:64px !important}
   }
+  /* v2 skin */
+  .sig{border-radius:16px;background:var(--panel);transition:border-color .15s}
+  .sig:hover{border-color:var(--line2,#243049)}
+  .lv{border-radius:10px;background:rgba(0,0,0,.25)}
+  .lv .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+  .fchip{border-radius:999px;padding:7px 14px}
+  .fchip.on{border-color:var(--gold);color:var(--gold);background:rgba(255,176,32,.08)}
+  .sum-strip>div{border-radius:14px}
+  .tel{border-radius:16px;background:linear-gradient(135deg,rgba(34,224,255,.08),rgba(255,176,32,.06)),var(--panel)}
+  .sbtn{border-radius:999px}
+  .sig-side{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;border:1px solid var(--line)}
+  .sig-side.buy{color:var(--green);border-color:rgba(52,211,153,.35)}.sig-side.sell{color:var(--red);border-color:rgba(251,113,133,.35)}
 </style>
 <link rel="stylesheet" href="/sklz-shell.css"/>
 </head>
@@ -181,8 +193,10 @@
     <div class="nav-item" onclick="logout()"><span class="i">⏻</span>Log out</div>
   </aside>
   <main class="main">
-    <h1>Signals</h1>
-    <div class="sub">SKLZ Radar maps multiple markets and posts entry zone, stop and target — live to your dashboard and Telegram.</div>
+    <div class="sk-art" style="background-image:url(/media/art-engine.jpg);padding:22px 22px 20px;margin-bottom:18px">
+      <div class="sk-h" style="margin:0"><div><div class="eyebrow">Trade · signals</div><h2>Signals</h2><p>Entry zone, stop and target on every call — and the outcome, tracked. Live here and on Telegram.</p></div>
+      <span class="sk-pill" id="sig-pulse"><i></i><span>engine …</span></span></div>
+    </div>
     <div id="compose" style="display:none"></div>
     <div id="updates"></div>
     <div id="content"><div class="empty">Loading…</div></div>
@@ -324,6 +338,7 @@
     localStorage.removeItem('sklz_access');location.href='/';
   }
   init();
+  fetch(API+'/api/public/engine-pulse',{cache:'no-store'}).then(r=>r.json()).then(d=>{const p=document.getElementById('sig-pulse');if(!p)return;p.className='sk-pill '+(d.alive?'live':'off');p.querySelector('span').textContent=d.alive?'engine live · '+(d.open_now||0)+' open':'engine heartbeat lost';}).catch(()=>{});
   setInterval(()=>{if(ent&&ent.allowed&&ent.allowed.length)loadFeed();},30000);
 
   var SIGNALS=[];
