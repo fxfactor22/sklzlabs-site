@@ -51,7 +51,8 @@
   .empty{color:var(--dim);font-family:var(--mono);font-size:12px;text-align:center;padding:30px}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:11px 18px;font-size:13px;transition:transform .28s;z-index:99}
   .toast.on{transform:translateX(-50%) translateY(0)}
-</style></head>
+</style><link rel="stylesheet" href="/sklz-shell.css"/>
+</head>
 <body>
 <div class="shell">
   <aside class="side">
@@ -162,4 +163,5 @@
 </script>
 <!-- /ISKRA widget -->
 <script>(function(){var r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('sklz_ref',r);})();</script>
+<script src="/sklz-shell.js" defer></script>
 </body></html>

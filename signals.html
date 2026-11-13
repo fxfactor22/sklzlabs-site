@@ -153,7 +153,8 @@
     .side.open{transform:translateX(0)}
     .main{padding-top:64px !important}
   }
-</style><link rel="stylesheet" href="/sklz-mobile.css"/>
+</style>
+<link rel="stylesheet" href="/sklz-shell.css"/>
 </head>
 <body>
 <div class="shell">
@@ -197,7 +198,7 @@
   function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
     clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}
   function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
-  let ent=null, activeFilter=null;
+  let ent=null, activeFilter=null, outcomeFilter='all';
 
   async function init(){
     try{
@@ -273,6 +274,7 @@
   }
 
   function setFilter(c){activeFilter=c;render();}
+  window.setOutcome=function(k){outcomeFilter=k;loadFeed();}
 
   async function loadFeed(){
     try{
@@ -286,7 +288,11 @@
         return;
       }
       SIGNALS=d.signals;
-      feed.innerHTML=d.signals.map((s,i)=>{
+      const oc=(s)=>{const st=s.status||'active';if(st==='closed')return ((s.outcome==='win')||(s.result_pips!=null&&s.result_pips>0))?'won':'lost';return st==='secured'?'secured':'running'};
+      const counts={all:d.signals.length,running:0,secured:0,won:0,lost:0};d.signals.forEach(s=>counts[oc(s)]++);
+      const ochips=[['all','All'],['running','Running'],['secured','Secured'],['won','Won'],['lost','Lost']].map(([k,l])=>`<div class="fchip ${outcomeFilter===k?'on':''}" onclick="setOutcome('${k}')">${l} <span style="opacity:.6">${counts[k]}</span></div>`).join('');
+      const shown=d.signals.map((s,i)=>[s,i]).filter(([s])=>outcomeFilter==='all'||oc(s)===outcomeFilter);
+      feed.innerHTML=`<div class="filters" style="margin-bottom:10px">${ochips}</div>`+(shown.length?'':'<div class="empty">Nothing in this bucket.</div>')+shown.map(([s,i])=>{
         const ez=(s.entry_low!=null&&s.entry_low!==s.entry_high)?`${s.entry_low} – ${s.entry_high}`:(s.entry??'—');
         return `<div class="sig">
           <div class="sig-head">
@@ -615,8 +621,8 @@
   })();
 </script>
 <!-- /ISKRA widget -->
+<script src="/sklz-shell.js" defer></script>
 <script src="/sklz-i18n.js" defer></script>
-<script src="/sklz-mobile.js" defer></script>
 <script>
 /* SKLZ paywall: members areas need an active plan. Public pages are
    exempt; everyone else routes through pricing. */

@@ -104,7 +104,8 @@
     .side.open{transform:translateX(0)}
     .main{padding-top:64px !important}
   }
-</style><link rel="stylesheet" href="/sklz-mobile.css"/>
+</style>
+<link rel="stylesheet" href="/sklz-shell.css"/>
 </head>
 <body>
 <div class="shell">
@@ -266,7 +267,7 @@
   function toast(m){const t=document.getElementById('toast');t.textContent=m;
     t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),2600)}
   function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
-  function money(n){return (n>=0?'+':'')+'$'+(+n).toLocaleString(undefined,{maximumFractionDigits:0})}
+  function money(n){n=isFinite(+n)?+n:0;return (n>=0?"+":"")+"$"+n.toLocaleString(undefined,{maximumFractionDigits:0})}
 
   function tab(name){
     ['overview','trades','add','review'].forEach(v=>{
@@ -567,8 +568,8 @@
 </div>
 <style>.jl{display:block;font-family:monospace;font-size:9.5px;color:#8B94A8;text-transform:uppercase;margin-bottom:4px}
 .jin{width:100%;background:#080A0F;border:1px solid #1E2735;border-radius:8px;padding:9px 11px;color:#EAEEF6;font-family:monospace;font-size:12.5px}</style>
+<script src="/sklz-shell.js" defer></script>
 <script src="/sklz-i18n.js" defer></script>
-<script src="/sklz-mobile.js" defer></script>
 <script>
 /* SKLZ paywall: members areas need an active plan. Public pages are
    exempt; everyone else routes through pricing. */

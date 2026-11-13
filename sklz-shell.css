@@ -1,0 +1,110 @@
+/* SKLZ Labs — shared app shell (v2, 13 Nov 2026)
+ * Loaded AFTER each page's own <style>. Re-tokens the palette so twenty
+ * pages change together, and styles the sidebar / app bar / drawer /
+ * bottom tabs that sklz-shell.js injects. Page content keeps its layout. */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --bg:#070A10;--panel:#0D1320;--panel2:#111827;--panel-2:#111827;--line:#1B2333;--line2:#243049;
+  --ink:#E8EDF5;--muted:#9AA4B6;--dim:#6B7483;
+  --gold:#FFB020;--gold2:#FFC24B;--gold-2:#FF7A3D;--blue:#22E0FF;--acc:#22E0FF;--teal:#22E0FF;
+  --green:#34D399;--red:#FB7185;--purple:#A78BFA;--amber:#FFB020;--coral:#FF7A3D;--cyan:#22E0FF;
+  --grad:linear-gradient(100deg,#FFB020,#FF7A3D 48%,#22E0FF);
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+  --sans:'Inter','SF Pro Text',-apple-system,system-ui,sans-serif;
+  --disp:'Sora',var(--sans);
+}
+body{background:var(--bg);color:var(--ink)}
+h1,h2,h3,.card-title,.p-name{font-family:var(--disp);letter-spacing:-.02em}
+.card,.pcard,.stat,.panel{border-radius:16px}
+img.logo,img.logo-img{max-height:44px;width:auto}
+@media(max-width:820px){#ikFab{bottom:92px!important}#ikPanel,#ikWin{bottom:160px!important}}
+/* old inline emoji nav + old mobile bar are retired by the shell */
+.lnav-btn,#sklz-mnav,.sklz-mnav,.sklz-mobile-bar,.mnav-btn,.mnav-back{display:none!important}
+
+/* ── sidebar ─────────────────────────────────────────────────────── */
+.side.sk-side{padding:16px 12px 18px!important;background:linear-gradient(180deg,#0B1019,#090D15)!important;border-right:1px solid var(--line)!important;display:flex;flex-direction:column;gap:0;width:auto}
+.sk-brand{display:flex;align-items:center;gap:10px;padding:6px 8px 14px;font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:-.05em;color:#fff;text-decoration:none}
+.sk-brand svg{width:28px;height:28px;flex:none}
+.sk-brand small{font-family:var(--sans);font-weight:300;font-size:9px;letter-spacing:.34em;color:var(--muted);align-self:flex-end;padding-bottom:3px;white-space:nowrap}
+.sk-ws{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:4px;margin:4px 4px 14px}
+.sk-ws button{border:0;background:none;color:var(--muted);font:600 12px var(--sans);padding:8px 6px;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.sk-ws button.on{background:var(--grad);color:#06090F}
+.sk-ws button svg{width:14px;height:14px}
+.sk-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding:12px 10px 6px}
+.sk-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:#C9D1DE;font:500 13.5px var(--sans);text-decoration:none;cursor:pointer;position:relative;transition:background .15s}
+.sk-item:hover{background:rgba(255,255,255,.05);color:#fff}
+.sk-item.on{background:rgba(255,176,32,.1);color:#fff}
+.sk-item.on:before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--grad)}
+.sk-item svg{width:17px;height:17px;flex:none;color:var(--muted)}
+.sk-item.on svg{color:var(--amber)}
+.sk-item .sk-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.sk-item .sk-tag{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--cyan);border:1px solid rgba(34,224,255,.3);border-radius:6px;padding:1px 5px}
+.sk-spacer{flex:1}
+.sk-foot{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}
+.sk-user{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px}
+.sk-user .av{width:30px;height:30px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#06090F;font:700 12px var(--disp)}
+.sk-user .nm{font-size:12.5px;color:#fff;font-weight:600;line-height:1.2;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sk-user .pl{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:.06em}
+#sklz-lang{margin:0 6px 10px!important;align-self:flex-start}
+
+/* ── app bar (pages without a sidebar) ───────────────────────────── */
+.sk-appbar{position:fixed;top:0;left:0;right:0;z-index:900;height:56px;display:flex;align-items:center;gap:12px;padding:0 14px;background:rgba(9,13,21,.85);border-bottom:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.sk-appbar .sk-brand{padding:0;font-size:17px}.sk-appbar .sk-brand small{display:none}
+.sk-appbar .sk-title{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-left:4px}
+.sk-appbar .sp{flex:1}
+.sk-ib{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:#fff;display:grid;place-items:center;cursor:pointer}
+.sk-ib svg{width:18px;height:18px}
+body.sk-has-appbar{padding-top:56px!important}
+body.sk-has-appbar .topbar,body.sk-has-appbar .top.sk-dup{display:none}
+
+/* ── drawer (mobile + appbar pages) ──────────────────────────────── */
+.sk-scrim{position:fixed;inset:0;background:rgba(3,5,9,.6);backdrop-filter:blur(4px);z-index:1190;opacity:0;visibility:hidden;transition:.2s}
+.sk-drawer{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);z-index:1200;background:#0B1019;border-right:1px solid var(--line);padding:14px 12px 20px;overflow:auto;transform:translateX(-102%);transition:transform .22s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column}
+.sk-open .sk-drawer{transform:none}.sk-open .sk-scrim{opacity:1;visibility:visible}
+.sk-drawer .sk-close{position:absolute;right:10px;top:12px}
+
+/* ── bottom tabs (mobile) ────────────────────────────────────────── */
+.sk-tabs{display:none;position:fixed;left:0;right:0;bottom:0;z-index:1000;background:rgba(9,13,21,.92);border-top:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:6px 6px calc(6px + env(safe-area-inset-bottom));grid-template-columns:repeat(5,1fr)}
+.sk-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:10px;color:var(--muted);font:500 10px var(--sans);text-decoration:none;background:none;border:0;cursor:pointer}
+.sk-tab svg{width:20px;height:20px}
+.sk-tab.on{color:#fff}.sk-tab.on svg{color:var(--amber)}
+@media(max-width:820px){
+  .side.sk-side{display:none!important}
+  .sk-tabs{display:grid}
+  body{padding-bottom:76px!important}
+  .shell{grid-template-columns:1fr!important}
+  .sk-appbar{display:flex}
+}
+@media(min-width:821px){.sk-appbar.sk-mobile-only{display:none}body.sk-has-appbar.sk-appbar-mobile-only{padding-top:0!important}}
+
+/* ── shared cockpit widgets (used by dashboard + partner) ────────── */
+.sk-grid{display:grid;gap:14px}
+.sk-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px;position:relative;overflow:hidden}
+.sk-card.hi{background:radial-gradient(90% 80% at 100% 0%,rgba(34,224,255,.08),transparent 60%),radial-gradient(70% 70% at 0% 100%,rgba(255,176,32,.1),transparent 60%),var(--panel)}
+.sk-k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.sk-v{font-family:var(--disp);font-size:26px;font-weight:700;letter-spacing:-.03em;margin-top:4px;color:#fff;font-variant-numeric:tabular-nums}
+.sk-v small{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0;font-family:var(--sans);margin-left:5px}
+.sk-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sk-h h3{font-family:var(--disp);font-size:15px;font-weight:700;margin:0;letter-spacing:-.01em}
+.sk-h a{font-family:var(--mono);font-size:11px;color:var(--cyan);text-decoration:none}
+.sk-pos{color:var(--green)}.sk-neg{color:var(--red)}.sk-neu{color:var(--muted)}
+.sk-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--muted)}
+.sk-pill i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.sk-pill.live{color:var(--green);border-color:rgba(52,211,153,.35)}.sk-pill.live i{background:var(--green);box-shadow:0 0 8px var(--green)}
+.sk-pill.off{color:var(--red);border-color:rgba(251,113,133,.35)}.sk-pill.off i{background:var(--red)}
+.sk-btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 16px;font:600 13px var(--sans);border:1px solid transparent;cursor:pointer;text-decoration:none}
+.sk-btn.p{background:var(--grad);color:#06090F}.sk-btn.g{background:rgba(255,255,255,.04);border-color:var(--line2);color:var(--ink)}
+.sk-ring{width:92px;height:92px;position:relative;flex:none}
+.sk-ring svg{transform:rotate(-90deg)}.sk-ring .c{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:18px}
+.sk-empty{color:var(--dim);font-size:13px;padding:10px 0}
+.sk-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.sk-row:last-child{border-bottom:0}
+.sk-chip{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:7px;border:1px solid var(--line);color:var(--muted)}
+.sk-chip.buy{color:var(--green);border-color:rgba(52,211,153,.35)}.sk-chip.sell{color:var(--red);border-color:rgba(251,113,133,.35)}
+.sk-bar{height:6px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}.sk-bar i{display:block;height:100%;background:var(--grad);border-radius:999px}
+.sk-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin:14px 0 4px}
+.sk-timeline:before{content:"";position:absolute;left:8%;right:8%;top:11px;height:2px;background:var(--line)}
+.sk-tl{text-align:center;position:relative;font-size:11px;color:var(--muted)}
+.sk-tl i{display:block;width:22px;height:22px;border-radius:50%;margin:0 auto 8px;background:var(--panel2);border:2px solid var(--line);position:relative}
+.sk-tl.done i{background:var(--grad);border-color:transparent}.sk-tl.now i{border-color:var(--amber);box-shadow:0 0 12px rgba(255,176,32,.5)}
+.sk-tl.now{color:#fff;font-weight:600}
