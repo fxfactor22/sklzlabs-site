@@ -176,6 +176,25 @@
       side.classList.add('sk-side');
       side.innerHTML = brand() + navHtml(w, false);
       if (lang) side.insertBefore(lang, side.children[1]);
+    } else if (hasSession()) {
+      // signed-in member on a page that was built without a sidebar: give it the
+      // same frame as the dashboard — sidebar on desktop, app bar + drawer on mobile
+      var page = document.createElement('div'); page.className = 'sk-page';
+      while (document.body.firstChild) page.appendChild(document.body.firstChild);
+      side = document.createElement('aside');
+      side.className = 'sk-side sk-synth-side'; side.setAttribute('data-nav', '');
+      side.innerHTML = brand() + navHtml(w, false);
+      if (lang) side.insertBefore(lang, side.children[1]);
+      var cs = getComputedStyle(document.body);
+      document.body.classList.add('sk-synth', 'sk-has-appbar', 'sk-appbar-mobile-only');
+      if (cs.overflow === 'hidden' || cs.overflowY === 'hidden') document.body.classList.add('sk-fixed');
+      document.body.appendChild(side); document.body.appendChild(page);
+      var mbar = document.createElement('div');
+      mbar.className = 'sk-appbar sk-mobile-only';
+      mbar.innerHTML = '<button class="sk-ib" aria-label="Menu" onclick="document.documentElement.classList.add(\'sk-open\')">' + ic('menu') + '</button>' +
+        brand() + '<span class="sk-title">' + (document.title || '').split(' — ')[0] + '</span><span class="sp"></span>';
+      document.body.insertBefore(mbar, side);
+      dedupe(page);
     } else {
       document.body.classList.add('sk-has-appbar');
       var bar = document.createElement('div');
@@ -187,6 +206,7 @@
       // pages with their own light "topbar" strip: hide the duplicate brand row
       var tb = document.querySelector('.topbar'); if (tb) tb.style.display = 'none';
     }
+    retint(); watch(document.body);
     // drawer (always built: mobile uses it on every page)
     var scrim = document.createElement('div'); scrim.className = 'sk-scrim';
     scrim.onclick = function () { document.documentElement.classList.remove('sk-open'); };
@@ -204,6 +224,48 @@
     // retire the old inline hamburger / old mobile nav remnants
     document.querySelectorAll('.lnav-btn, #sklz-mnav, .sklz-mnav').forEach(function (e) { e.style.display = 'none'; });
     whoami(); pulse();
+  }
+
+  function hasSession() {
+    try { return !!(localStorage.getItem('sklz_access') || localStorage.getItem('sklz_token')); } catch (e) { return false; }
+  }
+
+  // A page's own brand row (logo + "← Dashboard") duplicates the sidebar: keep the
+  // row's actions, drop the logo and the back-link. Idempotent; safe on late content.
+  function dedupe(root) {
+    root.querySelectorAll('img[src*="sklz-logo"]').forEach(function (img) {
+      if (img.closest('.sk-side, .sk-drawer, .sk-appbar')) return;
+      var row = img.closest('nav, .top, .topbar, header, .brand') || img.parentElement;
+      row.classList.add('sk-dup');
+      var a = img.closest('a'); (a || img).classList.add('sk-hide');
+    });
+    root.querySelectorAll('.sk-dup a[href="/dashboard.html"], .sk-dup a[href="dashboard.html"]').forEach(function (a) {
+      if (/dashboard/i.test(a.textContent)) a.classList.add('sk-hide');
+    });
+    // the dashboard links this page from the sidebar already
+    root.querySelectorAll('a[href="/dashboard.html"]').forEach(function (a) {
+      if (a.closest('.sk-side, .sk-drawer, .sk-tabs, .sk-dup')) return;
+      if (/^\s*(←|&larr;|<-)?\s*dashboard\s*$/i.test(a.textContent)) a.classList.add('sk-hide');
+    });
+  }
+
+  // Old solid-gold / gold-gradient buttons become the brand gradient pill, by
+  // computed colour rather than by class, so twenty pages change together.
+  var GOLD = /rgb\(255, 176, 32\)|rgb\(245, 166, 35\)|rgb\(255, 194, 75\)|rgb\(247, 197, 102\)/;
+  function retint() {
+    document.querySelectorAll('button, .btn, input[type=submit], a.cta, .cta').forEach(function (el) {
+      if (el.classList.contains('sk-p') || el.closest('.sk-side, .sk-drawer, .sk-tabs, .sk-appbar, .seg, #sklz-lang')) return;
+      var s = getComputedStyle(el);
+      if (GOLD.test(s.backgroundColor) || GOLD.test(s.backgroundImage)) el.classList.add('sk-p');
+    });
+  }
+  var pend = 0;
+  function watch(root) {
+    if (!window.MutationObserver) return;
+    new MutationObserver(function () {
+      if (pend) return;
+      pend = requestAnimationFrame(function () { pend = 0; retint(); if (document.body.classList.contains('sk-synth')) dedupe(document.body); });
+    }).observe(root, { childList: true, subtree: true });
   }
 
   function whoami() {

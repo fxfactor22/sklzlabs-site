@@ -26,35 +26,37 @@
 
 <title>SKLZ LABS — Pricing</title>
 <style>
-:root{--bg:#080A0F;--panel:#0F131C;--line:#1E2735;--ink:#EAEEF6;--dim:#8B94A8;--gold:#F5A623}
+:root{--bg:#070A10;--panel:#0D1320;--line:#1B2333;--ink:#E8EDF5;--dim:#9AA4B6;--gold:#FFB020}
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
 *{margin:0;box-sizing:border-box}body{background:var(--bg);color:var(--ink);
-font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;text-align:center}
+font:15px/1.5 'Inter',-apple-system,Segoe UI,Roboto,sans-serif;text-align:center}
+h1,h2,.pr span{font-family:'Sora','Inter',sans-serif;letter-spacing:-.02em}
 .wrap{max-width:1100px;margin:0 auto;padding:40px 20px 60px}
 h1{font-size:34px;margin-bottom:8px}
-h1 b{background:linear-gradient(90deg,#F5A623,#F7C566);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h1 b{background:linear-gradient(100deg,#FFB020,#FF7A3D 48%,#22E0FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .sub{color:var(--dim);max-width:640px;margin:0 auto 30px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;text-align:left}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;position:relative}
-.card.hot{border-color:var(--gold);box-shadow:0 0 34px rgba(245,166,35,.12)}
-.pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);
-color:#0a0a0a;font-size:10px;font-weight:800;letter-spacing:.1em;border-radius:6px;padding:3px 10px}
+.card.hot{border-color:rgba(255,176,32,.6);box-shadow:0 0 34px rgba(255,176,32,.12);background:radial-gradient(90% 80% at 100% 0%,rgba(34,224,255,.07),transparent 60%),radial-gradient(70% 70% at 0% 100%,rgba(255,176,32,.09),transparent 60%),var(--panel)}
+.pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(100deg,#FFB020,#FF7A3D 48%,#22E0FF);
+color:#06090F;font-size:10px;font-weight:800;letter-spacing:.1em;border-radius:999px;padding:3px 10px}
 h2{font-size:20px}.tag{color:var(--dim);font-size:13px;margin:4px 0 14px}
-.pr{margin:6px 0 16px;color:var(--dim)}.pr span{font-size:40px;font-weight:800;color:var(--gold)}
+.pr{margin:6px 0 16px;color:var(--dim)}.pr span{font-size:40px;font-weight:800;color:#fff}
 .ft{font-size:13.5px;padding:6px 0;border-top:1px solid rgba(30,39,53,.6)}
-.btn{width:100%;margin-top:18px;background:var(--gold);color:#0a0a0a;border:0;border-radius:10px;
+.btn{width:100%;margin-top:18px;background:linear-gradient(100deg,#FFB020,#FF7A3D 48%,#22E0FF);color:#06090F;border:0;border-radius:999px;
 padding:13px;font-weight:800;font-size:14px;cursor:pointer}
 .legal{color:var(--dim);font-size:11.5px;margin-top:36px;line-height:1.8}
 .keep{margin-top:22px;color:var(--dim);font-size:12.5px}
 a{color:var(--gold);text-decoration:none}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px}
 </style></head><body>
-<div class="topbar"><b>SKLZ<span style="color:var(--gold)">LABS</span></b>
+<div class="topbar"><a href="/" aria-label="SKLZ Labs"><img src="/sklz-logo.png" alt="SKLZ Labs" style="height:40px;width:auto;display:block"/></a>
 <a href="/dashboard.html">&larr; Dashboard</a></div>
 <div class="wrap">
 <h1>One platform. <b>Three ways in.</b></h1>
 <div class="sub">Every plan renews at the price on the button, cancels in one click from your
 billing portal, and carries a 7-day money-back guarantee on your first purchase. No upfront package fee, no enrolment, no recruiting — about 30% less than the $170-a-month memberships that also charge a $349–$1,699 initial fee. Existing subscribers keep their current price.</div>
-<div class="grid"><div class="card"><h2>SKLZ Core</h2><div class="tag">The full platform, minus crypto</div><div class="pr"><span>$119</span>/month</div><div class="ft">&#10003; MT5 Bot copy trading — partner broker, 1 account</div><div class="ft">&#10003; SKLZ Engine as your master — <a href="/perf.html?c=live" style="color:#F5A623;text-decoration:underline dotted">see its track record</a></div><div class="ft">&#10003; All four TradingView indicators</div><div class="ft">&#10003; TradeGPT Pro — unlimited chart analysis</div><div class="ft">&#10003; Signals, Journal, AI reviews</div><div class="ft">&#10003; English &amp; العربية</div><button class="btn" onclick="checkout('sklz_core_monthly')">Get SKLZ Core &rarr;</button><div style="text-align:center;margin-top:9px;font-size:12.5px"><a href="#" onclick="checkout('sklz_core_annual');return false">or $1,190/yr &mdash; 2 months free</a></div></div><div class="card hot"><div class=pop>MOST POPULAR</div><h2>SKLZ Plus</h2><div class="tag">Everything in Core, plus crypto</div><div class="pr"><span>$149</span>/month</div><div class="ft">&#10003; Everything in SKLZ Core</div><div class="ft">&#10003; Crypto trading &amp; crypto copy trading</div><div class="ft">&#10003; MT5 copy — partner broker, 1 account</div><div class="ft">&#10003; Priority access to new features</div><button class="btn" onclick="checkout('sklz_plus_monthly')">Start SKLZ Plus &rarr;</button><div style="text-align:center;margin-top:9px;font-size:12.5px"><a href="#" onclick="checkout('sklz_plus_annual');return false">or $1,490/yr &mdash; 2 months free</a></div></div><div class="card"><h2>SKLZ Pro</h2><div class="tag">Multi-account. Any broker.</div><div class="pr"><span>$179</span>/month</div><div class="ft">&#10003; Everything in SKLZ Plus</div><div class="ft">&#10003; MT5 copy on ANY broker</div><div class="ft">&#10003; Up to 10 MT5 accounts copying at once</div><div class="ft">&#10003; Built for prop-firm traders running multiple evals</div><button class="btn" onclick="checkout('sklz_pro_monthly')">Start SKLZ Pro &rarr;</button><div style="text-align:center;margin-top:9px;font-size:12.5px"><a href="#" onclick="checkout('sklz_pro_annual');return false">or $1,790/yr &mdash; 2 months free</a></div></div></div>
+<div class="grid"><div class="card"><h2>SKLZ Core</h2><div class="tag">The full platform, minus crypto</div><div class="pr"><span>$119</span>/month</div><div class="ft">&#10003; MT5 Bot copy trading — partner broker, 1 account</div><div class="ft">&#10003; SKLZ Engine as your master — <a href="/perf.html?c=live" style="color:#22E0FF;text-decoration:underline dotted">see its track record</a></div><div class="ft">&#10003; All four TradingView indicators</div><div class="ft">&#10003; TradeGPT Pro — unlimited chart analysis</div><div class="ft">&#10003; Signals, Journal, AI reviews</div><div class="ft">&#10003; English &amp; العربية</div><button class="btn" onclick="checkout('sklz_core_monthly')">Get SKLZ Core &rarr;</button><div style="text-align:center;margin-top:9px;font-size:12.5px"><a href="#" onclick="checkout('sklz_core_annual');return false">or $1,190/yr &mdash; 2 months free</a></div></div><div class="card hot"><div class=pop>MOST POPULAR</div><h2>SKLZ Plus</h2><div class="tag">Everything in Core, plus crypto</div><div class="pr"><span>$149</span>/month</div><div class="ft">&#10003; Everything in SKLZ Core</div><div class="ft">&#10003; Crypto trading &amp; crypto copy trading</div><div class="ft">&#10003; MT5 copy — partner broker, 1 account</div><div class="ft">&#10003; Priority access to new features</div><button class="btn" onclick="checkout('sklz_plus_monthly')">Start SKLZ Plus &rarr;</button><div style="text-align:center;margin-top:9px;font-size:12.5px"><a href="#" onclick="checkout('sklz_plus_annual');return false">or $1,490/yr &mdash; 2 months free</a></div></div><div class="card"><h2>SKLZ Pro</h2><div class="tag">Multi-account. Any broker.</div><div class="pr"><span>$179</span>/month</div><div class="ft">&#10003; Everything in SKLZ Plus</div><div class="ft">&#10003; MT5 copy on ANY broker</div><div class="ft">&#10003; Up to 10 MT5 accounts copying at once</div><div class="ft">&#10003; Built for prop-firm traders running multiple evals</div><button class="btn" onclick="checkout('sklz_pro_monthly')">Start SKLZ Pro &rarr;</button><div style="text-align:center;margin-top:9px;font-size:12.5px"><a href="#" onclick="checkout('sklz_pro_annual');return false">or $1,790/yr &mdash; 2 months free</a></div></div></div>
 <div class="keep">Already subscribed on an earlier plan? Nothing changes for you &mdash;
 existing subscriptions, including Founder $39 locks, keep their price. Promises don't expire.</div>
 <div class="legal">Prices in USD &middot; Renewal price always shown at checkout &middot; Manage or cancel anytime
